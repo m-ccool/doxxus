@@ -1,0 +1,284 @@
+:root {
+  --color1: rgb(0, 231, 255);
+  --color2: rgb(255, 0, 231);
+  --back: url(https://cdn2.bulbagarden.net/upload/1/17/pcardback.jpg);
+  --charizard1: #fac;
+  --charizard2: #ddccaa;
+  --charizardfront: source: "charizard-gx.png";
+  --pika1: #54a29e;
+  --pika2: #a79d66;
+  --pikafront: url(https://assets.codepen.io/13471/pikachu-gx.webp);
+  --eevee1: #efb2fb;
+  --eevee2: #acc6f8;
+  --eeveefront: url(https://assets.codepen.io/13471/eevee-gx.webp);
+  --mewtwo1: #efb2fb;
+  --mewtwo2: #acc6f8;
+  --mewtwofront: url(https://assets.codepen.io/13471/mewtwo-gx.webp);
+}
+
+.pcards.pcard-2 {
+  opacity: .5;
+  margin-top: calc(-5em + -5vw);
+  margin-left: calc(-10em + -5vw);
+}
+
+.pcards.pcard-1 {
+  z-index: 5;
+}
+
+.splashrow {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  /*transition: all 2.5s ease-out;*/
+  /*transition: all 4s ease;*/
+  /*--bs-gutter-x: 0;*/
+  /*--bs-gutter-y: 0;*/
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0;
+  /*margin-right: 0;*/
+  /*margin-left: 0;*/
+  margin-bottom: 0;
+}
+
+.pcard {
+  max-width: 250.25px;
+  width: 71.5vw;
+  max-height: 350px;
+  height: 100vw;
+  position: relative;
+  overflow: hidden;
+  margin: 20px;
+  overflow: hidden;
+  z-index: 10;
+  touch-action: none;
+  border-radius: 5%/3.5%;
+  box-shadow: -5px -5px 5px -5px var(--color1), 5px 5px 5px -5px var(--color2), -7px -7px 10px -5px transparent, 7px 7px 10px -5px transparent, 0 0 5px 0px rgba(255, 255, 255, 0), 0 55px 35px -20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s ease, box-shadow 0.2s ease;
+  will-change: transform, filter;
+  background-color: #040712;
+  background-image: var(--front);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  transform-origin: center;
+}
+
+.pcard-sm {
+  position: relative;
+  overflow: hidden;
+  margin: 20px;
+  overflow: hidden;
+  z-index: 10;
+  touch-action: none;
+  border-radius: 5%/3.5%;
+  box-shadow: -5px -5px 5px -5px var(--color1), 5px 5px 5px -5px var(--color2), -7px -7px 10px -5px transparent, 7px 7px 10px -5px transparent, 0 0 5px 0px rgba(255, 255, 255, 0), 0 55px 35px -20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s ease, box-shadow 0.2s ease;
+  will-change: transform, filter;
+  background-color: #040712;
+  background-image: var(--front);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  transform-origin: center;
+  max-width: 250.25px;
+  width: 71.5vw;
+  max-height: 350px;
+  height: 100vw;
+}
+
+@media screen and (max-width: 768px) {
+  #pcards-col {
+    opacity: .25;
+    /*transition: all 500ms ease-out;*/
+    /*width: 71.5vw;*/
+    /*max-width: 357.5px;*/
+    /*height: 100vw;*/
+    /*max-height: 500px;*/
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  #pcards-col {
+    opacity: 1;
+    /*transition: all 500ms ease-out;*/
+    /*width: 71.5vw;*/
+    /*max-width: 357.5px;*/
+    /*height: 100vw;*/
+    /*max-height: 500px;*/
+  }
+}
+
+@media screen and (max-width: 1599px) {
+  #pcards-col {
+    opacity: .75;
+    /*transition: all 500ms ease-out;*/
+    /*width: 71.5vw;*/
+    /*max-width: 357.5px;*/
+    /*height: 100vw;*/
+    /*max-height: 500px;*/
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .pcard-xl {
+    /*opacity: 1;*/
+    transition: all 500ms ease-out;
+    width: 71.5vw;
+    max-width: 357.5px;
+    height: 100vw;
+    max-height: 500px;
+  }
+}
+
+.pcard:hover {
+  box-shadow: -20px -20px 30px -25px var(--color1), 20px 20px 30px -25px var(--color2), -7px -7px 10px -5px var(--color1), 7px 7px 10px -5px var(--color2), 0 0 13px 4px rgba(255, 255, 255, 0.3), 0 55px 35px -20px rgba(0, 0, 0, 0.5);
+}
+
+.pcard.charizard {
+  --color1: var(--charizard1);
+  --color2: var(--charizard2);
+  --front: url("../../assets/img/charizard-gx.png");
+}
+
+.pcard.mewtwo {
+  --color1: var(--mewtwo1);
+  --color2: var(--mewtwo2);
+  --front: var(--mewtwofront);
+}
+
+.pcard:before, .pcard:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  mix-blend-mode: color-dodge;
+  transition: all 0.33s ease;
+}
+
+.pcard:before {
+  background-position: 50% 50%;
+  background-size: 300% 300%;
+  background-image: linear-gradient(115deg, transparent 0%, var(--color1) 25%, transparent 47%, transparent 53%, var(--color2) 75%, transparent 100%);
+  opacity: 0.5;
+  filter: brightness(0.5) contrast(1);
+  z-index: 1;
+}
+
+.pcard:after {
+  opacity: 1;
+  background-image: url("https://assets.codepen.io/13471/sparkles.gif"), url(https://assets.codepen.io/13471/holo.png), linear-gradient(125deg, #ff008450 15%, #fca40040 30%, #ffff0030 40%, #00ff8a20 60%, #00cfff40 70%, #cc4cfa50 85%);
+  background-position: 50% 50%;
+  background-size: 160%;
+  background-blend-mode: overlay;
+  z-index: 2;
+  filter: brightness(1) contrast(1);
+  transition: all 0.33s ease;
+  mix-blend-mode: color-dodge;
+  opacity: 0.75;
+}
+
+.pcard.active:after, .pcard:hover:after {
+  filter: brightness(1) contrast(1);
+  opacity: 1;
+}
+
+.pcard.active, .pcard:hover {
+  -webkit-animation: none;
+  animation: none;
+  transition: box-shadow 0.1s ease-out;
+}
+
+.pcard.active:before, .pcard:hover:before {
+  -webkit-animation: none;
+  animation: none;
+  background-image: linear-gradient(110deg, transparent 25%, var(--color1) 48%, var(--color2) 52%, transparent 75%);
+  background-position: 50% 50%;
+  background-size: 250% 250%;
+  opacity: 0.88;
+  filter: brightness(0.66) contrast(1.33);
+  transition: none;
+}
+
+.pcard.active:before, .pcard:hover:before, .pcard.active:after, .pcard:hover:after {
+  -webkit-animation: none;
+  animation: none;
+  transition: none;
+}
+
+.pcard.animated {
+  transition: none;
+  -webkit-animation: holopcard 12s ease 0s 1;
+  animation: holopcard 12s ease 0s 1;
+}
+
+.pcard.animated:before {
+  transition: none;
+  -webkit-animation: holoGradient 12s ease 0s 1;
+  animation: holoGradient 12s ease 0s 1;
+}
+
+.pcard.animated:after {
+  transition: none;
+  -webkit-animation: holoSparkle 12s ease 0s 1;
+  animation: holoSparkle 12s ease 0s 1;
+}
+
+.pdemo, .pcards {
+  display: flex!important;
+  flex-direction: column!important;
+  align-items: center;
+  justify-content: space-evenly;
+  perspective: 2000px;
+  position: relative;
+  z-index: 1;
+  transform: translate3d(0.1px, 0.1px, 0.1px);
+}
+
+@media screen and (min-width: 678px) {
+  .pcards {
+    flex-direction: row;
+  }
+}
+
+.h-title-splash {
+  /*animation: floating 5s linear infinite;*/
+  letter-spacing: calc(1rem + .5vw);
+  font-size: calc(02em + 1.3vw);
+  font-family: 'Lexend Giga', sans-serif;
+  color: #f0f9ff;
+  /*backdrop-filter: hue-rotate(160deg) blur(5px);*/
+  /*text-shadow: 4px 1px 20px rgba(255,255,255,0.38);*/
+}
+
+.splash-h-2 {
+  margin: 0;
+  /*max-height: 50p;*/
+  line-height: 2em;
+  color: rgba(248,249,250,0.75);
+  font-family: 'Lexend Giga', sans-serif;
+  text-shadow: 0px 5px 25px rgba(0,0,0,0.25);
+  font-size: calc(.75rem + .5vw);
+  letter-spacing: calc(.25rem + .5vw);
+  /*background: var(--rainbow-gradient);*/
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 250% 250%;
+  transition: gradient 500ms ease-in-out;
+  -webkit-text-size-adjust: 100%;
+  animation: gradient 5s ease infinite;
+}
+
+.h-title-splash {
+  font-family: 'Lexend Giga', sans-serif;
+  color: var(--bs-white);
+  letter-spacing: calc(1rem + .5vw);
+  font-size: calc(02em + 1.3vw);
+}
+
