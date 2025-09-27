@@ -62,6 +62,14 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   left: -1pt;
 }
 
+.github {
+  overflow: hidden!important;
+  width: calc(350px + 5vw)!important;
+  height: 200px;
+  padding: 10px;
+  overflow: auto;
+}
+
 .github tool-tip {
   display: none;
 }
@@ -80,8 +88,8 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: 3px;
   text-align: center;
-  padding: 0 1rem;
-  margin: 0 auto;
+  padding: 15px;
+  margin: 10px;
 }
 
 .graph-before-activity-overview {

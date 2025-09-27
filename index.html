@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html data-bs-theme="dark" class="scrollbar-hidden" lang="en">
+<html data-bs-theme="light" class="scrollbar-hidden" lang="en">
 
 <head>
     <meta charset="utf-8">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>B McCool - Web &amp; IT</title>
     <link rel="canonical" href="https://doxxus.dev/">
@@ -34,11 +35,14 @@
     <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet" href="assets/css/comet.compiled.css">
-    <link rel="stylesheet" href="assets/css/github-plugin.css">
+    <link rel="stylesheet" href="assets/css/globe.css">
     <link rel="stylesheet" href="assets/css/particle.compiled.css">
     <link rel="stylesheet" href="assets/css/style.css">
-<script src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/github-activity-feed@latest/dist/github-activity.min.css">
+<script type="text/javascript" src="https://unpkg.com/mustache@4.2.0/mustache.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/github-activity-feed@latest/dist/github-activity.min.js"></script>
 </head>
 
 <body class="scrollbar-hidden FADE">
@@ -74,9 +78,11 @@
         </div>
     </nav>
     <main>
+        <!-- Start: comet -->
         <div id="comet-1" class="div-comet">
             <div class="comet" style="/*transform: translate(1000px);*/"></div>
-        </div>
+        </div><!-- End: comet -->
+        <!-- Start: particle -->
         <div id="particle" class="particle-animation-bg particle-div">
             <div id="particle-animation-wrapper-1" class="particle-animation-wrapper">
                 <div id="particle-5" class="particle particle-1"></div>
@@ -84,19 +90,19 @@
                 <div id="particle-7" class="particle particle-4"></div>
                 <div id="particle-8" class="particle particle-3"></div>
             </div>
-        </div>
+        </div><!-- End: particle -->
         <section id="splash">
             <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-2 row-cols-xxl-2 text-center d-flex flex-fill justify-content-sm-center align-items-xxl-center">
                 <div class="col-auto col-lg-4 text-center d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex flex-column flex-grow-1 flex-fill justify-content-center align-items-center flex-nowrap justify-content-sm-center align-items-sm-center justify-content-md-center justify-content-lg-center">
                     <div class="d-flex flex-column justify-content-center align-items-center align-content-center" style="width: 100%;/*max-width: 650px;*//*z-index: 5;*/z-index: 25;/*transition: margin 1000ms ease-out;*/">
-                        <div class="container text-center d-flex flex-grow-1 align-items-center align-content-center align-self-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center" data-aos="fade" data-aos-duration="800" data-aos-once="true" id="brand-name-xl">
+                        <div class="container text-center d-flex flex-grow-1 align-items-center align-content-center align-self-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center" data-aos="fade" data-aos-duration="800" data-aos-once="true" id="splash-p-2" style="/*overflow: visible;*//*text-shadow: 0px 1px 3px rgb(0,0,0);*/min-width: calc(30vw + 2rem);max-width: calc(35vw + 1.5rem);/*width: auto;*//*transition: all 1250ms ease-in-out;*/display: inline-block!important;/*margin: 0px;*/padding: 0px;/*transition: all 1200ms ease-in-out!important;*/">
                             <div class="typed-out blink-caret" style="/*transition: margin 1000ms ease-out;*//*display: inline-block;*/"><img src="assets/img/doxxus-brand.png" style="min-width: 300px;/*padding: 25px 0;*/max-width: 30vw;filter: blur(0px) brightness(200%) saturate(200%);"></div>
                         </div>
                         <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient">WEB DEVelopER</h2><span data-aos="fade" data-aos-duration="800" data-aos-delay="1200" data-aos-once="true" class="h2" style="/*opacity: 0.50;*/font-size: .7rem;color: whitesmoke!important;">CREATING WEBSPACES</span>
-                    </div>
+                    </div><!-- Start: neon-btn -->
                     <div data-aos="fade-up" data-aos-duration="1200" data-aos-delay="1800" class="neon-btn-outline" style="margin: 2.5rem;">
                         <div><button class="btn btn-primary text-nowrap btn-neon-outline" type="button" data-bs-target="#contact" data-bs-toggle="modal">&nbsp;CREATE NOW</button></div>
-                    </div>
+                    </div><!-- End: neon-btn -->
                     <p data-aos="fade" data-aos-duration="800" data-aos-delay="2400" data-aos-once="true" class="p p-center-flex" style="z-index: 100;">b mccool</p>
                 </div>
                 <div class="col d-flex d-md-flex justify-content-center align-items-center align-self-center justify-content-md-center align-items-md-center" style="animation: 5s linear infinite bob;margin-top: 5vw;overflow: visible;opacity: 0.75;/*\: .1;*/">
@@ -211,6 +217,7 @@
             </div>
         </section>
         <section id="projects">
+            <!-- Start: web-portfolio-content -->
             <div data-aos="fade-up" data-aos-duration="750" data-aos-once="true" class="portfolio-content">
                 <div class="row g-0 row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1 row-cols-xxl-1" style="/*max-height: 200px;*//*overflow: visible!important;*/">
                     <div class="col" data-aos="fade" data-aos-duration="800" data-aos-once="true">
@@ -320,35 +327,34 @@
                     <hr class="justify-content-center" style="opacity: 0.25;width: 100%;/*margin: CALC(5PX+2.5VW) 0;*//*width: 85vw;*//*opacity: 100;*/height: 2px;background: VAR(--rainbow-gradient);/*-webkit-background-clip: text;*/-webkit-text-fill-color: transparent;background-size: 500% 500%;transition: gradient 500ms ease-in-out;-webkit-text-size-adjust: 100%;animation: gradient 5s ease infinite;">
                 </div>
                 <div class="col-12 text-end d-flex d-sm-flex flex-column justify-content-center align-items-center align-content-center justify-content-sm-center" style="padding: 2vw;overflow: visible!important;">
+                    <!-- Start: neon-btn -->
                     <div class="d-inline-flex flex-column justify-content-center align-items-xxl-center neon-btn-outline" style="margin: 2rem 2rem;font-size: .75rem!important;">
                         <div><a class="btn text-nowrap btn-neon-outline" role="button" href="https://github.com/m-ccool">&nbsp;VIEW FULL PORTFOLIO</a></div>
-                    </div>
+                    </div><!-- End: neon-btn -->
                 </div>
-            </div>
-        </section>
+            </div><!-- End: web-portfolio-content -->
+        </section><!-- Start: comet -->
         <div id="comet" class="div-comet">
             <div class="comet" style="/*transform: translate(1000px);*/"></div>
-        </div>
+        </div><!-- End: comet -->
         <section class="d-flex d-md-flex flex-column justify-content-center align-items-center align-items-xl-center" id="about" style="padding-bottom: 2rem;">
             <div data-aos="fade" data-aos-duration="800" data-aos-once="true">
                 <h2 class="text-center h2" id="web-portfolio-h">THE DEVELOPER<span class="meta-card-gradient">...</span>|</h2>
             </div>
-            <h1><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-brand-github-filled" style="margin-bottom: 1rem;">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M5.315 2.1c.791 -.113 1.9 .145 3.333 .966l.272 .161l.16 .1l.397 -.083a13.3 13.3 0 0 1 4.59 -.08l.456 .08l.396 .083l.161 -.1c1.385 -.84 2.487 -1.17 3.322 -1.148l.164 .008l.147 .017l.076 .014l.05 .011l.144 .047a1 1 0 0 1 .53 .514a5.2 5.2 0 0 1 .397 2.91l-.047 .267l-.046 .196l.123 .163c.574 .795 .93 1.728 1.03 2.707l.023 .295l.007 .272c0 3.855 -1.659 5.883 -4.644 6.68l-.245 .061l-.132 .029l.014 .161l.008 .157l.004 .365l-.002 .213l-.003 3.834a1 1 0 0 1 -.883 .993l-.117 .007h-6a1 1 0 0 1 -.993 -.883l-.007 -.117v-.734c-1.818 .26 -3.03 -.424 -4.11 -1.878l-.535 -.766c-.28 -.396 -.455 -.579 -.589 -.644l-.048 -.019a1 1 0 0 1 .564 -1.918c.642 .188 1.074 .568 1.57 1.239l.538 .769c.76 1.079 1.36 1.459 2.609 1.191l.001 -.678l-.018 -.168a5.03 5.03 0 0 1 -.021 -.824l.017 -.185l.019 -.12l-.108 -.024c-2.976 -.71 -4.703 -2.573 -4.875 -6.139l-.01 -.31l-.004 -.292a5.6 5.6 0 0 1 .908 -3.051l.152 -.222l.122 -.163l-.045 -.196a5.2 5.2 0 0 1 .145 -2.642l.1 -.282l.106 -.253a1 1 0 0 1 .529 -.514l.144 -.047l.154 -.03z" stroke-width="0" fill="currentColor"></path>
-                </svg></h1><div class="github calendar">
-  Loading your GitHub calendar...
-</div>
+            <div class="container" style="height: 15vh!important;"><div id="github-activity-feed"></div>
 
 <script>
-  GitHubCalendar(".calendar", "m-ccool", { responsive: true });
-</script>
+    GitHubActivity.feed({
+    username: "m-ccool",
+    selector: "#github-activity-feed"
+    });
+</script></div>
             <div class="row d-flex justify-content-center align-items-center mx-auto" style="width: 100%;padding: 0 5%;">
                 <div class="col-auto d-flex flex-column justify-content-start align-items-center justify-content-md-start align-items-xxl-center" data-aos="fade" data-aos-duration="800" data-aos-delay="400" data-aos-once="true" style="margin: 2REM;/*padding: 1rem;*//*width: 30%;*/">
-                    <div class="d-flex flex-row" style="overflow: hidden!important;"><a class="btn d-flex flex-column" role="button" href="https://www.linkedin.com/in/b-m-ccool/" rel="author"><i class="typcn typcn-social-linkedin icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-social-github icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-mortar-board icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="/resume.pdf"><i class="typcn typcn-business-card icon1 rainbow-gradient"></i></a></div>
+                    <div class="d-flex flex-row" style="overflow: hidden!important;"><a class="btn d-flex flex-column" role="button" href="https://www.linkedin.com/in/b-m-ccool/"><i class="typcn typcn-social-linkedin icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-social-github icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-mortar-board icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="/resume.pdf"><i class="typcn typcn-business-card icon1 rainbow-gradient"></i></a></div>
                     <ul class="list-unstyled">
-                        <li class="d-flex justify-content-center align-items-center"><a class="d-flex justify-content-center align-items-center justify-content-xl-center linkedin-link rainbow-gradient" id="linkedin-link" style="font-family: Dongle, sans-serif;font-weight: 700;letter-spacing: 2px;">&nbsp;<i class="typcn typcn-tick" style="font-size: .75rem;/*margin: 0!important;*/"></i>&nbsp;Software Engineer [MSU]</a></li>
-                        <li class="d-flex d-xl-flex justify-content-center justify-content-xl-center"><a id="linkedin-link" class="linkedin-link rainbow-gradient" style="font-family: Dongle, sans-serif;font-weight: 700;letter-spacing: 2px;"><i class="typcn typcn-tick-outline" style="font-size: .75rem;/*margin: 0!important;*/"></i>&nbsp;Security+ [COMPTIA]</a></li>
+                        <li class="d-flex justify-content-center align-items-center"><a class="stretched-link d-flex justify-content-center align-items-center justify-content-xl-center linkedin-link rainbow-gradient" id="linkedin-link" href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" style="font-family: Dongle, sans-serif;font-weight: 700;letter-spacing: 2px;">&nbsp;<i class="typcn typcn-tick" style="font-size: .75rem;/*margin: 0!important;*/"></i>&nbsp;Software Engineer [MSU]</a></li>
+                        <li class="d-flex d-xl-flex justify-content-center justify-content-xl-center"><a class="stretched-link linkedin-link rainbow-gradient" id="linkedin-link" href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" style="font-family: Dongle, sans-serif;font-weight: 700;letter-spacing: 2px;"><i class="typcn typcn-tick-outline" style="font-size: .75rem;/*margin: 0!important;*/"></i>&nbsp;Security+ [COMPTIA]</a></li>
                     </ul>
                 </div>
                 <div class="col-auto d-flex justify-content-center align-items-center" style="/*margin: 1REM;*//*padding: 1rem;*/">
@@ -413,6 +419,7 @@
         </section>
     </main>
     <footer class="d-flex flex-fill justify-content-center" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
+        <!-- Start: footer-info -->
         <div class="row footer-dark">
             <div class="col-sm-6 col-md-3 footer-item footer-col">
                 <h3 class="rainbow-gradient">Services</h3>
@@ -460,11 +467,11 @@
                         <path d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11"></path>
                         <path d="M9 7l4 0"></path>
                         <path d="M9 11l4 0"></path>
-                    </svg></a><a id="cashapp-icon" href="https://cash.app/$doxxus"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-brand-cashapp footer-icon">
+                    </svg></a><a id="linkedin-icon" href="https://cash.app/$doxxus"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-brand-cashapp footer-icon">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                         <path d="M17.1 8.648a.568 .568 0 0 1 -.761 .011a5.682 5.682 0 0 0 -3.659 -1.34c-1.102 0 -2.205 .363 -2.205 1.374c0 1.023 1.182 1.364 2.546 1.875c2.386 .796 4.363 1.796 4.363 4.137c0 2.545 -1.977 4.295 -5.204 4.488l-.295 1.364a.557 .557 0 0 1 -.546 .443h-2.034l-.102 -.011a.568 .568 0 0 1 -.432 -.67l.318 -1.444a7.432 7.432 0 0 1 -3.273 -1.784v-.011a.545 .545 0 0 1 0 -.773l1.137 -1.102c.214 -.2 .547 -.2 .761 0a5.495 5.495 0 0 0 3.852 1.5c1.478 0 2.466 -.625 2.466 -1.614c0 -.989 -1 -1.25 -2.886 -1.954c-2 -.716 -3.898 -1.728 -3.898 -4.091c0 -2.75 2.284 -4.091 4.989 -4.216l.284 -1.398a.545 .545 0 0 1 .545 -.432h2.023l.114 .012a.544 .544 0 0 1 .42 .647l-.307 1.557a8.528 8.528 0 0 1 2.818 1.58l.023 .022c.216 .228 .216 .569 0 .773l-1.057 1.057z"></path>
                     </svg></a></div>
-        </div>
+        </div><!-- End: footer-info -->
     </footer>
     <div class="modal fade scrollbar-hidden" role="dialog" tabindex="-1" id="contact" style="/*z-index: -100;*/">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -474,12 +481,13 @@
                         <h2 class="h2" style="/*font-size: 1REM;*/margin-left: 1REM;margin-top: 2rem;">CONTACT<br>DEV</h2><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body flex-column form">
+                        <!-- Start: notif -->
                         <div class="row" style="/*padding-bottom: 2rem;*/">
                             <div class="col d-flex flex-column justify-content-center align-items-center" style="/*padding: 1REM 0;*/">
                                 <p id="show_message" class="p-form-notice">sent!&nbsp; 🚀 we'll contact you in the next 24 hours!</p>
                                 <p id="error" class="p-form-notice">error! 🐛 please try again or email dev@doxxus.us</p>
                             </div>
-                        </div>
+                        </div><!-- End: notif -->
                         <div class="row row-cols-1" style="--bs-gutter-x: 0!important;">
                             <div class="col text-center d-flex flex-column align-items-center">
                                 <p class="modal-form-label" style="/*width: 400px;*/padding-bottom: 20px;font-size: .6rem;text-transform: none;">the senior dev will get back to you soon.&nbsp;&nbsp;<span class="rainbow-gradient" style="font-weight: bold;text-transform: uppers;">dev@doxxus.us</span></p>
@@ -530,7 +538,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>        <script type="text/javascript">
+                                    </div><!-- Start: AJAX-SCRIPT -->        <script type="text/javascript">
         $(document).ready(function($){
         // hide messages 
         $("#error").hide();
@@ -590,7 +598,7 @@
         return false;
         });
         </script>
-
+<!-- End: AJAX-SCRIPT -->
                                 </form>
                             </div>
                         </div>
@@ -603,6 +611,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/comet.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/scripts.js"></script>
 </body>
