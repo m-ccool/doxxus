@@ -4,6 +4,14 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ── Glass system variables ── */
+:root {
+  --glass-bg:      rgba(10,10,14,0.22);
+  --glass-blur:    blur(36px) brightness(78%) saturate(240%);
+  --glass-border:  1px solid rgba(255,255,255,0.04);
+  --glass-shadow:  0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
 /* root -end */
 
 /* navbar -start */
@@ -156,11 +164,12 @@ html {
   z-index: 999;
   padding: .25rem 0.75REM !important;
   transition: all .4s ease;
-  background-color: rgba(11,11,11,0.23);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  box-shadow: 0px 0px 20px 0px rgb(0,0,0);
-  border-bottom-right-radius: 25px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
+  border-radius: 0 0 var(--small-radius) var(--small-radius);
+  border-bottom: var(--glass-border);
 }
 
 @media (min-width:768px) {
@@ -177,9 +186,12 @@ footer {
   padding: 1rem calc(1rem + 5vw);
   /*padding-top: 2.5rem;*/
   overflow: hidden!important;
-  background-color: rgba(11,11,11,0.23)!important;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background: var(--glass-bg)!important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: var(--glass-border);
+  border-radius: var(--small-radius) var(--small-radius) 0 0;
+  box-shadow: var(--glass-shadow);
   font-family: Dongle, sans-serif;
   font-size: .75rem;
   color: white;
@@ -389,11 +401,107 @@ footer .footer-item.social > a:hover {
   border-radius: 25px;
 }
 
+/* begin panel */
+
+.begin-panel {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin: 2rem calc(10px + 6vw);
+  padding: 3rem 3.5rem;
+  border-radius: var(--medium-radius);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.begin-left {
+  flex: 1;
+}
+
+.begin-eyebrow {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 1rem;
+  font-family: 'Lexend Giga', sans-serif;
+}
+
+.begin-headline {
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.5rem;
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient 5s ease infinite;
+}
+
+.begin-sub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.begin-right {
+  flex-shrink: 0;
+}
+
+.begin-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.begin-stack span {
+  padding: 0.35rem 1rem;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: 'Lexend Giga', sans-serif;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.55);
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.begin-stack span:hover {
+  color: var(--teal);
+  border-color: var(--teal);
+}
+
+@media (max-width: 576px) {
+  .begin-panel {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    margin: 1rem 1rem;
+    gap: 2rem;
+  }
+  .begin-stack { align-items: flex-start; }
+}
+
+/* begin panel end */
+
 .colored-div {
-  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
-  background-color: var(--bs-body-bubble);
-  border-top-left-radius: 250px;
-  border-bottom-left-radius: 250px;
+  box-shadow: var(--glass-shadow);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--small-radius);
   padding: 0px;
   margin-left: 25px;
   justify-content: center!important;
@@ -401,10 +509,7 @@ footer .footer-item.social > a:hover {
 }
 
 .colored-div.colored-div-l {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: 250px;
-  border-bottom-right-radius: 250px;
+  border-radius: var(--small-radius);
   margin-left: 0;
   margin-right: 25px;
 }
@@ -854,7 +959,11 @@ h1 {
   position: relative;
   z-index: 5!important;
   border-radius: var(--small-radius);
-  background: var(--bs-body-color);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .h2, h2 {
@@ -973,8 +1082,8 @@ h1 {
 .work-carousel .content .item-img {
   background-repeat: no-repeat;
   overflow: hidden;
-  background-attachment: fixed;
-  background-size: 800px;
+  background-attachment: scroll;
+  background-size: cover;
   background-position: center;
   position: relative;
   /*height: 480px;*/
@@ -1067,9 +1176,12 @@ h1 {
   position: absolute;
   padding: 1rem 2rem;
   border-radius: 1rem 1rem 0rem 0rem!important;
-  background: var(--bs-body-color)!important;
-  backdrop-filter: blur;
-  -webkit-backdrop-filter: blur;
+  background: var(--glass-bg)!important;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-bottom: none;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
   bottom: 0;
   left: 50%;
   -webkit-transform: translateX(-50%);
@@ -1201,9 +1313,7 @@ body {
 .bubble-div {
   z-index: 2!important;
   position: relative;
-  /*backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);*/
-  background-color: var(--bs-body-color);
+  background-color: transparent;
   padding: 0px;
   justify-content: center!important;
   display: flex!important;
@@ -1767,10 +1877,11 @@ a {
   margin-right: calc(10px + 6vw);
   margin-bottom: calc(10px + 2vw);
   border-radius: 75px;
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
-  background-color: var(--bs-body-color);
-  box-shadow: 0px 14px 20px 2px rgba(0,0,0,0.25);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .inner, .outer, ::after, ::before {
