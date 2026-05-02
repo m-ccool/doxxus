@@ -198,6 +198,115 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   height: 26px;
 }
 
+/* ── GitHub Activity Feed – Dark Theme Overrides ── */
+
+.gha-container {
+  width: min(680px, 90vw);
+  max-height: 420px;
+  margin: 1.5rem auto 2rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.gha-feed {
+  background: #111113 !important;
+  border: none !important;
+  color: #dddddd !important;
+  font-family: inherit !important;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.gha-feed::-webkit-scrollbar { width: 4px; }
+.gha-feed::-webkit-scrollbar-track { background: #111113; }
+.gha-feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+
+.gha-header {
+  background: #111113 !important;
+  background: linear-gradient(to bottom, #1a1a1e 0%, #111113 100%) !important;
+  filter: none !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.gha-footer {
+  background: #111113 !important;
+  background: linear-gradient(to bottom, #111113 0%, #1a1a1e 100%) !important;
+  filter: none !important;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+  color: rgba(255,255,255,0.4) !important;
+}
+
+.gha-footer a {
+  color: rgba(255,255,255,0.4) !important;
+}
+
+.gha-user-info {
+  color: #dddddd !important;
+}
+
+.gha-user-info a {
+  color: #dddddd !important;
+}
+
+.gha-gravatar img {
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: none !important;
+}
+
+.gha-activity,
+.gha-repo {
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.gha-activity:last-child {
+  padding-bottom: 20px;
+}
+
+.gha-activity-icon .octicon {
+  color: rgba(255,255,255,0.25) !important;
+}
+
+.gha-feed a {
+  color: #57d7ff !important;
+}
+
+.gha-feed a:hover {
+  color: #8aff96 !important;
+}
+
+.gha-feed small {
+  color: rgba(255,255,255,0.45) !important;
+}
+
+.gha-time,
+span.gha-time {
+  color: rgba(255,255,255,0.3) !important;
+}
+
+.gha-feed pre {
+  background: rgba(255,255,255,0.05) !important;
+  box-shadow: none !important;
+  border-radius: 4px !important;
+}
+
+.gha-message-merge {
+  background: rgba(138,255,150,0.12) !important;
+  color: #8aff96 !important;
+}
+
+.gha-info {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: rgba(255,255,255,0.5) !important;
+}
+
+.gha-github-icon {
+  color: rgba(255,255,255,0.3) !important;
+}
+
+
 .left.text-muted {
   float: left;
   margin-left: 9px;

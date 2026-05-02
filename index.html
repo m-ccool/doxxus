@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="assets/css/particle.compiled.css">
     <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="https://unpkg.com/github-activity-feed@latest/dist/github-activity.min.css">
+    <link rel="stylesheet" href="assets/css/github-plugin.css">
 <script type="text/javascript" src="https://unpkg.com/mustache@4.2.0/mustache.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/github-activity-feed@latest/dist/github-activity.min.js"></script>
 </head>
@@ -322,14 +323,12 @@
             <div data-aos="fade" data-aos-duration="800" data-aos-once="true">
                 <h2 class="text-center h2" id="web-portfolio-h">THE DEVELOPER<span class="meta-card-gradient">...</span>|</h2>
             </div>
-            <div class="container" style="height: 15vh!important;"><div id="github-activity-feed"></div>
-
-<script>
-    GitHubActivity.feed({
-    username: "m-ccool",
-    selector: "#github-activity-feed"
-    });
-</script></div>
+            <div class="gha-container">
+                <div id="github-activity-feed"></div>
+            </div>
+            <script>
+                GitHubActivity.feed({ username: "m-ccool", selector: "#github-activity-feed" });
+            </script>
             <div class="row d-flex justify-content-center align-items-center mx-auto" style="width: 100%;padding: 0 5%;">
                 <div class="col-auto d-flex flex-column justify-content-start align-items-center justify-content-md-start align-items-xxl-center" data-aos="fade" data-aos-duration="800" data-aos-delay="400" data-aos-once="true" style="margin: 2REM;/*padding: 1rem;*//*width: 30%;*/">
                     <div class="d-flex flex-row" style="overflow: hidden!important;"><a class="btn d-flex flex-column" role="button" href="https://www.linkedin.com/in/b-m-ccool/"><i class="typcn typcn-social-linkedin icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-social-github icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-mortar-board icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="/resume.pdf"><i class="typcn typcn-business-card icon1 rainbow-gradient"></i></a></div>
