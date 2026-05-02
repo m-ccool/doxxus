@@ -202,7 +202,7 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
 
 .gha-container {
   width: min(680px, 90vw);
-  max-height: 420px;
+  max-height: 500px;
   margin: 1.5rem auto 2rem;
   border-radius: 12px;
   overflow: hidden;
@@ -215,7 +215,7 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   border: none !important;
   color: #dddddd !important;
   font-family: inherit !important;
-  max-height: 420px;
+  max-height: 500px;
   overflow-y: auto;
 }
 
