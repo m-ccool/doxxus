@@ -628,6 +628,11 @@ footer .footer-item.social > a:hover {
     margin: 1rem 1rem;
     gap: 2rem;
   }
+  .begin-right {
+    width: 100%;
+    flex: 0 0 220px;
+    max-height: 220px;
+  }
   .begin-stack { align-items: flex-start; }
 }
 
