@@ -6,12 +6,12 @@
   --color-calendar-graph-day-L4-bg: #0a4208;
 
   /* Glass system — must match style.css */
-  --glass-bg:     rgba(255,255,255,0.055);
-  --glass-blur:   blur(24px) brightness(105%);
-  --glass-border: 1px solid rgba(255,255,255,0.14);
+  --glass-bg:     rgba(255,255,255,0.018);
+  --glass-blur:   blur(12px) saturate(120%);
+  --glass-border: 1px solid rgba(255,255,255,0.10);
   --glass-shadow:
     0 8px 48px rgba(0,0,0,0.55),
-    inset 0 1.5px 0 rgba(255,255,255,0.65),
+    inset 0 1px 0 rgba(255,255,255,0.32),
     inset 0 -1px 0 rgba(0,0,0,0.28);
   /* Neutral dark header — no color filters to avoid blue tint */
   --glass-header-bg: rgba(6,6,6,0.88);

@@ -59,6 +59,7 @@
         <!-- Stage 2: Floating monitor with projected light -->
         <div id="splash-screen" class="splash-hidden">
             <div class="splash-floor-glow"></div>
+            <div class="splash-horizon"></div>
             <div class="splash-monitor-rig">
                 <div class="splash-monitor-frame">
                     <canvas id="splash-snow" aria-hidden="true"></canvas>
@@ -413,12 +414,7 @@
             </div>
         </section>
     </main>
-    <div class="floating-icons" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
-        <a href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" aria-label="LinkedIn"><i class="typcn typcn-social-linkedin"></i></a>
-        <a href="https://github.com/m-ccool" target="_blank" aria-label="GitHub"><i class="typcn typcn-social-github"></i></a>
-        <a href="mailto:dev@doxxus.dev" aria-label="Email"><i class="typcn typcn-mail"></i></a>
-        <a href="https://cash.app/$doxxus" target="_blank" aria-label="CashApp"><i class="typcn typcn-credit-card"></i></a>
-    </div>
+   
     <footer class="d-flex flex-fill justify-content-center" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
         <div class="footer-inner">
             <div class="footer-cols">
@@ -646,14 +642,28 @@
         snowCanvas.width  = W;
         snowCanvas.height = H;
         function tick() {
-          var img = ctx.createImageData(W, H);
-          var d   = img.data;
-          for (var i = 0; i < d.length; i += 4) {
-            var v = Math.random() < 0.45
-              ? Math.floor(Math.random() * 22)
-              : Math.floor(Math.random() * 160 + 30);
-            d[i] = d[i+1] = d[i+2] = v;
-            d[i+3] = 255;
+          var img  = ctx.createImageData(W, H);
+          var d    = img.data;
+          var shft = 3;
+          /* generate flat noise: 80% bright-white, 20% dark flecks */
+          var noise = new Float32Array(W * H);
+          for (var p = 0; p < noise.length; p++) {
+            noise[p] = Math.random() < 0.20
+              ? Math.random() * 16
+              : Math.random() * 58 + 197;
+          }
+          /* assemble with RGB channel offset — chroma warp */
+          for (var y = 0; y < H; y++) {
+            for (var x = 0; x < W; x++) {
+              var i  = (y * W + x) * 4;
+              var rp = y * W + (x >= shft     ? x - shft     : 0);
+              var gp = y * W + x;
+              var bp = y * W + (x + shft < W  ? x + shft     : W - 1);
+              d[i]   = noise[rp];
+              d[i+1] = noise[gp];
+              d[i+2] = noise[bp];
+              d[i+3] = 255;
+            }
           }
           ctx.putImageData(img, 0, 0);
           rafId = requestAnimationFrame(tick);
