@@ -4,12 +4,40 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ── Glass system variables ── */
+/* ── Glass system variables — Liquid Glass Pro Max ref ── */
 :root {
-  --glass-bg:      rgba(10,10,14,0.14);
-  --glass-blur:    blur(36px) brightness(72%) saturate(260%);
-  --glass-border:  1px solid rgba(255,255,255,0.04);
-  --glass-shadow:  0 8px 48px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+  /* Near-invisible fill: background (starfield/comets) shows through fully */
+  --glass-bg:      rgba(255,255,255,0.028);
+
+  /* Brightening blur: glass slightly luminises what's behind it */
+  --glass-blur:    blur(60px) brightness(108%) saturate(130%);
+
+  /* Visible edge — slightly stronger than before for glass definition */
+  --glass-border:  1px solid rgba(255,255,255,0.13);
+
+  /* Layered shadow:
+     1. outer depth            — dark
+     2. prismatic pink rim     — faint iridescent ring (liquid glass edge)
+     3. prismatic teal rim     — second wider iridescent ring
+     4. specular top catchlight— the defining 'glass edge' highlight
+     5. bottom depth           — adds material thickness
+     6. side specular          — subtle left-edge light
+     7. inner ambient glow     — very faint interior depth
+  */
+  --glass-shadow:
+    0 8px 56px rgba(0,0,0,0.52),
+    0 0 0 0.5px rgba(255,138,180,0.2),
+    0 0 0 1.5px rgba(87,215,255,0.08),
+    inset 0 1.5px 0 rgba(255,255,255,0.75),
+    inset 0 -1px 0 rgba(0,0,0,0.45),
+    inset 1px 0 0 rgba(255,255,255,0.1),
+    inset 0 0 80px rgba(160,138,255,0.02);
+
+  /* Navbar/sticky-header needs more opacity to remain readable */
+  --glass-nav-bg:  rgba(6,6,8,0.68);
+
+  /* Dense header for scrolling-content panels (activity feed) */
+  --glass-header-bg: rgba(6,6,6,0.88);
 }
 
 /* root -end */
@@ -164,7 +192,8 @@ html {
   z-index: 999;
   padding: .25rem 0.75REM !important;
   transition: all .4s ease;
-  background: var(--glass-bg);
+  /* Navbar uses opaque nav var — not the see-through panel var */
+  background: var(--glass-nav-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   box-shadow: var(--glass-shadow);
@@ -186,7 +215,7 @@ footer {
   padding: 1rem calc(1rem + 5vw);
   /*padding-top: 2.5rem;*/
   overflow: hidden!important;
-  background: var(--glass-bg)!important;
+  background: var(--glass-nav-bg)!important;
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
   border-top: var(--glass-border);

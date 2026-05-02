@@ -41,6 +41,13 @@ assets/
 - Dark theme: `--bs-body-color: #0d0d0e`, `--bs-body-bg: #0f0f10`
 - Contact form posts to `https://doxxus.dev/ajax-form-store.php`
 
+## Style References for Agents
+- Liquid Glass Pro Max - https://codepen.io/fand/pen/azmPjqd
+- Liquid Glass - https://codepen.io/toi-nagasawa/pen/wBzWebb
+- Liquid Metal - https://codepen.io/Majoramari/pen/pvbzpoa
+- NEW SPLASH - Screen Lght - https://codepen.io/toi-nagasawa/pen/OPRBwOd
+
+
 ## Contact
 
 **dev@doxxus.dev** · [linkedin](https://www.linkedin.com/in/b-m-ccool/) · [github](https://github.com/m-ccool)

@@ -115,3 +115,15 @@ For governance/rule changes, use this commit structure:
 ## Compliance Gate
 
 - If an answer would violate scope, formatting, data policy, or README binding, stop and ask one concise clarification question instead of proceeding.
+
+
+
+
+
+
+
+## Online References for Agents
+- Liquid Glass Pro Max - https://codepen.io/fand/pen/azmPjqd
+- Liquid Glass - https://codepen.io/toi-nagasawa/pen/wBzWebb
+- Liquid Metal - https://codepen.io/Majoramari/pen/pvbzpoa
+- NEW SPLASH - Screen Lght - https://codepen.io/toi-nagasawa/pen/OPRBwOd
