@@ -326,17 +326,50 @@ footer .footer-item.social > a:hover {
 
 /* modal start */
 
+/* PHP submission responses — hidden by default, shown by jQuery on success/error */
+#show_message,
+#error {
+  display: none;
+  font-family: Dongle, sans-serif;
+  font-size: clamp(0.8rem, 0.7rem + 0.4vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  padding: 0.4rem 1rem;
+  border-radius: 100vw;
+  margin-bottom: 0.5rem;
+}
+
+#show_message {
+  color: var(--green);
+  background: rgba(138,255,150,0.08);
+  border: 1px solid rgba(138,255,150,0.2);
+}
+
+#error {
+  color: var(--pink);
+  background: rgba(255,138,180,0.08);
+  border: 1px solid rgba(255,138,180,0.2);
+}
+
 .modal-content {
   /*border: #000000;*/
   position: relative;
   flex-direction: column;
   width: 100%;
   pointer-events: auto;
-  background-color: var(--bs-body-color);
+  background: rgba(6,6,8,0.72);
+  backdrop-filter: blur(60px) brightness(108%) saturate(130%);
+  -webkit-backdrop-filter: blur(60px) brightness(108%) saturate(130%);
   background-clip: padding-box;
   border-radius: 3rem;
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255,255,255,0.13);
+  box-shadow:
+    0 24px 80px rgba(0,0,0,0.65),
+    0 0 0 0.5px rgba(255,138,180,0.18),
+    0 0 0 1.5px rgba(87,215,255,0.07),
+    inset 0 1.5px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.45);
   display: flex;
 }
 
@@ -3269,5 +3302,238 @@ button.swiper-pagination-bullet {
 
 .nav-item {
   margin: 0!important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPLASH OVERLAY
+   Stage 1: loader  |  Stage 2: CRT snow  |  Stage 3: login
+   ═══════════════════════════════════════════════════════ */
+
+#splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#splash-overlay.splash-dismiss {
+  animation: splash-fade-out 0.6s ease forwards;
+}
+
+@keyframes splash-fade-out {
+  to { opacity: 0; pointer-events: none; }
+}
+
+.splash-hidden {
+  display: none !important;
+}
+
+.splash-fade-out {
+  animation: splash-fade-out 0.32s ease forwards;
+}
+
+/* ── Stage 1: Loader ─────────────────────────────────── */
+
+#splash-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.splash-bar-track {
+  width: clamp(160px, 40vw, 360px);
+  height: 4px;
+  border-radius: 100vw;
+  background: rgba(255,255,255,0.07);
+  overflow: hidden;
+  position: relative;
+}
+
+.splash-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 100vw;
+  background: linear-gradient(-45deg, var(--pink), var(--indigo), var(--purple), var(--teal), var(--green));
+  background-size: 300% 300%;
+  animation: gradient 1.4s ease infinite;
+  transition: width 0.05s linear;
+  box-shadow: 0 0 12px rgba(87,215,255,0.5);
+}
+
+/* ── Stage 2: CRT Screen ─────────────────────────────── */
+
+#splash-screen {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#splash-snow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.32;
+}
+
+.splash-crt-frame {
+  position: relative;
+  z-index: 2;
+  width: clamp(260px, 55vw, 540px);
+  aspect-ratio: 4 / 3;
+  border-radius: clamp(12px, 2vw, 24px);
+  border: 2px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.025);
+  backdrop-filter: blur(60px) brightness(108%) saturate(130%);
+  -webkit-backdrop-filter: blur(60px) brightness(108%) saturate(130%);
+  box-shadow:
+    0 0 80px rgba(0,0,0,0.8),
+    0 0 0 0.5px rgba(255,138,180,0.2),
+    0 0 0 1.5px rgba(87,215,255,0.08),
+    inset 0 1.5px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.5);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CRT scanlines overlay */
+.splash-crt-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.18) 2px,
+    rgba(0,0,0,0.18) 4px
+  );
+  z-index: 1;
+}
+
+.splash-crt-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  user-select: none;
+}
+
+.splash-create-label {
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: clamp(0.6rem, 1.2vw + 0.5rem, 1.4rem);
+  letter-spacing: clamp(0.3em, 0.8vw + 0.2em, 0.9em);
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 0 18px rgba(255,255,255,0.35);
+  animation: pulse-fade 3s ease-in-out infinite;
+}
+
+/* ── Stage 3: Login Gate ─────────────────────────────── */
+
+#splash-login {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: splash-fade-in 0.4s ease;
+}
+
+@keyframes splash-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.splash-login-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: clamp(220px, 60vw, 320px);
+}
+
+.splash-login-mark {
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.25);
+  margin-bottom: 0.5rem;
+  user-select: none;
+}
+
+.splash-field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  border-radius: 0;
+  color: rgba(255,255,255,0.85);
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: clamp(0.45rem, 0.5vw + 0.3rem, 0.7rem);
+  letter-spacing: 0.25em;
+  padding: 0.6rem 0.2rem;
+  outline: none;
+  transition: border-color 250ms ease;
+}
+
+.splash-field::placeholder {
+  color: rgba(255,255,255,0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+.splash-field:focus {
+  border-bottom-color: rgba(255,255,255,0.45);
+}
+
+.splash-enter-btn {
+  margin-top: 0.75rem;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100vw;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: clamp(0.4rem, 0.4vw + 0.25rem, 0.6rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 0.55rem 2rem;
+  cursor: pointer;
+  transition: all 300ms ease;
+}
+
+.splash-enter-btn:not(:disabled) {
+  border-color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.9);
+  box-shadow:
+    0 0 0 0.5px rgba(255,138,180,0.25),
+    0 0 0 1.5px rgba(87,215,255,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.splash-enter-btn:not(:disabled):hover {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.splash-enter-btn:disabled {
+  cursor: default;
+  opacity: 0.35;
 }
 

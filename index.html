@@ -43,6 +43,43 @@
 </head>
 
 <body class="scrollbar-hidden FADE">
+
+    <!-- ═══════════════════════════════════════════════════════
+         SPLASH OVERLAY
+         Flow: #splash-loader → #splash-screen → #splash-login → site
+         ═══════════════════════════════════════════════════════ -->
+    <div id="splash-overlay">
+
+        <!-- Stage 1: Rainbow bar loader -->
+        <div id="splash-loader">
+            <div class="splash-bar-track">
+                <div class="splash-bar-fill" id="splash-bar-fill"></div>
+            </div>
+        </div>
+
+        <!-- Stage 2: CRT screen with static snow + CREATE NOW -->
+        <div id="splash-screen" class="splash-hidden">
+            <canvas id="splash-snow" aria-hidden="true"></canvas>
+            <div class="splash-crt-frame">
+                <div class="splash-crt-scanlines"></div>
+                <div class="splash-crt-content">
+                    <span class="splash-create-label">create now</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage 3: Login gate -->
+        <div id="splash-login" class="splash-hidden">
+            <div class="splash-login-inner">
+                <span class="splash-login-mark">?</span>
+                <input type="text"        id="splash-name"  class="splash-field" placeholder="name"  autocomplete="off">
+                <input type="password"    id="splash-token" class="splash-field" placeholder="token" autocomplete="off">
+                <button id="splash-enter" class="splash-enter-btn" disabled>enter</button>
+            </div>
+        </div>
+
+    </div><!-- /splash-overlay -->
+
     <div class="cursor-outer"></div>
     <div class="cursor-inner"></div>
     <nav class="navbar navbar-expand-md">
@@ -542,10 +579,12 @@
         $.ajax({
         type:"POST",
         url: "https://doxxus.dev/ajax-form-store.php",
-        data: $(this).serialize(), // get all form field value in serialize form
+        data: $(this).serialize(),
         success: function(){
-        $("#show_message").fadeIn();
-        //$("#ajax-form").fadeOut();
+          $("#show_message").fadeIn();
+        },
+        error: function(){
+          $("#error").fadeIn();
         }
         });
         });  
@@ -568,6 +607,102 @@
     <script src="assets/js/comet.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/scripts.js"></script>
+
+    <!-- ════════════ SPLASH CONTROLLER ════════════ -->
+    <script>
+    (function () {
+      'use strict';
+
+      var overlay    = document.getElementById('splash-overlay');
+      var loader     = document.getElementById('splash-loader');
+      var barFill    = document.getElementById('splash-bar-fill');
+      var screen     = document.getElementById('splash-screen');
+      var login      = document.getElementById('splash-login');
+      var nameField  = document.getElementById('splash-name');
+      var tokenField = document.getElementById('splash-token');
+      var enterBtn   = document.getElementById('splash-enter');
+      var snowCanvas = document.getElementById('splash-snow');
+
+      // ─── Snow canvas ───────────────────────────────────────
+      function initSnow() {
+        var ctx = snowCanvas.getContext('2d');
+        function resize() {
+          snowCanvas.width  = window.innerWidth;
+          snowCanvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        (function tick() {
+          if (!snowCanvas.parentElement || snowCanvas.parentElement.classList.contains('splash-hidden')) return;
+          var id = ctx.createImageData(snowCanvas.width, snowCanvas.height);
+          for (var i = 0; i < id.data.length; i += 4) {
+            var v = Math.random() > 0.5 ? Math.floor(Math.random() * 60 + 5) : 0;
+            id.data[i] = id.data[i+1] = id.data[i+2] = v;
+            id.data[i+3] = 255;
+          }
+          ctx.putImageData(id, 0, 0);
+          requestAnimationFrame(tick);
+        })();
+      }
+
+      // ─── Stage 1 → Stage 2 ─────────────────────────────────
+      function runLoader() {
+        var start = performance.now();
+        var dur   = 1400; // ms
+        function step(now) {
+          var pct = Math.min((now - start) / dur, 1);
+          barFill.style.width = (pct * 100) + '%';
+          if (pct < 1) { requestAnimationFrame(step); }
+          else         { showScreen(); }
+        }
+        requestAnimationFrame(step);
+      }
+
+      function showScreen() {
+        loader.classList.add('splash-hidden');
+        screen.classList.remove('splash-hidden');
+        initSnow();
+        screen.addEventListener('click', showLogin, { once: true });
+        screen.addEventListener('touchend', showLogin, { once: true });
+      }
+
+      // ─── Stage 2 → Stage 3 ─────────────────────────────────
+      function showLogin() {
+        screen.classList.add('splash-fade-out');
+        setTimeout(function () {
+          screen.classList.add('splash-hidden');
+          screen.classList.remove('splash-fade-out');
+          login.classList.remove('splash-hidden');
+          setTimeout(function () { nameField.focus(); }, 80);
+        }, 320);
+      }
+
+      // ─── Enable button when any text is typed ─────────────
+      function checkFields() {
+        enterBtn.disabled = (nameField.value.length === 0 && tokenField.value.length === 0);
+      }
+      nameField.addEventListener('input', checkFields);
+      tokenField.addEventListener('input', checkFields);
+
+      // ─── Stage 3 → Site ────────────────────────────────────
+      function dismissSplash() {
+        overlay.classList.add('splash-dismiss');
+        setTimeout(function () {
+          overlay.style.display = 'none';
+        }, 600);
+      }
+      enterBtn.addEventListener('click', dismissSplash);
+      tokenField.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !enterBtn.disabled) dismissSplash();
+      });
+      nameField.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !enterBtn.disabled) dismissSplash();
+      });
+
+      // ─── Boot ───────────────────────────────────────────────
+      runLoader();
+    })();
+    </script>
 </body>
 
 </html>
