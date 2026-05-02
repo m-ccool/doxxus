@@ -198,6 +198,92 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   height: 26px;
 }
 
+/* ── GitHub Calendar Grid – Dark Theme Overrides ── */
+
+.cal-container {
+  width: min(820px, 92vw);
+  margin: 0.75rem auto 0.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: #111113;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.calendar {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: rgba(255,255,255,0.55) !important;
+  font-size: 0.75rem;
+  overflow: hidden;
+}
+
+.calendar svg,
+.js-calendar-graph-svg {
+  width: 100% !important;
+  height: auto !important;
+}
+
+.js-yearly-contributions {
+  overflow: hidden !important;
+}
+
+.js-calendar-graph > div:first-child {
+  overflow: hidden !important;
+}
+
+.ContributionCalendar-grid {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+/* Override light default colors on SVG rects */
+rect.ContributionCalendar-day[data-level="0"] { fill: var(--color-calendar-graph-day-bg) !important; }
+rect.ContributionCalendar-day[data-level="1"] { fill: var(--color-calendar-graph-day-L1-bg) !important; }
+rect.ContributionCalendar-day[data-level="2"] { fill: var(--color-calendar-graph-day-L2-bg) !important; }
+rect.ContributionCalendar-day[data-level="3"] { fill: var(--color-calendar-graph-day-L3-bg) !important; }
+rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph-day-L4-bg) !important; }
+
+/* Calendar text and labels */
+.calendar-graph text,
+.js-calendar-graph text {
+  fill: rgba(255,255,255,0.4) !important;
+}
+
+/* "276 contributions in the last year" summary bar */
+.js-yearly-contributions h2,
+.js-yearly-contributions h3 {
+  color: rgba(255,255,255,0.65) !important;
+  font-size: 0.85rem !important;
+  font-weight: 400 !important;
+}
+
+/* Hover tooltip */
+.day-tooltip {
+  background: #1e1e22 !important;
+  color: #dddddd !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 6px !important;
+  font-size: 0.75rem !important;
+}
+
+/* "Learn how we count contributions" footer row */
+.contrib-footer {
+  color: rgba(255,255,255,0.3) !important;
+}
+
+.contrib-footer a {
+  color: #57d7ff !important;
+}
+
+/* Legend squares */
+.legend li {
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
 /* ── GitHub Activity Feed – Dark Theme Overrides ── */
 
 .gha-container {
