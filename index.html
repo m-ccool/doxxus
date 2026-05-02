@@ -44,6 +44,11 @@
 
 <body class="scrollbar-hidden FADE">
 
+    <!-- SPLASH -->
+    <div id="splash-overlay">
+        <div class="splash-bar-track"><div class="splash-bar-fill" id="splash-bar-fill"></div></div>
+    </div>
+
     <div class="cursor-outer"></div>
     <div class="cursor-inner"></div>
     <nav class="navbar navbar-expand-md">
@@ -566,6 +571,24 @@
     <script src="assets/js/comet.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/scripts.js"></script>
+    <script>
+    (function(){
+        var fill = document.getElementById('splash-bar-fill');
+        var overlay = document.getElementById('splash-overlay');
+        var startTime = Date.now();
+        requestAnimationFrame(function(){ fill.style.width = '100%'; });
+        function dismiss() {
+            var elapsed = Date.now() - startTime;
+            var remaining = Math.max(1050 - elapsed, 0);
+            setTimeout(function(){
+                overlay.classList.add('splash-done');
+                setTimeout(function(){ overlay.remove(); }, 700);
+            }, remaining);
+        }
+        if (document.readyState === 'complete') { dismiss(); }
+        else { window.addEventListener('load', dismiss); }
+    })();
+    </script>
 
 </body>
 

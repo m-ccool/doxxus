@@ -233,6 +233,19 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   overflow: hidden;
 }
 
+.gha-container {
+  width: min(820px, 92vw);
+  margin: 0.75rem auto 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+
 .calendar {
   background: transparent !important;
   border: none !important;
