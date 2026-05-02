@@ -52,33 +52,35 @@
     <div class="cursor-outer"></div>
     <div class="cursor-inner"></div>
     <nav class="navbar navbar-expand-md">
-        <div class="container-fluid">
-            <div class="row row-cols-3 d-flex flex-grow-1 flex-fill justify-content-evenly align-items-center flex-nowrap" style="/*margin-left: -1PX;*/overflow: visible;">
-                <div class="col-auto d-flex flex-nowrap order-1 align-items-xl-center" id="brand-name">
-                    <div class="align-items-xl-center"><a class="navbar-brand d-flex flex-shrink-1 flex-nowrap flex-sm-shrink-1 flex-md-shrink-1 align-items-xxl-center" href="#" style="/*padding-left: 5px;*/"><img src="assets/img/logo-gr.png" style="/*margin-right: 10PX;*//*image-source: logo-gr.png;*//*padding: 3px 8px 0px 0px;*/width: calc(1.5rem + .2vw);/*margin: 0 1rem;*//*animation: hueRotate 5s linear infinite;*/"></a></div>
-                </div>
-                <div class="col-auto d-flex flex-grow-1 flex-shrink-1 justify-content-center flex-nowrap order-2 align-items-lg-center" id="col-contact-dev-btn-1" style="overflow: visible;">
-                    <div class="justify-content-lg-center align-items-lg-center neon-btn-outline">
-                        <div><button class="btn text-center d-flex flex-row nav-btn bgn-btn" style="/*padding: 0;*/" type="button" data-bs-toggle="modal" data-bs-target="#contact">CONTACT DEV</button></div>
-                    </div>
-                </div>
-                <div class="col-auto col-lg-3 text-end d-flex d-sm-flex flex-shrink-1 justify-content-end order-4 justify-content-sm-end nav-toggler-col"><button data-bs-toggle="collapse" class="navbar-toggler justify-content-end align-self-end" data-bs-target="#navcol-2" style="filter: brightness(1000%);opacity: 1;color: rgba(0,0,0,0);border-style: none;/*padding-left: 25PX;*/"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon" style="/*font-size: .75em;*//*border-radius: 100vw;*//*margin-left: 5px;*/color: #f0f9ff;/*height: 30px;*//*letter-spacing: calc(0.05em + .25vw);*//*font-family: Kanit, sans-serif;*//*padding-left: calc(0.5em + 1.5vw);*//*padding-bottom: calc(0.05em + .25vw);*//*padding-right: calc(0.5em + 1.5vw);*//*padding-top: calc(0.05em + .25vw);*//*background: linear-gradient(to right, var(--bs-pink) 0%, var(--bs-purple) 50%, var(--bs-cyan) 100%);*//*-webkit-background-clip: text;*//*-webkit-text-fill-color: transparent;*//*border: 2.5px solid var(--bs-light);*/transition: all 0.5s;/*-webkit-smoothing: antialiased;*/width: 0px;"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none">
-                                <path d="M20 12H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg></span></button></div>
-            </div>
-            <div class="row g-0 d-flex align-items-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center" style="width: 500px;">
-                <div class="col d-flex flex-shrink-1 flex-fill invisible" style="width: 191px;height: 0;">
-                    <header></header>
-                </div>
-                <div class="col offset-sm-2 d-flex float-end flex-shrink-1 flex-fill flex-nowrap" style="/*width: 151.672px;*//*padding-right: 18px;*/">
-                    <div class="collapse navbar-collapse text-end d-lg-flex justify-content-end" id="navcol-2" style="font-family: Dongle, sans-serif;position: relative;/*padding-right: 15px;*/">
-                        <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center" style="/*font-size: 18px;*//*color: var(--bs-pink);*/">
-                            <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#splash" target="_parent" title="Home"><i class="typcn typcn-home-outline nav-link-icon" style="font-size: 1.2rem;"></i></a></li>
-                            <li class="nav-item d-flex justify-content-center align-items-center"><a class="nav-link d-flex justify-content-center align-items-center justify-content-lg-end align-items-lg-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#about" title="About"><i class="typcn typcn-business-card nav-link-icon"></i></a></li>
-                            <li class="nav-item d-flex justify-content-center align-items-center"><a class="nav-link d-flex justify-content-center align-items-center justify-content-lg-end align-items-lg-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#projects" title="Projects"><i class="typcn typcn-folder-open nav-link-icon"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="container-fluid px-3 position-relative">
+            <!-- Brand (left) -->
+            <a class="navbar-brand" href="#">
+                <img src="assets/img/logo-gr.png" style="width: calc(1.5rem + .2vw);">
+            </a>
+
+            <!-- Last-online: absolutely centered on desktop, hidden on mobile -->
+            <span class="last-online d-none d-md-block position-absolute start-50 translate-middle-x" id="last-online-nav">last online &mdash;</span>
+
+            <!-- Toggler (right, auto-hidden at md+ by Bootstrap) -->
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navcol-2"
+                style="border: none; filter: brightness(1000%); box-shadow: none;">
+                <span class="navbar-toggler-icon" style="color: #f0f9ff;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none">
+                        <path d="M20 12H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </span>
+            </button>
+
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse justify-content-end" id="navcol-2" style="font-family: Dongle, sans-serif;">
+                <!-- Last-online centered on mobile only (inside collapse) -->
+                <span class="last-online d-flex d-md-none justify-content-center w-100 py-1" id="last-online-mobile">last online &mdash;</span>
+                <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center gap-1">
+                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#splash" target="_parent" title="Home"><i class="typcn typcn-home-outline nav-link-icon" style="font-size: 1.2rem;"></i></a></li>
+                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#about" title="About"><i class="typcn typcn-business-card nav-link-icon"></i></a></li>
+                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#projects" title="Projects"><i class="typcn typcn-folder-open nav-link-icon"></i></a></li>
+                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contact" title="Contact"><i class="typcn typcn-mail nav-link-icon"></i></a></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -105,10 +107,9 @@
                         </div>
                         <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient">WEB DEVelopER</h2><span data-aos="fade" data-aos-duration="800" data-aos-delay="1200" data-aos-once="true" class="h2" style="/*opacity: 0.50;*/font-size: .7rem;color: whitesmoke!important;">CREATING WEBSPACES</span>
                     </div><!-- Start: neon-btn -->
-                    <div data-aos="fade-up" data-aos-duration="1200" data-aos-delay="1800" class="neon-btn-outline" style="margin: 2.5rem;">
-                        <div><button class="btn btn-primary text-nowrap btn-neon-outline" type="button" data-bs-target="#contact" data-bs-toggle="modal">&nbsp;CREATE NOW</button></div>
-                    </div><!-- End: neon-btn -->
+<!-- End: neon-btn -->
                     <p data-aos="fade" data-aos-duration="800" data-aos-delay="2400" data-aos-once="true" class="p p-center-flex" style="z-index: 100;">b mccool</p>
+                    <span class="last-online" id="last-online-splash" data-aos="fade" data-aos-duration="800" data-aos-delay="2800" data-aos-once="true">last online &mdash;</span>
                 </div>
                 <div class="col d-flex d-md-flex justify-content-center align-items-center align-self-center justify-content-md-center align-items-md-center" style="animation: 5s linear infinite bob;margin-top: 5vw;overflow: visible;opacity: 0.75;/*\: .1;*/">
                     <div data-aos="zoom-out-down" data-aos-duration="1200" data-aos-delay="300" id="globe-container">
@@ -119,7 +120,7 @@
             </div>
             <div class="row" id="explore-anim">
                 <div class="col text-center d-inline-flex justify-content-center"><a data-aos="fade-down" data-aos-duration="800" data-aos-delay="2600" data-aos-once="true" href="#projects" style="z-index: 10!important;">
-                        <div id="scroll-down-icon" class="scroll-down-icon" style="text-shadow: 0px 0px 10px var(--bs-body-bubble);padding: 5rem 0 10px;"><i class="fas fa-angle-down d-flex d-lg-flex justify-content-center align-items-center icon-scroll-down icon-scroll-down-arrow1"></i><i class="fas fa-angle-down d-flex d-lg-flex justify-content-center align-items-center icon-scroll-down icon-scroll-down-arrow1" style="animation-delay: 100ms;"></i><i class="fas fa-angle-down d-flex d-lg-flex justify-content-center align-items-center icon-scroll-down icon-scroll-down-arrow1" style="animation-delay: 200ms;"></i>
+                        <div id="scroll-down-icon" class="scroll-down-icon" style="padding: 5rem 0 10px;"><i class="fas fa-chevron-down icon-scroll-down icon-scroll-down-arrow1"></i><i class="fas fa-chevron-down icon-scroll-down icon-scroll-down-arrow1" style="animation-delay: -667ms;"></i><i class="fas fa-chevron-down icon-scroll-down icon-scroll-down-arrow1" style="animation-delay: -1333ms;"></i>
                             <h2 class="text-nowrap p p-explore" id="splash-p-4">&nbsp;explore</h2>
                         </div>
                     </a></div>
@@ -130,19 +131,49 @@
                 <div class="begin-left">
                     <span class="begin-eyebrow">Certified Developer</span>
                     <h2 class="begin-headline">Design.<br>Build.<br>Launch.</h2>
-                    <p class="begin-sub">Bringing businesses online &mdash; fast, clean, modern.</p>
+                    <p class="begin-sub">bringing ideas into reality &mdash; in digital spaces</p>
                 </div>
                 <div class="begin-right">
                     <div class="begin-stack">
                         <span>React</span>
                         <span>Node.js</span>
+                        <span>TypeScript</span>
                         <span>HTML &amp; CSS</span>
                         <span>MongoDB</span>
                         <span>Bootstrap</span>
+                        <span>Express.js</span>
+                        <span>Git &amp; GitHub</span>
+                        <span>REST APIs</span>
+                        <span>Tailwind CSS</span>
+                        <span>Python</span>
+                        <span>SQL &amp; MySQL</span>
+                        <span>Figma</span>
+                        <span>AWS</span>
+                        <span>Docker</span>
+                        <span>Bash / CLI</span>
+                        <span>VS Code</span>
+                        <span>React</span>
+                        <span>Node.js</span>
+                        <span>TypeScript</span>
+                        <span>HTML &amp; CSS</span>
+                        <span>MongoDB</span>
+                        <span>Bootstrap</span>
+                        <span>Express.js</span>
+                        <span>Git &amp; GitHub</span>
+                        <span>REST APIs</span>
+                        <span>Tailwind CSS</span>
+                        <span>Python</span>
+                        <span>SQL &amp; MySQL</span>
+                        <span>Figma</span>
+                        <span>AWS</span>
+                        <span>Docker</span>
+                        <span>Bash / CLI</span>
+                        <span>VS Code</span>
                     </div>
                 </div>
             </div>
         </section>
+        <div class="text-center" style="color: rgba(255,255,255,0.5); font-style: italic; font-size: 0.85rem; padding: 1.5rem 0 0.5rem; letter-spacing: 0.04em;">i just.. really like to play with computers.</div>
         <section id="cards" class="section">
             <div class="d-flex flex-column align-self-center mx-auto" style="padding-top: 4rem;max-width: 60%;">
                 <div class="d-flex justify-content-end" data-aos="fade-right" data-aos-duration="750" data-aos-delay="50" id="apps-card" style="margin-bottom: calc(-3rem - 5vw);">
@@ -165,7 +196,7 @@
                                 </div>
                                 <p class="text-center d-flex flex-column justify-content-center p">Create to advertise + book + sell</p>
                                 <div data-aos="fade-up" data-aos-duration="800" data-aos-once="true" class="neon-btn-outline">
-                                    <div style="margin: 1r;"><a class="btn text-nowrap btn-neon-outline" role="button" data-bs-target="#contact" data-bs-toggle="modal">&nbsp;GET QUOTE</a></div>
+                                    <div style="margin: 1r;"><a class="btn text-nowrap btn-neon-outline" role="button" data-bs-target="#contact" data-bs-toggle="modal">&nbsp;BUILD</a></div>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +222,7 @@
                                 </div>
                                 <p class="text-center d-flex flex-column justify-content-center p">provides url &amp; hosting</p>
                                 <div data-aos="fade-up" data-aos-duration="800" data-aos-once="true" class="neon-btn-outline">
-                                    <div style="margin: 1r;"><a class="btn text-nowrap btn-neon-outline" role="button" data-bs-target="#contact" data-bs-toggle="modal">&nbsp;GET QUOTE</a></div>
+                                    <div style="margin: 1r;"><a class="btn text-nowrap btn-neon-outline" role="button" data-bs-target="#contact" data-bs-toggle="modal">&nbsp;LAUNCH</a></div>
                                 </div>
                             </div>
                         </div>
@@ -299,7 +330,7 @@
                 <div class="col-12 text-end d-flex d-sm-flex flex-column justify-content-center align-items-center align-content-center justify-content-sm-center" style="padding: 2vw;overflow: visible!important;">
                     <!-- Start: neon-btn -->
                     <div class="d-inline-flex flex-column justify-content-center align-items-xxl-center neon-btn-outline" style="margin: 2rem 2rem;font-size: .75rem!important;">
-                        <div><a class="btn text-nowrap btn-neon-outline" role="button" href="https://github.com/m-ccool">&nbsp;VIEW FULL PORTFOLIO</a></div>
+                        <div><a class="btn text-nowrap btn-neon-outline" role="button" href="https://github.com/m-ccool">&nbsp;VIEW PROJECTS</a></div>
                     </div><!-- End: neon-btn -->
                 </div>
             </div><!-- End: web-portfolio-content -->

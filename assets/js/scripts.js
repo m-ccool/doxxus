@@ -29,244 +29,29 @@ $(function () {
     var wind = $(window);
 
 
-    $.scrollIt({
-        upKey: 38,                // key code to navigate to the next section
-        downKey: 40,              // key code to navigate to the previous section
-        easing: 'swing',          // the easing function for animation
-        scrollTime: 600,          // how long (in ms) the animation takes
-        activeClass: 'active',    // class given to the active nav element
-        onPageChange: null,       // function(pageIndex) that is called when page is changed
-        topOffset: -80            // offste (in px) for fixed top navigation
-    });
-    
-
+    /* ======= Navbar scroll state ======= */
     wind.on("scroll", function () {
-
-        var bodyScroll = wind.scrollTop(),
-            navbar = $(".navbar"),
-            logo = $(".navbar.change .logo> img");
-
-        if (bodyScroll > 300) {
-
-            navbar.addClass("nav-scroll");
-            logo.attr('src', 'img/logo-dark.png');
-
+        if (wind.scrollTop() > 300) {
+            $(".navbar").addClass("nav-scroll");
         } else {
-
-            navbar.removeClass("nav-scroll");
-            logo.attr('src', 'img/logo-light.png');
+            $(".navbar").removeClass("nav-scroll");
         }
-    });
-
-    $('.navbar .search .icon').on('click', function () {
-        $(".navbar .search .search-form").fadeIn();
-    });
-
-    $('.navbar .search .search-form .close').on('click', function () {
-        $(".navbar .search .search-form").fadeOut();
-    });
-
-
-    function noScroll() {
-        window.scrollTo(0, 0);
-    }
-
-    wind.on("scroll", function () {
-
-        var bodyScroll = wind.scrollTop(),
-            navbar = $(".topnav");
-
-        if (bodyScroll > 300) {
-
-            navbar.addClass("nav-scroll");
-
-        } else {
-
-            navbar.removeClass("nav-scroll");
-        }
-    });
-
-    var open = false,
-        navDark = $(".topnav.dark"),
-        logoChan = $(".topnav.dark .logo img");
-
-    $('.topnav .menu-icon').on('click', function () {
-        open = !open;
-
-        $('.hamenu').toggleClass("open");
-
-        if (open) {
-
-            $('.hamenu').animate({ left: 0 });
-
-            $('.topnav .menu-icon .text').addClass('open');
-
-            navDark.addClass("navlit");
-            logoChan.attr('src', 'img/logo-light.png');
-
-            window.addEventListener('scroll', noScroll);
-
-        } else {
-
-            $('.hamenu').delay(300).animate({ left: "-100%" });
-
-            $('.topnav .menu-icon .text').removeClass('open');
-
-            navDark.removeClass("navlit");
-            logoChan.attr('src', 'img/logo-dark.png');
-
-            window.removeEventListener('scroll', noScroll);
-        }
-    });
-
-    $('.hamenu .menu-links .main-menu > li').on('mouseenter', function () {
-        $(this).css("opacity", "1").siblings().css("opacity", ".5");
-    });
-
-    $('.hamenu .menu-links .main-menu > li').on('mouseleave', function () {
-        $(".hamenu .menu-links .main-menu > li").css("opacity", "1");
-    });
-
-
-    $('.main-menu > li .dmenu').on('click', function () {
-        $(".main-menu").addClass("gosub");
-        $(this).parent().parent().find(".sub-menu").addClass("sub-open");
-    });
-
-    $('.main-menu .sub-menu li .sub-link.back').on('click', function () {
-        $(".main-menu").removeClass("gosub");
-        $(".main-menu .sub-menu").removeClass("sub-open");
-    });
-
-
-
-    $(document).on("scroll", function () {
-        var pixels = $(document).scrollTop();
-        var pageHeight = $(document).height() - $(window).height();
-        var progress = 100 * pixels / pageHeight;
-
-        $("div.progress").css("height", progress + "%");
     });
 
     /* ===============================  Swiper slider  =============================== */
 
 
-    var parallaxSlider;
-    var parallaxSliderOptions = {
-        speed: 1000,
-        autoplay: true,
-        parallax: true,
-        loop: true,
-
-        on: {
-            init: function () {
-                var swiper = this;
-                for (var i = 0; i < swiper.slides.length; i++) {
-                    $(swiper.slides[i])
-                        .find('.bg-img')
-                        .attr({
-                            'data-swiper-parallax': 0.75 * swiper.width
-                        });
-                }
-            },
-            resize: function () {
-                this.update();
-            }
-        },
-
-        pagination: {
-            el: '.slider-prlx .parallax-slider .swiper-pagination',
-            type: 'fraction',
-            clickable: true
-        },
-
-        navigation: {
-            nextEl: '.slider-prlx .parallax-slider .next-ctrl',
-            prevEl: '.slider-prlx .parallax-slider .prev-ctrl'
-        }
-    };
-    parallaxSlider = new Swiper('.slider-prlx .parallax-slider', parallaxSliderOptions);
-
-
-    var parallaxArch;
-    var parallaxArchOptions = {
-        speed: 1000,
-        autoplay: true,
-        parallax: true,
-        loop: true,
-
-        on: {
-            init: function () {
-                var swiper = this;
-                for (var i = 0; i < swiper.slides.length; i++) {
-                    $(swiper.slides[i])
-                        .find('.bg-img')
-                        .attr({
-                            'data-swiper-parallax': 0.75 * swiper.width
-                        });
-                }
-            },
-            resize: function () {
-                this.update();
-            }
-        },
-
-        pagination: {
-            el: '.arch-slider .swiper-pagination',
-            clickable: true
-        },
-
-        navigation: {
-            nextEl: '.arch-slider .next-ctrl',
-            prevEl: '.arch-slider .prev-ctrl'
-        }
-    };
-    parallaxArch = new Swiper('.arch-slider .parallax-slider', parallaxArchOptions);
-
-
-    var parallaxShowCase;
-    var parallaxShowCaseOptions = {
-        speed: 1000,
-        autoplay: true,
-        parallax: true,
-        mousewheel: true,
-        loop: true,
-
-        on: {
-            init: function () {
-                var swiper = this;
-                for (var i = 0; i < swiper.slides.length; i++) {
-                    $(swiper.slides[i])
-                        .find('.bg-img')
-                        .attr({
-                            'data-swiper-parallax': 0.75 * swiper.width
-                        });
-                }
-            },
-            resize: function () {
-                this.update();
-            }
-        },
-
-        pagination: {
-            el: '.showcase-full .parallax-slider .swiper-pagination',
-            clickable: true
-        },
-
-        navigation: {
-            nextEl: '.showcase-full .parallax-slider .next-ctrl',
-            prevEl: '.showcase-full .parallax-slider .prev-ctrl'
-        }
-    };
-    parallaxShowCase = new Swiper('.showcase-full .parallax-slider', parallaxShowCaseOptions);
-
-
     var swiperWorkMetro = new Swiper('.metro .swiper-container', {
         slidesPerView: 2,
         spaceBetween: 0,
-        speed: 1000,
+        speed: 2000,
         loop: true,
         centeredSlides: true,
+        autoplay: {
+            delay: 7000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true
+        },
 
         breakpoints: {
             320: {
@@ -721,23 +506,133 @@ $(document).ready(function () {
 /* ===============================  Mouse effect  =============================== */
 
 function mousecursor() {
-    const e = document.querySelector(".cursor-inner"),
-        t = document.querySelector(".cursor-outer");
-    if (!e || !t) return;
-    let n, i = 0,
-        o = !1;
-    window.onmousemove = function (s) {
-        o || (t.style.transform = "translate(" + s.clientX + "px, " + s.clientY + "px)"), e.style.transform = "translate(" + s.clientX + "px, " + s.clientY + "px)", n = s.clientY, i = s.clientX
-    }, $("body").on("mouseenter", "a, .cursor-pointer", function () {
-        e.classList.add("cursor-hover"), t.classList.add("cursor-hover")
-    }), $("body").on("mouseleave", "a, .cursor-pointer", function () {
-        $(this).is("a") && $(this).closest(".cursor-pointer").length || (e.classList.remove("cursor-hover"), t.classList.remove("cursor-hover"))
-    }), e.style.visibility = "visible", t.style.visibility = "visible";
+    // Blurred canvas — soft glow trail + cursor glow
+    const trailCanvas = document.createElement('canvas');
+    trailCanvas.id = 'cursor-trail-canvas';
+    trailCanvas.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:9994;filter:blur(5px);';
+    document.body.appendChild(trailCanvas);
+    const tCtx = trailCanvas.getContext('2d');
+
+    // Sharp canvas — crisp pixel sparkles only
+    const sparkCanvas = document.createElement('canvas');
+    sparkCanvas.id = 'cursor-spark-canvas';
+    sparkCanvas.style.cssText = 'position:fixed;top:0;left:0;pointer-events:none;z-index:9995;';
+    document.body.appendChild(sparkCanvas);
+    const sCtx = sparkCanvas.getContext('2d');
+
+    function resizeCanvas() {
+        trailCanvas.width  = sparkCanvas.width  = window.innerWidth;
+        trailCanvas.height = sparkCanvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const TRAIL_LEN  = 55;
+    const LIFETIME   = 500;
+    const MAX_RADIUS = 7;
+    const trail    = [];
+    const sparkles = [];
+
+    let mx = -200, my = -200;
+    let lastSparkleX = -999, lastSparkleY = -999;
+
+    window.addEventListener('mousemove', function(e) {
+        mx = e.clientX;
+        my = e.clientY;
+        trail.push({ x: mx, y: my, t: Date.now() });
+        if (trail.length > TRAIL_LEN) trail.shift();
+
+        const dx = mx - lastSparkleX, dy = my - lastSparkleY;
+        if (dx * dx + dy * dy > 120) {
+            lastSparkleX = mx; lastSparkleY = my;
+            if (sparkles.length < 90) {
+                sparkles.push({
+                    x:     mx + (Math.random() - 0.5) * 14,
+                    y:     my + (Math.random() - 0.5) * 14,
+                    alpha: Math.random() * 0.85 + 0.4,
+                    vy:    Math.random() * 1.4 + 0.5,
+                    vx:    (Math.random() - 0.5) * 0.8,
+                    decay: Math.random() * 0.016 + 0.010
+                });
+            }
+        }
+    });
+
+    (function renderLoop() {
+        const now = Date.now();
+        while (trail.length > 0 && now - trail[0].t > LIFETIME) trail.shift();
+
+        // ── Trail + cursor glow on blurred canvas ──
+        tCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+        const n = trail.length;
+        for (let i = 0; i < n; i++) {
+            const p        = trail[i];
+            const posRatio = i / Math.max(n - 1, 1);
+            const timeFade = Math.max(0, 1 - (now - p.t) / LIFETIME);
+            const ratio    = posRatio * timeFade;
+            const r        = ratio * MAX_RADIUS;
+            if (r < 0.15) continue;
+
+            const grad = tCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 3);
+            grad.addColorStop(0, 'rgba(255,255,255,' + (ratio * 0.19).toFixed(3) + ')');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            tCtx.beginPath();
+            tCtx.arc(p.x, p.y, r * 3, 0, Math.PI * 2);
+            tCtx.fillStyle = grad;
+            tCtx.fill();
+        }
+        // cursor glow at live position
+        if (mx > -100) {
+            const cg = tCtx.createRadialGradient(mx, my, 0, mx, my, 14);
+            cg.addColorStop(0, 'rgba(255,255,255,0.225)');
+            cg.addColorStop(1, 'rgba(255,255,255,0)');
+            tCtx.beginPath();
+            tCtx.arc(mx, my, 14, 0, Math.PI * 2);
+            tCtx.fillStyle = cg;
+            tCtx.fill();
+        }
+
+        // ── Sparkles: 1px pixel squares on sharp canvas ──
+        sCtx.clearRect(0, 0, sparkCanvas.width, sparkCanvas.height);
+        for (let i = sparkles.length - 1; i >= 0; i--) {
+            const sp = sparkles[i];
+            sp.x    += sp.vx;
+            sp.y    += sp.vy;
+            sp.alpha -= sp.decay;
+            if (sp.alpha <= 0) { sparkles.splice(i, 1); continue; }
+            sCtx.fillStyle = 'rgba(255,255,255,' + sp.alpha.toFixed(3) + ')';
+            sCtx.fillRect(Math.round(sp.x), Math.round(sp.y), 1, 1);
+        }
+
+        requestAnimationFrame(renderLoop);
+    })();
+
+    document.addEventListener('mousedown', function(ev) {
+        const burst = document.createElement('div');
+        burst.className = 'cursor-burst-el';
+        burst.style.left = (ev.clientX - 40) + 'px';
+        burst.style.top  = (ev.clientY - 40) + 'px';
+        document.body.appendChild(burst);
+        burst.addEventListener('animationend', () => burst.remove());
+    });
 };
 
 $(function () {
     mousecursor();
 });
+
+/* ===============================  Last Online Status  =============================== */
+(function () {
+    fetch('https://api.github.com/users/m-ccool/events?per_page=1')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data || !data[0]) return;
+            var d = new Date(data[0].created_at);
+            var text = 'last online ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            document.querySelectorAll('.last-online').forEach(function(el) { el.textContent = text; });
+        })
+        .catch(function() {});
+})();
 
 /* ===============================  fixed-slider  =============================== */
 
