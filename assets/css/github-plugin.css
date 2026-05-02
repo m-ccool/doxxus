@@ -6,10 +6,11 @@
   --color-calendar-graph-day-L4-bg: #0a4208;
 
   /* Glass system — must match style.css */
-  --glass-bg:      rgba(10,10,14,0.22);
-  --glass-blur:    blur(36px) brightness(78%) saturate(240%);
+  --glass-bg:      rgba(10,10,14,0.14);
+  --glass-blur:    blur(36px) brightness(72%) saturate(260%);
   --glass-border:  1px solid rgba(255,255,255,0.04);
-  --glass-shadow:  0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+  --glass-shadow:  0 8px 48px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+  --glass-header-bg: rgba(8,8,12,0.72);
 }
 
 .contrib-column {
@@ -54,7 +55,7 @@
 table.ContributionCalendar-grid {
   margin-bottom: 0;
   border-collapse: separate !important;
-  border-spacing: 2px !important;
+  border-spacing: 3px !important;
 }
 
 table.ContributionCalendar-grid td {
@@ -295,6 +296,27 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
   color: #57d7ff !important;
 }
 
+/* Legend squares — match contribution grid size/corners/spacing */
+.float-right.color-fg-muted .ContributionCalendar-day {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 3px !important;
+  display: inline-block !important;
+}
+
+.float-right.color-fg-muted .mr-1,
+.float-right.color-fg-muted .tmp-mr-1 {
+  margin-right: 3px !important;
+}
+
+.float-right.color-fg-muted {
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  font-size: 0.7rem !important;
+  color: rgba(255,255,255,0.4) !important;
+}
+
 /* Legend squares */
 .legend li {
   border: 1px solid rgba(255,255,255,0.1);
@@ -332,24 +354,30 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
   position: sticky !important;
   top: 0;
   z-index: 5;
-  background: var(--glass-bg) !important;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--glass-header-bg) !important;
+  backdrop-filter: blur(48px) brightness(60%) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) brightness(60%) saturate(200%);
   filter: none !important;
   border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+  padding: 0.6rem 1rem !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .gha-footer {
   position: sticky !important;
   bottom: 0;
   z-index: 5;
-  background: var(--glass-bg) !important;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--glass-header-bg) !important;
+  backdrop-filter: blur(48px) brightness(60%) saturate(200%);
+  -webkit-backdrop-filter: blur(48px) brightness(60%) saturate(200%);
   filter: none !important;
   border-top: 1px solid rgba(255,255,255,0.07) !important;
   color: rgba(255,255,255,0.4) !important;
-  padding-bottom: 8px !important;
+  padding: 0.5rem 1rem 0.6rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 .gha-footer a {

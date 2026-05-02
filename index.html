@@ -323,21 +323,13 @@
             <script>
                 GitHubActivity.feed({ username: "m-ccool", selector: "#github-activity-feed" });
             </script>
-            <div class="row d-flex justify-content-center align-items-center mx-auto" style="width: 100%;padding: 0 5%;">
-                <div class="col-auto d-flex flex-column justify-content-start align-items-center justify-content-md-start align-items-xxl-center" data-aos="fade" data-aos-duration="800" data-aos-delay="400" data-aos-once="true" style="margin: 2REM;/*padding: 1rem;*//*width: 30%;*/">
-                    <div class="d-flex flex-row" style="overflow: hidden!important;"><a class="btn d-flex flex-column" role="button" href="https://www.linkedin.com/in/b-m-ccool/"><i class="typcn typcn-social-linkedin icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-social-github icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="https://github.com/m-ccool"><i class="typcn typcn-mortar-board icon1 rainbow-gradient"></i></a><a class="btn d-flex flex-column" role="button" href="/resume.pdf"><i class="typcn typcn-business-card icon1 rainbow-gradient"></i></a></div>
-                    <ul class="list-unstyled">
-                        <li class="d-flex justify-content-center align-items-center"><a class="stretched-link d-flex justify-content-center align-items-center justify-content-xl-center linkedin-link rainbow-gradient" id="linkedin-link" href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" style="font-family: Dongle, sans-serif;font-weight: 700;letter-spacing: 2px;">&nbsp;<i class="typcn typcn-tick" style="font-size: .75rem;/*margin: 0!important;*/"></i>&nbsp;Software Engineer [MSU]</a></li>
-                        <li class="d-flex d-xl-flex justify-content-center justify-content-xl-center"><a class="stretched-link linkedin-link rainbow-gradient" id="linkedin-link" href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" style="font-family: Dongle, sans-serif;font-weight: 700;letter-spacing: 2px;"><i class="typcn typcn-tick-outline" style="font-size: .75rem;/*margin: 0!important;*/"></i>&nbsp;Security+ [COMPTIA]</a></li>
-                    </ul>
-                </div>
-                <div class="col-auto d-flex justify-content-center align-items-center" style="/*margin: 1REM;*//*padding: 1rem;*/">
-                    <ul class="list-unstyled text-center" style="/*margin-top: 2rem;*/color: white;/*margin: 1rem;*/">
-                        <li data-aos="fade-right" data-aos-duration="1000" class="li_skill"><span class="meta-card-gradient">...</span>&nbsp;IT support, hands-on exp</li>
-                        <li data-aos="fade-right" data-aos-duration="1000" data-aos-delay="500" class="li_skill"><span class="meta-card-gradient">...</span>&nbsp;agile management methodology</li>
-                        <li data-aos="fade-right" data-aos-duration="1000" data-aos-delay="1000" class="li_skill"><span class="meta-card-gradient">...</span>&nbsp;10+ years graphic design exp</li>
-                        <li data-aos="fade-right" data-aos-duration="1000" data-aos-delay="1500" class="li_skill"><span class="meta-card-gradient">...</span>&nbsp;6+ years ux/ui prototyping exp</li>
-                    </ul>
+            <div class="about-links-row">
+                <div class="about-creds" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
+                    <span class="about-cred-item"><i class="typcn typcn-tick"></i> Software Engineer [MSU]</span>
+                    <span class="about-cred-item"><i class="typcn typcn-tick-outline"></i> Security+ [CompTIA]</span>
+                    <span class="about-cred-item"><i class="typcn typcn-tick-outline"></i> 10+ yrs graphic design</span>
+                    <span class="about-cred-item"><i class="typcn typcn-tick-outline"></i> 6+ yrs UX/UI prototyping</span>
+                    <span class="about-cred-item"><i class="typcn typcn-tick-outline"></i> Agile methodology</span>
                 </div>
             </div>
             <div class="row text-center d-flex flex-row justify-content-center mb-4 mt-4" id="skill-cards" style="padding: 3%;max-width: 700px;width: 90%;">
@@ -392,60 +384,48 @@
             </div>
         </section>
     </main>
+    <div class="floating-icons" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
+        <a href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" aria-label="LinkedIn"><i class="typcn typcn-social-linkedin"></i></a>
+        <a href="https://github.com/m-ccool" target="_blank" aria-label="GitHub"><i class="typcn typcn-social-github"></i></a>
+        <a href="mailto:dev@doxxus.dev" aria-label="Email"><i class="typcn typcn-mail"></i></a>
+        <a href="https://cash.app/$doxxus" target="_blank" aria-label="CashApp"><i class="typcn typcn-credit-card"></i></a>
+    </div>
     <footer class="d-flex flex-fill justify-content-center" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
-        <!-- Start: footer-info -->
-        <div class="row footer-dark">
-            <div class="col-sm-6 col-md-3 footer-item footer-col">
-                <h3 class="rainbow-gradient">Services</h3>
-                <ul>
-                    <li><a href="#web-card">Web design</a></li>
-                    <li><a href="#portfolio">Development</a></li>
-                    <li><a href="l#web-card">Hosting</a></li>
-                </ul>
+        <div class="footer-inner">
+            <div class="footer-cols">
+                <div class="footer-col-group">
+                    <span class="footer-label">Services</span>
+                    <a href="#web-card">Web Design</a>
+                    <a href="#portfolio">Development</a>
+                    <a href="#web-card">Hosting</a>
+                </div>
+                <div class="footer-col-group">
+                    <span class="footer-label">Work</span>
+                    <a href="#projects">Portfolio</a>
+                    <a href="projects.html">All Projects</a>
+                </div>
+                <div class="footer-col-group">
+                    <span class="footer-label">Legal</span>
+                    <a href="terms.html">Terms &amp; Conditions</a>
+                </div>
+                <div class="footer-col-group">
+                    <span class="footer-label">Contact</span>
+                    <a href="mailto:dev@doxxus.dev">dev@doxxus.dev</a>
+                </div>
             </div>
-            <div class="col-sm-6 col-md-3 footer-item footer-col">
-                <h3 class="rainbow-gradient">About</h3>
-                <ul>
-                    <li><a href="terms.html">terms + conditions</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <span class="footer-copy">
+                    <img src="assets/img/logo-gr.png" style="height:1.1rem;filter:saturate(200%);vertical-align:middle;margin-right:.4rem;" alt="doxxus">
+                    DOXXUS &copy;2025
+                </span>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" aria-label="LinkedIn"><i class="typcn typcn-social-linkedin"></i></a>
+                    <a href="https://github.com/m-ccool" target="_blank" aria-label="GitHub"><i class="typcn typcn-social-github"></i></a>
+                    <a href="mailto:dev@doxxus.dev" aria-label="Email"><i class="typcn typcn-mail"></i></a>
+                    <a href="https://cash.app/$doxxus" target="_blank" aria-label="CashApp"><i class="typcn typcn-credit-card"></i></a>
+                </div>
             </div>
-            <div class="col-sm-6 col-md-3 footer-item footer-col">
-                <h3 class="rainbow-gradient">Portfolio</h3>
-                <ul>
-                    <li><a href="#">Web Development</a></li>
-                    <li><a href="#">3D Modeling</a></li>
-                    <li><a href="#">Graphic Design</a></li>
-                </ul>
-            </div>
-            <div class="col-sm-6 col-md-3 footer-item footer-col">
-                <h3 class="rainbow-gradient">Contact</h3>
-                <ul>
-                    <li><a href="#">dev@doxxus.us</a></li>
-                </ul>
-            </div>
-            <div class="col-md-6 m-auto footer-item text footer-col">
-                <h3><img id="doxxus-logo-icon-footer" src="assets/img/logo-gr.png" style="/*margin-left: 1rem;*/padding: 0 .25rem;height: 1.5rem;filter: saturate(200%);">&nbsp; &nbsp; &nbsp;DOXXUS ©2025 LlC</h3>
-                <p class="p">Need UX Design, Web or Software development?&nbsp;Contact senior developer at d<strong>ev@doxxus.dev</strong>&nbsp;</p>
-            </div>
-            <div class="col footer-item social"><a href="dev@doxxus.com"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-mail-share footer-icon">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M13 19h-8a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v6"></path>
-                        <path d="M3 7l9 6l9 -6"></path>
-                        <path d="M16 22l5 -5"></path>
-                        <path d="M21 21.5v-4.5h-4.5"></path>
-                    </svg></a><a id="github-icon" href="github.com/m-ccool"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-brand-github footer-icon">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"></path>
-                    </svg></a><a id="twitter-icon" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-license footer-icon">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M15 21h-9a3 3 0 0 1 -3 -3v-1h10v2a2 2 0 0 0 4 0v-14a2 2 0 1 1 2 2h-2m2 -4h-11a3 3 0 0 0 -3 3v11"></path>
-                        <path d="M9 7l4 0"></path>
-                        <path d="M9 11l4 0"></path>
-                    </svg></a><a id="linkedin-icon" href="https://cash.app/$doxxus"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-brand-cashapp footer-icon">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M17.1 8.648a.568 .568 0 0 1 -.761 .011a5.682 5.682 0 0 0 -3.659 -1.34c-1.102 0 -2.205 .363 -2.205 1.374c0 1.023 1.182 1.364 2.546 1.875c2.386 .796 4.363 1.796 4.363 4.137c0 2.545 -1.977 4.295 -5.204 4.488l-.295 1.364a.557 .557 0 0 1 -.546 .443h-2.034l-.102 -.011a.568 .568 0 0 1 -.432 -.67l.318 -1.444a7.432 7.432 0 0 1 -3.273 -1.784v-.011a.545 .545 0 0 1 0 -.773l1.137 -1.102c.214 -.2 .547 -.2 .761 0a5.495 5.495 0 0 0 3.852 1.5c1.478 0 2.466 -.625 2.466 -1.614c0 -.989 -1 -1.25 -2.886 -1.954c-2 -.716 -3.898 -1.728 -3.898 -4.091c0 -2.75 2.284 -4.091 4.989 -4.216l.284 -1.398a.545 .545 0 0 1 .545 -.432h2.023l.114 .012a.544 .544 0 0 1 .42 .647l-.307 1.557a8.528 8.528 0 0 1 2.818 1.58l.023 .022c.216 .228 .216 .569 0 .773l-1.057 1.057z"></path>
-                    </svg></a></div>
-        </div><!-- End: footer-info -->
+        </div>
     </footer>
     <div class="modal fade scrollbar-hidden" role="dialog" tabindex="-1" id="contact" style="/*z-index: -100;*/">
         <div class="modal-dialog modal-dialog-centered" role="document">

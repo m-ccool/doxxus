@@ -6,10 +6,10 @@ html {
 
 /* ── Glass system variables ── */
 :root {
-  --glass-bg:      rgba(10,10,14,0.22);
-  --glass-blur:    blur(36px) brightness(78%) saturate(240%);
+  --glass-bg:      rgba(10,10,14,0.14);
+  --glass-blur:    blur(36px) brightness(72%) saturate(260%);
   --glass-border:  1px solid rgba(255,255,255,0.04);
-  --glass-shadow:  0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+  --glass-shadow:  0 8px 48px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 /* root -end */
@@ -1736,13 +1736,12 @@ dl, ol, ul {
   white-space: normal!important;
   font-weight: 900;
   line-height: 2rem;
-  font-size: calc(.5em + .5vw);
-  letter-spacing: calc(.2em + 1.5vw);
+  font-size: clamp(0.6rem, 0.5em + 0.5vw, 1.2rem);
+  letter-spacing: clamp(0.15em, 0.2em + 1.5vw, 0.6em);
   transition: all 500ms ease-out;
-  animation: pulse-fade 15s ease infinite;
+  animation: pulse-fade 8s ease-in-out infinite;
   font-family: 'Lexend Giga', sans-serif;
   color: var(--mute-white);
-  /*white-space: nowrap!important;*/
 }
 
 .skill-card-img {
@@ -2679,6 +2678,161 @@ button.swiper-pagination-bullet {
   margin-left: auto;
   color: transparent;
   -webkit-text-stroke: 1px #fff;
+}
+
+/* ===== About / links section ===== */
+.about-links-row {
+  display: flex;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2.5rem) clamp(1rem, 5vw, 4rem);
+}
+
+.about-creds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  justify-content: center;
+  max-width: 780px;
+}
+
+.about-cred-item {
+  font-family: Dongle, sans-serif;
+  font-size: clamp(0.85rem, 0.75rem + 0.6vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.55);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.about-cred-item i {
+  font-size: 0.85em;
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 5s ease infinite;
+}
+
+/* ===== Floating icons row above footer ===== */
+.floating-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  padding: clamp(1.5rem, 4vw, 3rem) 1rem;
+}
+
+.floating-icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(2.5rem, 4vw, 3.4rem);
+  height: clamp(2.5rem, 4vw, 3.4rem);
+  border-radius: 50%;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  color: rgba(255,255,255,0.5);
+  font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+  text-decoration: none;
+  transition: color 300ms ease, transform 300ms ease, box-shadow 300ms ease;
+}
+
+.floating-icons a:hover {
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 0 18px rgba(255,255,255,0.12);
+}
+
+/* ===== Footer rebuild ===== */
+.footer-inner {
+  width: 100%;
+  max-width: 1080px;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.footer-cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
+  justify-content: flex-start;
+}
+
+.footer-col-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 130px;
+}
+
+.footer-label {
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: clamp(0.5rem, 0.4rem + 0.5vw, 0.7rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 5s ease infinite;
+  margin-bottom: 0.25rem;
+}
+
+.footer-col-group a {
+  font-family: Dongle, sans-serif;
+  font-size: clamp(0.9rem, 0.8rem + 0.4vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  transition: color 250ms ease;
+}
+
+.footer-col-group a:hover {
+  color: rgba(255,255,255,0.9);
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 1rem;
+}
+
+.footer-copy {
+  font-family: Dongle, sans-serif;
+  font-size: clamp(0.85rem, 0.8rem + 0.3vw, 1rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+.footer-social {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.footer-social a {
+  font-size: clamp(1.1rem, 1.3vw, 1.5rem);
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  transition: color 250ms ease, transform 250ms ease;
+}
+
+.footer-social a:hover {
+  color: rgba(255,255,255,0.85);
+  transform: translateY(-2px);
 }
 
 .showcase-carus.circle-slide .copy-cap .cap h1 span {
