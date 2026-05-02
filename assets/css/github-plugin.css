@@ -46,11 +46,19 @@
 }
 
 table.ContributionCalendar-grid {
-  margin-bottom: 0pt;
+  margin-bottom: 0;
+  border-collapse: separate !important;
+  border-spacing: 2px !important;
 }
 
 table.ContributionCalendar-grid td {
-  padding: 4pt;
+  padding: 0 !important;
+}
+
+table.ContributionCalendar-grid td.ContributionCalendar-day {
+  border-radius: 3px !important;
+  width: 10px !important;
+  height: 10px !important;
 }
 
 table.ContributionCalendar-grid td span.sr-only {
@@ -310,18 +318,23 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 .gha-feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
 
 .gha-header {
-  background: #111113 !important;
-  background: linear-gradient(to bottom, #1a1a1e 0%, #111113 100%) !important;
+  position: sticky !important;
+  top: 0;
+  z-index: 5;
+  background: #1a1a1e !important;
   filter: none !important;
   border-bottom: 1px solid rgba(255,255,255,0.08) !important;
 }
 
 .gha-footer {
-  background: #111113 !important;
-  background: linear-gradient(to bottom, #111113 0%, #1a1a1e 100%) !important;
+  position: sticky !important;
+  bottom: 0;
+  z-index: 5;
+  background: #1a1a1e !important;
   filter: none !important;
   border-top: 1px solid rgba(255,255,255,0.08) !important;
   color: rgba(255,255,255,0.4) !important;
+  padding-bottom: 8px !important;
 }
 
 .gha-footer a {
