@@ -45,8 +45,7 @@
 <body class="scrollbar-hidden FADE">
 
     <!-- ═══════════════════════════════════════════════════════
-         SPLASH OVERLAY
-         Flow: #splash-loader → #splash-screen → #splash-login → site
+         SPLASH OVERLAY — bar → monitor light → click → site
          ═══════════════════════════════════════════════════════ -->
     <div id="splash-overlay">
 
@@ -57,24 +56,17 @@
             </div>
         </div>
 
-        <!-- Stage 2: CRT screen with static snow + CREATE NOW -->
+        <!-- Stage 2: Floating monitor with projected light -->
         <div id="splash-screen" class="splash-hidden">
-            <canvas id="splash-snow" aria-hidden="true"></canvas>
-            <div class="splash-crt-frame">
-                <div class="splash-crt-scanlines"></div>
-                <div class="splash-crt-content">
-                    <span class="splash-create-label">create now</span>
+            <div class="splash-floor-glow"></div>
+            <div class="splash-monitor-rig">
+                <div class="splash-monitor-frame">
+                    <canvas id="splash-snow" aria-hidden="true"></canvas>
+                    <div class="splash-enter-label">&gt;enter</div>
+                    <div class="splash-glare"></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Stage 3: Login gate -->
-        <div id="splash-login" class="splash-hidden">
-            <div class="splash-login-inner">
-                <span class="splash-login-mark">?</span>
-                <input type="text"        id="splash-name"  class="splash-field" placeholder="name"  autocomplete="off">
-                <input type="password"    id="splash-token" class="splash-field" placeholder="token" autocomplete="off">
-                <button id="splash-enter" class="splash-enter-btn" disabled>enter</button>
+                <div class="splash-monitor-neck"></div>
+                <div class="splash-monitor-base"></div>
             </div>
         </div>
 
@@ -617,89 +609,68 @@
       var loader     = document.getElementById('splash-loader');
       var barFill    = document.getElementById('splash-bar-fill');
       var screen     = document.getElementById('splash-screen');
-      var login      = document.getElementById('splash-login');
-      var nameField  = document.getElementById('splash-name');
-      var tokenField = document.getElementById('splash-token');
-      var enterBtn   = document.getElementById('splash-enter');
       var snowCanvas = document.getElementById('splash-snow');
+      var rafId      = null;
 
-      // ─── Snow canvas ───────────────────────────────────────
-      function initSnow() {
-        var ctx = snowCanvas.getContext('2d');
-        function resize() {
-          snowCanvas.width  = window.innerWidth;
-          snowCanvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
-        (function tick() {
-          if (!snowCanvas.parentElement || snowCanvas.parentElement.classList.contains('splash-hidden')) return;
-          var id = ctx.createImageData(snowCanvas.width, snowCanvas.height);
-          for (var i = 0; i < id.data.length; i += 4) {
-            var v = Math.random() > 0.5 ? Math.floor(Math.random() * 60 + 5) : 0;
-            id.data[i] = id.data[i+1] = id.data[i+2] = v;
-            id.data[i+3] = 255;
-          }
-          ctx.putImageData(id, 0, 0);
-          requestAnimationFrame(tick);
-        })();
-      }
-
-      // ─── Stage 1 → Stage 2 ─────────────────────────────────
+      // ─── Stage 1: Bar loader ────────────────────────────────
       function runLoader() {
         var start = performance.now();
-        var dur   = 1400; // ms
+        var dur   = 1500;
         function step(now) {
           var pct = Math.min((now - start) / dur, 1);
           barFill.style.width = (pct * 100) + '%';
-          if (pct < 1) { requestAnimationFrame(step); }
-          else         { showScreen(); }
+          if (pct < 1) {
+            requestAnimationFrame(step);
+          } else {
+            setTimeout(function () {
+              loader.style.transition = 'opacity 0.4s ease';
+              loader.style.opacity    = '0';
+              setTimeout(function () {
+                loader.classList.add('splash-hidden');
+                loader.style.cssText = '';
+                screen.classList.remove('splash-hidden');
+                startSnow();
+              }, 420);
+            }, 120);
+          }
         }
         requestAnimationFrame(step);
       }
 
-      function showScreen() {
-        loader.classList.add('splash-hidden');
-        screen.classList.remove('splash-hidden');
-        initSnow();
-        screen.addEventListener('click', showLogin, { once: true });
-        screen.addEventListener('touchend', showLogin, { once: true });
+      // ─── Digital snow on monitor screen ─────────────────────
+      function startSnow() {
+        var ctx   = snowCanvas.getContext('2d');
+        var frame = snowCanvas.parentElement;
+        var W     = frame.clientWidth;
+        var H     = frame.clientHeight;
+        snowCanvas.width  = W;
+        snowCanvas.height = H;
+        function tick() {
+          var img = ctx.createImageData(W, H);
+          var d   = img.data;
+          for (var i = 0; i < d.length; i += 4) {
+            var v = Math.random() < 0.45
+              ? Math.floor(Math.random() * 22)
+              : Math.floor(Math.random() * 160 + 30);
+            d[i] = d[i+1] = d[i+2] = v;
+            d[i+3] = 255;
+          }
+          ctx.putImageData(img, 0, 0);
+          rafId = requestAnimationFrame(tick);
+        }
+        tick();
+        // click or tap anywhere → dismiss to site
+        screen.addEventListener('click',    dismiss, { once: true });
+        screen.addEventListener('touchend', dismiss, { once: true });
       }
 
-      // ─── Stage 2 → Stage 3 ─────────────────────────────────
-      function showLogin() {
-        screen.classList.add('splash-fade-out');
-        setTimeout(function () {
-          screen.classList.add('splash-hidden');
-          screen.classList.remove('splash-fade-out');
-          login.classList.remove('splash-hidden');
-          setTimeout(function () { nameField.focus(); }, 80);
-        }, 320);
-      }
-
-      // ─── Enable button when any text is typed ─────────────
-      function checkFields() {
-        enterBtn.disabled = (nameField.value.length === 0 && tokenField.value.length === 0);
-      }
-      nameField.addEventListener('input', checkFields);
-      tokenField.addEventListener('input', checkFields);
-
-      // ─── Stage 3 → Site ────────────────────────────────────
-      function dismissSplash() {
+      // ─── Dismiss: black flash → fade → reveal site ──────────
+      function dismiss() {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
         overlay.classList.add('splash-dismiss');
-        setTimeout(function () {
-          overlay.style.display = 'none';
-        }, 600);
+        setTimeout(function () { overlay.style.display = 'none'; }, 800);
       }
-      enterBtn.addEventListener('click', dismissSplash);
-      tokenField.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' && !enterBtn.disabled) dismissSplash();
-      });
-      nameField.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' && !enterBtn.disabled) dismissSplash();
-      });
 
-      // ─── Boot ───────────────────────────────────────────────
       runLoader();
     })();
     </script>
