@@ -7,10 +7,10 @@ html {
 /* ── Glass system variables ── */
 :root {
   /* Near-transparent fill — dark bg shows fully through */
-  --glass-bg:     rgba(255,255,255,0.018);
+  --glass-bg:     rgba(255,255,255,0.01);
 
   /* Moderate blur + saturation — color pop without brightness wash */
-  --glass-blur:   blur(12px) saturate(120%);
+  --glass-blur:   blur(6px) saturate(120%);
 
   /* Very subtle edge line */
   --glass-border: 1px solid rgba(255,255,255,0.10);
@@ -18,14 +18,14 @@ html {
   /* Shadow: outer depth + thin specular catchlight + bottom edge */
   --glass-shadow:
     0 8px 48px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.32),
-    inset 0 -1px 0 rgba(0,0,0,0.28);
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0,0,0,0.05);
 
   /* Navbar/sticky-header — more opaque for readability */
-  --glass-nav-bg:    rgba(6,6,8,0.72);
+  --glass-nav-bg:rgba(6,6,8,0.7);
 
   /* Dense header for scrolling-content panels */
-  --glass-header-bg: rgba(6,6,6,0.88);
+  --glass-header-bg: rgba(6,6,8,0.7);
 }
 
 /* root -end */
