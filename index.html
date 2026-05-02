@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html data-bs-theme="dark" class="scrollbar-hidden" lang="en">
 
 <head>
@@ -44,6 +44,33 @@
 
 <body class="scrollbar-hidden FADE">
 
+    <!-- ═══════════════════════════════════════════════════════
+         SPLASH OVERLAY — bar → monitor light → click → site
+         ═══════════════════════════════════════════════════════ -->
+    <div id="splash-overlay">
+
+        <!-- Stage 1: Rainbow bar loader -->
+        <div id="splash-loader">
+            <div class="splash-bar-track">
+                <div class="splash-bar-fill" id="splash-bar-fill"></div>
+            </div>
+        </div>
+
+        <!-- Stage 2: Floating monitor with projected light -->
+        <div id="splash-screen" class="splash-hidden">
+            <div class="splash-dot-floor">
+                <canvas id="splash-floor-canvas" aria-hidden="true"></canvas>
+            </div>
+            <div class="splash-monitor-rig">
+                <div class="splash-monitor-frame">
+                    <canvas id="splash-snow" aria-hidden="true"></canvas>
+                    <div class="splash-enter-label">&gt;enter</div>
+                    <div class="splash-glare"></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /splash-overlay -->
 
     <div class="cursor-outer"></div>
     <div class="cursor-inner"></div>
@@ -567,6 +594,115 @@
     <script src="assets/js/comet.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/scripts.js"></script>
+
+    <!-- ════════════ SPLASH CONTROLLER ════════════ -->
+    <script>
+    (function () {
+      'use strict';
+
+      var overlay      = document.getElementById('splash-overlay');
+      var loader        = document.getElementById('splash-loader');
+      var barFill       = document.getElementById('splash-bar-fill');
+      var screen        = document.getElementById('splash-screen');
+      var snowCanvas    = document.getElementById('splash-snow');
+      var floorCanvas   = document.getElementById('splash-floor-canvas');
+      var rafId         = null;
+      var lastNoiseRows = null;  // shared noise rows for floor reflection
+
+      // ─── Stage 1: Bar loader ────────────────────────────────
+      function runLoader() {
+        var start = performance.now();
+        var dur   = 1500;
+        function step(now) {
+          var pct = Math.min((now - start) / dur, 1);
+          barFill.style.width = (pct * 100) + '%';
+          if (pct < 1) {
+            requestAnimationFrame(step);
+          } else {
+            setTimeout(function () {
+              loader.style.transition = 'opacity 0.4s ease';
+              loader.style.opacity    = '0';
+              setTimeout(function () {
+                loader.classList.add('splash-hidden');
+                loader.style.cssText = '';
+                screen.classList.remove('splash-hidden');
+                startSnow();
+              }, 420);
+            }, 120);
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      // ─── Screen snow + floor snow reflection ────────────────
+      function startSnow() {
+        var sCtx  = snowCanvas.getContext('2d');
+        var frame = snowCanvas.parentElement;
+        var W     = frame.clientWidth;
+        var H     = frame.clientHeight;
+        snowCanvas.width  = W;
+        snowCanvas.height = H;
+
+        /* floor canvas sized to its container */
+        var fW = floorCanvas.parentElement.clientWidth;
+        var fH = floorCanvas.parentElement.clientHeight;
+        floorCanvas.width  = fW;
+        floorCanvas.height = fH;
+        var fCtx = floorCanvas.getContext('2d');
+
+        function tick() {
+          /* ── screen snow with RGB chroma warp ── */
+          var img   = sCtx.createImageData(W, H);
+          var d     = img.data;
+          var shft  = 3;
+          var noise = new Float32Array(W * H);
+          for (var p = 0; p < noise.length; p++) {
+            noise[p] = Math.random() < 0.20
+              ? Math.random() * 16
+              : Math.random() * 58 + 197;
+          }
+          for (var y = 0; y < H; y++) {
+            for (var x = 0; x < W; x++) {
+              var i  = (y * W + x) * 4;
+              var rp = y * W + (x >= shft    ? x - shft    : 0);
+              var gp = y * W + x;
+              var bp = y * W + (x + shft < W ? x + shft    : W - 1);
+              d[i]   = noise[rp];
+              d[i+1] = noise[gp];
+              d[i+2] = noise[bp];
+              d[i+3] = 255;
+            }
+          }
+          sCtx.putImageData(img, 0, 0);
+
+          /* ── floor: reflect bottom rows of screen, fade out ── */
+          fCtx.clearRect(0, 0, fW, fH);
+          fCtx.save();
+          /* flip vertically so it reads as a surface reflection */
+          fCtx.translate(0, fH * 0.55);
+          fCtx.scale(1, -1);
+          fCtx.globalAlpha = 0.30;
+          /* sample from middle of screen downward, stretch to floor width */
+          fCtx.drawImage(snowCanvas, 0, H * 0.55, W, H * 0.45, 0, 0, fW, fH * 0.55);
+          fCtx.restore();
+
+          rafId = requestAnimationFrame(tick);
+        }
+        tick();
+        screen.addEventListener('click',    dismiss, { once: true });
+        screen.addEventListener('touchend', dismiss, { once: true });
+      }
+
+      // ─── Dismiss: black flash → fade → reveal site ──────────
+      function dismiss() {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        overlay.classList.add('splash-dismiss');
+        setTimeout(function () { overlay.style.display = 'none'; }, 800);
+      }
+
+      runLoader();
+    })();
+    </script>
 </body>
 
 </html>
