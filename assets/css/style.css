@@ -388,6 +388,7 @@ footer .footer-item.social > a:hover {
   background-color: rgba(0,0,0,0);
   position: relative;
   flex: 1 1 auto;
+  padding: 1.5rem 2.25rem 2rem;
 }
 
 .modal-backdrop {
@@ -488,7 +489,7 @@ footer .footer-item.social > a:hover {
 .cf {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 1rem;
   padding: 0 0.25rem;
   width: 100%;
 }
