@@ -484,24 +484,83 @@ footer .footer-item.social > a:hover {
   transition: all 750ms ease;
 }
 
-.modal-content .form-control,
-.modal-content .form-select {
+/* ── Contact Form Grid ── */
+.cf {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0 0.25rem;
+  width: 100%;
+}
+
+.cf-row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cf-row-full {
+  align-items: start;
+}
+
+.cf-label {
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  text-align: right;
+  line-height: 1.4;
+}
+
+.cf-label-top {
+  padding-top: 0.55rem;
+}
+
+.cf-submit {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 0 0.25rem;
+}
+
+.cf-btn {
+  background: rgba(6,6,8,0.7);
+  color: rgba(255,255,255,0.85);
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 24px;
+  padding: 0.55rem 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.cf-btn:hover {
+  color: #ffffff;
+  background: rgba(6,6,8,0.9);
+}
+
+.cf .form-control,
+.cf .form-select {
   background: rgba(255,255,255,0.04) !important;
   border: 1px solid rgba(255,255,255,0.1) !important;
   border-radius: 10px !important;
   color: rgba(255,255,255,0.8) !important;
+  font-size: 0.8rem !important;
   transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-.modal-content .form-control:focus,
-.modal-content .form-select:focus {
+.cf .form-control:focus,
+.cf .form-select:focus {
   background: rgba(255,255,255,0.07) !important;
-  border-color: rgba(255,255,255,0.28) !important;
+  border-color: rgba(255,255,255,0.25) !important;
   box-shadow: 0 0 0 3px rgba(255,255,255,0.04) !important;
 }
 
-.modal-content .form-control::placeholder {
-  color: rgba(255,255,255,0.22) !important;
+.cf .form-control::placeholder {
+  color: rgba(255,255,255,0.2) !important;
 }
 
 /* modal end */
