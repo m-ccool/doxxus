@@ -38,6 +38,15 @@ $(function () {
         }
     });
 
+    /* ======= Restart last-online animation on each navbar open ======= */
+    document.getElementById('navcol-2')?.addEventListener('show.bs.collapse', function () {
+        var el = document.getElementById('last-online-mobile');
+        if (!el) return;
+        el.style.animation = 'none';
+        el.offsetHeight; // force reflow
+        el.style.animation = '';
+    });
+
     /* ===============================  Swiper slider  =============================== */
 
 

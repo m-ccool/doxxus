@@ -354,11 +354,11 @@ footer .footer-item.social > a:hover {
   flex-direction: column;
   width: 100%;
   pointer-events: auto;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: rgba(8, 8, 12, 0.72);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
   background-clip: padding-box;
-  border-radius: 3rem;
+  border-radius: 2rem;
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
   display: flex;
