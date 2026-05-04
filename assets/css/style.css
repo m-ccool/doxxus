@@ -383,12 +383,37 @@ footer .footer-item.social > a:hover {
 
 .modal-body {
   display: flex!important;
-  justify-content: center!important;
-  align-items: center!important;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   background-color: rgba(0,0,0,0);
   position: relative;
   flex: 1 1 auto;
   padding: 1.5rem 2.25rem 2rem;
+  gap: 0.75rem;
+}
+
+.p-form-notice {
+  display: none;
+  margin: 0;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+#show_message {
+  background: rgba(63, 185, 80, 0.12);
+  border: 1px solid rgba(63, 185, 80, 0.35);
+  color: #3fb950;
+}
+
+#error {
+  background: rgba(255, 80, 80, 0.1);
+  border: 1px solid rgba(255, 80, 80, 0.3);
+  color: rgba(255, 120, 120, 0.9);
 }
 
 .modal-backdrop {
@@ -574,12 +599,12 @@ footer .footer-item.social > a:hover {
 
 /* Modal enter/exit animations */
 @keyframes modalSlideIn {
-  from { opacity: 0; transform: translateY(28px) scale(0.97); }
+  from { opacity: 0; transform: translateY(28px) scale(0.94); }
   to   { opacity: 1; transform: translateY(0)     scale(1); }
 }
 @keyframes modalSlideOut {
   from { opacity: 1; transform: translateY(0)    scale(1); }
-  to   { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 0; transform: translateY(18px) scale(0.94); }
 }
 
 /* Override Bootstrap's built-in dialog transform transition */

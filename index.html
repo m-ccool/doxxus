@@ -109,7 +109,7 @@
                         <div class="container text-center d-flex flex-grow-1 align-items-center align-content-center align-self-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center" data-aos="fade" data-aos-duration="800" data-aos-once="true" id="splash-p-2" style="/*overflow: visible;*//*text-shadow: 0px 1px 3px rgb(0,0,0);*/min-width: calc(30vw + 2rem);max-width: calc(35vw + 1.5rem);/*width: auto;*//*transition: all 1250ms ease-in-out;*/display: inline-block!important;/*margin: 0px;*/padding: 0px;/*transition: all 1200ms ease-in-out!important;*/">
                             <div class="typed-out blink-caret" style="/*transition: margin 1000ms ease-out;*//*display: inline-block;*/"><img src="assets/img/doxxus-brand.png" style="min-width: 300px;/*padding: 25px 0;*/max-width: 30vw;filter: blur(0px) brightness(200%) saturate(200%);"></div>
                         </div>
-                        <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient">DEVELOPER</h2><span data-aos="fade" data-aos-duration="800" data-aos-delay="1200" data-aos-once="true" class="h2" style="/*opacity: 0.50;*/font-size: .7rem;color: whitesmoke!important;">BUILDING IN PUBLIC</span>
+                        <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient">SOFTWARE ENGINEER</h2><span data-aos="fade" data-aos-duration="800" data-aos-delay="1200" data-aos-once="true" class="h2" style="/*opacity: 0.50;*/font-size: .7rem;color: whitesmoke!important;">creating webspaces</span>
                     </div><!-- Start: neon-btn -->
 <!-- End: neon-btn -->
                     <p data-aos="fade" data-aos-duration="800" data-aos-delay="2400" data-aos-once="true" class="p p-center-flex" style="z-index: 100;">b mccool</p>
@@ -512,6 +512,14 @@
                         $(document).ready(function($){
                             $("#error").hide();
                             $("#show_message").hide();
+                            // reset form + notices when modal is closed
+                            $('#contact').on('hidden.bs.modal', function(){
+                                $("#ajax-form")[0].reset();
+                                $("#error").hide();
+                                $("#show_message").hide();
+                                var ta = document.getElementById('websummary');
+                                if (ta) ta.style.height = '';
+                            });
                             // auto-resize textarea
                             $('#websummary').on('input', function(){
                                 this.style.height = 'auto';
@@ -520,6 +528,7 @@
                             $('#ajax-form').submit(function(e){
                                 e.preventDefault();
                                 $("#error").hide();
+                                $("#show_message").hide();
                                 $.ajax({
                                     type: "POST",
                                     url: "https://doxxus.dev/ajax-form-store.php",
