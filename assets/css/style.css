@@ -414,7 +414,7 @@ footer .footer-item.social > a:hover {
   color: var(--teal);
   font-family: 'Lexend Giga', sans-serif;
   margin-bottom: 0.4rem;
-  text-align: center;
+  text-align: left;
 }
 
 .modal-headline {
@@ -430,7 +430,7 @@ footer .footer-item.social > a:hover {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: gradient 5s ease infinite;
-  text-align: center;
+  text-align: left;
 }
 
 .btn-close:hover {
@@ -565,6 +565,23 @@ footer .footer-item.social > a:hover {
 }
 
 /* modal end */
+
+/* Modal enter/exit animations */
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(-18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)     scale(1); }
+}
+@keyframes modalSlideOut {
+  from { opacity: 1; transform: translateY(0)     scale(1); }
+  to   { opacity: 0; transform: translateY(12px)  scale(0.97); }
+}
+
+.modal.show .modal-dialog {
+  animation: modalSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.modal.hiding .modal-dialog {
+  animation: modalSlideOut 0.22s ease-in both;
+}
 
 .div-neon-frame {
   padding: 2px;
