@@ -526,21 +526,21 @@ footer .footer-item.social > a:hover {
 }
 
 .cf-btn {
-  background: rgba(6,6,8,0.7);
+  background: var(--bs-body-color);
   color: rgba(255,255,255,0.85);
   font-family: 'Lexend Giga', sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-size: calc(.5rem + .5vw);
+  letter-spacing: calc(2.5px + .5vw);
   text-transform: uppercase;
   border: none;
   border-radius: 24px;
-  padding: 0.55rem 1.5rem;
-  transition: color 0.3s ease;
+  padding: 0.75rem 1.5rem;
+  transition: color 0.5s;
 }
 
 .cf-btn:hover {
   color: #ffffff;
-  background: rgba(6,6,8,0.9);
+  background: var(--bs-body-color);
 }
 
 .cf .form-control,
