@@ -390,9 +390,46 @@ footer .footer-item.social > a:hover {
   flex: 1 1 auto;
 }
 
+.modal-backdrop {
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+}
+
+.modal-backdrop.show {
+  opacity: 1 !important;
+  background: rgba(0,0,0,0.45) !important;
+}
+
 .modal-header {
-  padding: 1rem 2rem;
-  border-bottom: 0px solid rgba(222,226,230,0)!important;
+  padding: 1.5rem 2rem 0.5rem;
+  border-bottom: 0 !important;
+}
+
+.modal-eyebrow {
+  display: block;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-family: 'Lexend Giga', sans-serif;
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+
+.modal-headline {
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient 5s ease infinite;
+  text-align: center;
 }
 
 .btn-close:hover {
@@ -445,6 +482,26 @@ footer .footer-item.social > a:hover {
   display: flex!important;
   align-items: center!important;
   transition: all 750ms ease;
+}
+
+.modal-content .form-control,
+.modal-content .form-select {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: 10px !important;
+  color: rgba(255,255,255,0.8) !important;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.modal-content .form-control:focus,
+.modal-content .form-select:focus {
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.28) !important;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.04) !important;
+}
+
+.modal-content .form-control::placeholder {
+  color: rgba(255,255,255,0.22) !important;
 }
 
 /* modal end */
