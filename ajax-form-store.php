@@ -8,8 +8,8 @@
 header('Content-Type: text/plain; charset=utf-8');
 
 // ── Config ────────────────────────────────────────────────────────────────────
-$to      = 'mccoolcontact@gmail.com';
-$from    = 'noreply@doxxus.dev';   // must be a domain you own / host controls
+$to      = 'dev@doxxus.us';
+$from    = 'dev@doxxus.us';   // must match a domain on your host
 $subject = '[doxxus.dev] New Contact Form Submission';
 // ─────────────────────────────────────────────────────────────────────────────
 
