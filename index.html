@@ -534,11 +534,10 @@
                                     url: "https://doxxus.dev/ajax-form-store.php",
                                     data: $(this).serialize(),
                                     success: function(response){
-                                        var r = (response || '').toString().toLowerCase();
-                                        if (r.indexOf('error') !== -1 || r.indexOf('fail') !== -1) {
-                                            $("#error").fadeIn();
-                                        } else {
+                                        if ((response || '').trim() === 'success') {
                                             $("#show_message").fadeIn();
+                                        } else {
+                                            $("#error").fadeIn();
                                         }
                                     },
                                     error: function(){ $("#error").fadeIn(); }
