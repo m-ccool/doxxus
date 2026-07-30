@@ -1638,22 +1638,46 @@ body {
   max-width: 100%;
 }
 
-/* Safari/iOS fallback: avoid occasional width-animation clipping on brand image */
+/* Safari/iOS fallback: keep full logo visible without forcing oversized width */
 @supports (-webkit-touch-callout: none) {
-  .typed-out {
-    width: auto;
+  #splash-p-2 {
+    min-width: min(82vw, 300px)!important;
+    max-width: min(82vw, 300px)!important;
+  }
+
+  #splash-p-2 .typed-out {
+    width: 100%;
     border-right: 0;
     animation: none;
     overflow: visible;
   }
+
+  #splash-p-2 .typed-out img {
+    min-width: 0!important;
+    width: 100%!important;
+    max-width: 100%!important;
+    height: auto!important;
+  }
 }
 
 @media (max-width: 767px) {
-  .typed-out {
-    width: auto;
+  #splash-p-2 {
+    min-width: min(82vw, 300px)!important;
+    max-width: min(82vw, 300px)!important;
+  }
+
+  #splash-p-2 .typed-out {
+    width: 100%;
     border-right: 0;
     animation: none;
     overflow: visible;
+  }
+
+  #splash-p-2 .typed-out img {
+    min-width: 0!important;
+    width: 100%!important;
+    max-width: 100%!important;
+    height: auto!important;
   }
 }
 
