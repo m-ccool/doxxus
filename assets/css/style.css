@@ -1638,21 +1638,6 @@ body {
   max-width: 100%;
 }
 
-.splash-brand-image {
-  display: block;
-  width: 100%;
-  max-width: min(82vw, 420px);
-  min-width: 0;
-  height: auto;
-  filter: blur(0px) brightness(200%) saturate(200%);
-}
-
-.splash-brand-shell {
-  width: min(82vw, 420px);
-  max-width: 100%;
-  min-width: 0!important;
-}
-
 /* Safari/iOS fallback: avoid occasional width-animation clipping on brand image */
 @supports (-webkit-touch-callout: none) {
   .typed-out {
@@ -1669,10 +1654,6 @@ body {
     border-right: 0;
     animation: none;
     overflow: visible;
-  }
-
-  .splash-brand-shell {
-    width: min(88vw, 420px);
   }
 }
 
