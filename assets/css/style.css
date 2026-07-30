@@ -1635,14 +1635,22 @@ body {
   /*white-space: nowrap;*/
   width: 0;
   animation: typing 3s forwards, blink-caret 950ms step-end infinite;
+  max-width: 100%;
 }
 
 .splash-brand-image {
   display: block;
-  width: min(82vw, 420px);
-  max-width: 100%;
+  width: 100%;
+  max-width: min(82vw, 420px);
+  min-width: 0;
   height: auto;
   filter: blur(0px) brightness(200%) saturate(200%);
+}
+
+.splash-brand-shell {
+  width: min(82vw, 420px);
+  max-width: 100%;
+  min-width: 0!important;
 }
 
 /* Safari/iOS fallback: avoid occasional width-animation clipping on brand image */
@@ -1651,6 +1659,20 @@ body {
     width: auto;
     border-right: 0;
     animation: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 767px) {
+  .typed-out {
+    width: auto;
+    border-right: 0;
+    animation: none;
+    overflow: visible;
+  }
+
+  .splash-brand-shell {
+    width: min(88vw, 420px);
   }
 }
 
