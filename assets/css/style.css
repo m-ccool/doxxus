@@ -1634,45 +1634,9 @@ body {
   border-right: .75em solid;
   /*white-space: nowrap;*/
   width: 0;
-  animation: splash-type-reveal 2.4s forwards, splash-caret 950ms step-end infinite;
-  -webkit-animation: splash-type-reveal 2.4s forwards, splash-caret 950ms step-end infinite;
+  animation: typing 3s forwards, blink-caret 950ms step-end infinite;
+  -webkit-animation: typing 3s forwards, blink-caret 950ms step-end infinite;
   max-width: 100%;
-}
-
-@keyframes splash-type-reveal {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-@-webkit-keyframes splash-type-reveal {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-@keyframes splash-caret {
-  from, to {
-    border-color: transparent;
-  }
-  50% {
-    border-color: #3bff50;
-  }
-}
-
-@-webkit-keyframes splash-caret {
-  from, to {
-    border-color: transparent;
-  }
-  50% {
-    border-color: #3bff50;
-  }
 }
 
 /* Safari/iOS fallback: keep full logo visible without forcing oversized width */
@@ -1684,8 +1648,8 @@ body {
 
   #splash-p-2 .typed-out img {
     min-width: 0!important;
-    width: 100%!important;
-    max-width: 100%!important;
+    width: min(82vw, 300px)!important;
+    max-width: none!important;
     height: auto!important;
   }
 }
@@ -1698,8 +1662,8 @@ body {
 
   #splash-p-2 .typed-out img {
     min-width: 0!important;
-    width: 100%!important;
-    max-width: 100%!important;
+    width: min(82vw, 300px)!important;
+    max-width: none!important;
     height: auto!important;
   }
 }
