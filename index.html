@@ -618,7 +618,14 @@
         function startTyping() {
             if (typingStarted) return;
             typingStarted = true;
-            document.body.classList.add('splash-typing-ready');
+            document.querySelectorAll('.typed-out').forEach(function(el) {
+                el.style.animation = 'none';
+                el.style.webkitAnimation = 'none';
+                el.style.width = '0';
+                void el.offsetWidth;
+                el.style.animation = 'typing 3s forwards, blink-caret 950ms step-end infinite';
+                el.style.webkitAnimation = 'typing 3s forwards, blink-caret 950ms step-end infinite';
+            });
         }
 
         requestAnimationFrame(function(){ fill.style.width = '100%'; });

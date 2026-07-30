@@ -1636,14 +1636,7 @@ body {
   width: 0;
   animation: typing 3s forwards, blink-caret 950ms step-end infinite;
   -webkit-animation: typing 3s forwards, blink-caret 950ms step-end infinite;
-  animation-play-state: paused;
-  -webkit-animation-play-state: paused;
   max-width: 100%;
-}
-
-body.splash-typing-ready .typed-out {
-  animation-play-state: running;
-  -webkit-animation-play-state: running;
 }
 
 /* Safari/iOS fallback: keep full logo visible without forcing oversized width */
