@@ -1646,10 +1646,10 @@ body {
   }
 
   #splash-p-2 .typed-out {
-    width: 100%;
-    border-right: 0;
-    animation: none;
-    overflow: visible;
+    width: 0;
+    border-right: .75em solid;
+    animation: typing 2.4s forwards, blink-caret 950ms step-end infinite;
+    overflow: hidden;
   }
 
   #splash-p-2 .typed-out img {
@@ -1667,10 +1667,10 @@ body {
   }
 
   #splash-p-2 .typed-out {
-    width: 100%;
-    border-right: 0;
-    animation: none;
-    overflow: visible;
+    width: 0;
+    border-right: .75em solid;
+    animation: typing 2.4s forwards, blink-caret 950ms step-end infinite;
+    overflow: hidden;
   }
 
   #splash-p-2 .typed-out img {
