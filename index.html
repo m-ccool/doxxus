@@ -613,17 +613,35 @@
         var fill = document.getElementById('splash-bar-fill');
         var overlay = document.getElementById('splash-overlay');
         var startTime = Date.now();
+        var typingStarted = false;
+
+        function startTyping() {
+            if (typingStarted) return;
+            typingStarted = true;
+            document.body.classList.add('splash-typing-ready');
+        }
+
         requestAnimationFrame(function(){ fill.style.width = '100%'; });
         function dismiss() {
             var elapsed = Date.now() - startTime;
             var remaining = Math.max(1050 - elapsed, 0);
             setTimeout(function(){
+                if (!overlay) {
+                    startTyping();
+                    return;
+                }
                 overlay.classList.add('splash-done');
-                setTimeout(function(){ overlay.remove(); }, 700);
+                setTimeout(function(){
+                    overlay.remove();
+                    startTyping();
+                }, 700);
             }, remaining);
         }
         if (document.readyState === 'complete') { dismiss(); }
         else { window.addEventListener('load', dismiss); }
+
+        // Safety: always start splash typing if overlay timing is interrupted.
+        setTimeout(startTyping, 4500);
     })();
     </script>
 
