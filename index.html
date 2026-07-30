@@ -614,17 +614,29 @@
         var overlay = document.getElementById('splash-overlay');
         var startTime = Date.now();
         var typingStarted = false;
+        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
         function startTyping() {
             if (typingStarted) return;
             typingStarted = true;
             document.querySelectorAll('.typed-out').forEach(function(el) {
+                var img = el.querySelector('img');
+                var targetWidth = img ? Math.max(Math.round(img.getBoundingClientRect().width), 1) : 300;
+
                 el.style.animation = 'none';
                 el.style.webkitAnimation = 'none';
+                el.classList.remove('typed-fade-in');
                 el.style.width = '0';
+                el.style.setProperty('--typed-target', targetWidth + 'px');
                 void el.offsetWidth;
-                el.style.animation = 'typing 3s forwards, blink-caret 950ms step-end infinite';
-                el.style.webkitAnimation = 'typing 3s forwards, blink-caret 950ms step-end infinite';
+
+                if (isIOS) {
+                    el.classList.add('typed-fade-in');
+                    return;
+                }
+
+                el.style.animation = 'typing-reveal 3s forwards, blink-caret 950ms step-end infinite';
+                el.style.webkitAnimation = 'typing-reveal 3s forwards, blink-caret 950ms step-end infinite';
             });
         }
 
