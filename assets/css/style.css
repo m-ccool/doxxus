@@ -1637,6 +1637,31 @@ body {
   animation: typing 3s forwards, blink-caret 950ms step-end infinite;
 }
 
+.splash-brand-image {
+  display: block;
+  width: min(82vw, 420px);
+  max-width: 100%;
+  height: auto;
+  filter: blur(0px) brightness(200%) saturate(200%);
+}
+
+/* Safari/iOS fallback: avoid occasional width-animation clipping on brand image */
+@supports (-webkit-touch-callout: none) {
+  .typed-out {
+    width: auto;
+    border-right: 0;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typed-out {
+    width: auto;
+    border-right: 0;
+    animation: none;
+  }
+}
+
 .web-host-div {
   max-width: calc(250pt + 5vw);
   margin-top: calc(50px);
