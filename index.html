@@ -134,9 +134,9 @@
         <section data-aos="fade-up" data-aos-duration="800" data-aos-once="true" id="begin">
             <div class="begin-panel">
                 <div class="begin-left">
-                    <span class="begin-eyebrow">Independent Developer</span>
+                    <span class="begin-eyebrow" data-glitch-candidate>Independent Developer</span>
                     <h2 class="begin-headline">Design.<br>Build.<br>Ship.</h2>
-                    <p class="begin-sub">One dev. Full stack. Start to finish.</p>
+                    <p class="begin-sub" data-glitch-candidate>One dev. Full stack. Start to finish.</p>
                 </div>
                 <div class="begin-right">
                     <div class="begin-stack">
@@ -431,22 +431,22 @@
         <div class="footer-inner">
             <div class="footer-cols">
                 <div class="footer-col-group">
-                    <span class="footer-label">Services</span>
+                    <span class="footer-label" data-glitch-candidate>Services</span>
                     <a href="#web-card">Web Design</a>
                     <a href="#portfolio">Development</a>
                     <a href="#web-card">Hosting</a>
                 </div>
                 <div class="footer-col-group">
-                    <span class="footer-label">Work</span>
+                    <span class="footer-label" data-glitch-candidate>Work</span>
                     <a href="#projects">Portfolio</a>
                     <a href="projects.html">All Projects</a>
                 </div>
                 <div class="footer-col-group">
-                    <span class="footer-label">Legal</span>
+                    <span class="footer-label" data-glitch-candidate>Legal</span>
                     <a href="terms.html">Terms &amp; Conditions</a>
                 </div>
                 <div class="footer-col-group">
-                    <span class="footer-label">Contact</span>
+                    <span class="footer-label" data-glitch-candidate>Contact</span>
                     <a href="mailto:dev@doxxus.us">dev@doxxus.us</a>
                 </div>
             </div>
@@ -589,6 +589,7 @@
             var scrambleLen = target.length + 2;
             var scramble = '';
             var i = 0;
+            if (caretEl) caretEl.classList.add('is-typing');
 
             function typeScramble() {
                 if (i < scrambleLen) {
@@ -607,6 +608,7 @@
 
             function typeFinal(index, current) {
                 if (index >= target.length) {
+                    if (caretEl) caretEl.classList.remove('is-typing');
                     if (onDone) onDone();
                     return;
                 }
@@ -621,12 +623,14 @@
 
         // Occasional delete + retype-with-a-few-typos, for a living-terminal feel while the wordmark is visible.
         function runTypoRetype(textEl, caretEl, target, onDone) {
+            if (caretEl) caretEl.classList.add('is-typing');
             deleteText(textEl, caretEl, target, 80, function(){
                 setTimeout(function(){ typeWithTypos(0, ''); }, 320);
             });
 
             function typeWithTypos(index, current) {
                 if (index >= target.length) {
+                    if (caretEl) caretEl.classList.remove('is-typing');
                     if (onDone) onDone();
                     return;
                 }
@@ -674,10 +678,60 @@
             tick();
         }
 
+        function randomItems(items, count) {
+            return items.sort(function(){ return Math.random() - 0.5; }).slice(0, count);
+        }
+
+        function runGlitchCandidate(el) {
+            var target = el.textContent.trim();
+            var letters = target.split('');
+            var indices = letters.map(function(letter, index){ return /[A-Za-z0-9]/.test(letter) ? index : -1; }).filter(function(index){ return index >= 0; });
+            var selected = randomItems(indices, Math.min(3 + Math.floor(Math.random() * 2), indices.length));
+            var text = document.createElement('span');
+            var caret = document.createElement('span');
+            caret.className = 'glitch-caret';
+            caret.setAttribute('aria-hidden', 'true');
+            el.textContent = '';
+            el.append(text, caret);
+            el.classList.add('is-glitch-typing');
+
+            function settle(step) {
+                var frame = letters.slice();
+                selected.slice(step).forEach(function(index){ frame[index] = randChar(); });
+                text.textContent = frame.join('');
+                if (step < selected.length) {
+                    setTimeout(function(){ settle(step + 1); }, 70 + Math.random() * 120);
+                    return;
+                }
+                setTimeout(function(){ el.classList.remove('is-glitch-typing'); }, 160);
+            }
+            settle(0);
+        }
+
+        function startGlitchCandidates(reduceMotion) {
+            if (reduceMotion) return;
+            var candidates = randomItems(Array.from(document.querySelectorAll('[data-glitch-candidate]')), 3);
+            candidates.forEach(function(el, index){
+                var trigger = function(){ setTimeout(function(){ runGlitchCandidate(el); }, 400 + index * 550 + Math.random() * 900); };
+                if ('IntersectionObserver' in window) {
+                    var observer = new IntersectionObserver(function(entries){
+                        if (entries[0].isIntersecting) {
+                            observer.disconnect();
+                            trigger();
+                        }
+                    }, { threshold: 0.25 });
+                    observer.observe(el);
+                } else {
+                    trigger();
+                }
+            });
+        }
+
         function startTyping() {
             if (typingStarted) return;
             typingStarted = true;
             var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            startGlitchCandidates(reduceMotion);
             document.querySelectorAll('.typed-out').forEach(function(el) {
                 var textEl = el.querySelector('.brand-type-text');
                 var caretEl = el.querySelector('.brand-caret');

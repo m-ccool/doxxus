@@ -1870,8 +1870,29 @@ body {
   vertical-align: -0.08em;
   background: #39d353;
   border-radius: 1px;
-  transition: background-color 260ms ease-out;
-  animation: caret-blink-glow 1400ms ease-in-out infinite;
+  opacity: 0;
+  transition: opacity 220ms ease, background-color 260ms ease-out;
+  animation: none;
+}
+
+.brand-caret.is-typing,
+.is-glitch-typing .glitch-caret {
+  opacity: 1;
+  animation: caret-blink-glow 900ms ease-in-out infinite;
+}
+
+.glitch-caret {
+  display: inline-block;
+  width: 0.09em;
+  height: 0.9em;
+  margin-left: 0.12em;
+  vertical-align: -0.08em;
+  border-radius: 1px;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+  opacity: 0;
+  transition: opacity 180ms ease;
+  animation: none;
 }
 
 @keyframes caret-blink-glow {
@@ -1916,7 +1937,7 @@ body {
 
   .brand-caret {
     animation: none !important;
-    opacity: 1 !important;
+    opacity: 0 !important;
     box-shadow: 0 0 12px rgba(57,211,83,0.8), 0 0 26px rgba(57,211,83,0.25) !important;
   }
 }
