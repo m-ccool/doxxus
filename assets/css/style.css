@@ -2463,7 +2463,6 @@ a {
   border-radius: var(--small-radius);
   overflow: visible;
   background: transparent;
-  border: var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
 
