@@ -1811,66 +1811,49 @@ body {
   transition: margin 1200ms ease-in-out;
   display: inline-block;
   white-space: nowrap;
+  font-size: clamp(1.8rem, 1rem + 5vw, 4rem);
 }
 
-/* text-based brand wordmark, letters fade/rise in one at a time */
+/* text-based brand wordmark, JS scrambles/settles the characters in on reveal */
 .brand-type-text {
   display: inline-block;
   white-space: nowrap;
   font-family: 'Lexend Giga', sans-serif;
   font-weight: 900;
-  font-size: clamp(1.8rem, 1rem + 5vw, 4rem);
+  font-size: 1em;
   letter-spacing: 0.1em;
   line-height: 1.1;
   padding: 0 0.05em 0.1em 0;
+  color: #fff;
+  animation: brand-glow-pulse 3.2s ease-in-out infinite;
 }
 
-.brand-letter {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.35em);
-  background: var(--rainbow-gradient);
-  background-size: 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+@keyframes brand-glow-pulse {
+  0%, 100% { text-shadow: 0 0 6px rgba(255,255,255,0.25), 0 0 16px rgba(255,255,255,0.1); }
+  50%       { text-shadow: 0 0 14px rgba(255,255,255,0.75), 0 0 34px rgba(255,255,255,0.35); }
 }
 
-.typed-out.play .brand-letter {
-  animation: letterIn 650ms cubic-bezier(.16,.84,.32,1) forwards, gradient 5s ease infinite;
-}
-
-.typed-out.play .brand-letter:nth-child(1) { animation-delay: 0ms, 0ms; }
-.typed-out.play .brand-letter:nth-child(2) { animation-delay: 110ms, 0ms; }
-.typed-out.play .brand-letter:nth-child(3) { animation-delay: 220ms, 0ms; }
-.typed-out.play .brand-letter:nth-child(4) { animation-delay: 330ms, 0ms; }
-.typed-out.play .brand-letter:nth-child(5) { animation-delay: 440ms, 0ms; }
-.typed-out.play .brand-letter:nth-child(6) { animation-delay: 550ms, 0ms; }
-
-@keyframes letterIn {
-  from {
-    opacity: 0;
-    transform: translateY(0.35em);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* cursor sized relative to the wordmark's own font-size, same soft glow as .p-explore */
 .brand-caret {
   display: inline-block;
   width: 0.075em;
   height: 0.85em;
   margin-left: 0.15em;
   vertical-align: -0.08em;
-  background: #3bff50;
-  opacity: 0;
+  background: #39d353;
+  border-radius: 1px;
+  animation: caret-blink-glow 950ms step-end infinite;
 }
 
-.typed-out.play .brand-caret {
-  opacity: 1;
-  animation: blink-caret 950ms step-end infinite;
+@keyframes caret-blink-glow {
+  0%, 49% {
+    opacity: 1;
+    box-shadow: 0 0 12px rgba(57,211,83,0.8), 0 0 26px rgba(57,211,83,0.25);
+  }
+  50%, 100% {
+    opacity: 0;
+    box-shadow: 0 0 4px rgba(57,211,83,0.15);
+  }
 }
 
 @media (max-width: 767px) {
@@ -1880,15 +1863,15 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brand-letter {
+  .brand-type-text {
     animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
+    text-shadow: 0 0 10px rgba(255,255,255,0.4) !important;
   }
 
   .brand-caret {
     animation: none !important;
     opacity: 1 !important;
+    box-shadow: 0 0 12px rgba(57,211,83,0.8), 0 0 26px rgba(57,211,83,0.25) !important;
   }
 }
 
