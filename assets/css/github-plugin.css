@@ -6,16 +6,16 @@
   --color-calendar-graph-day-L4-bg: #0a4208;
 
   /* Glass system — must match style.css */
-  --glass-bg:     rgba(255,255,255,0.018);
-  --glass-blur:   blur(12px) saturate(120%);
+  --glass-bg:     rgba(255,255,255,0.01);
+  --glass-blur:   blur(6px) saturate(120%);
   --glass-border: 1px solid rgba(255,255,255,0.10);
   --glass-shadow:
     0 8px 48px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.32),
-    inset 0 -1px 0 rgba(0,0,0,0.28);
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 -1px 0 rgba(0,0,0,0.05);
   /* Neutral dark header — no color filters to avoid blue tint */
-  --glass-header-bg: rgba(6,6,6,0.88);
-  --glass-nav-bg:  rgba(6,6,8,0.68);
+  --glass-header-bg: rgba(6,6,8,0.7);
+  --glass-nav-bg:  rgba(6,6,8,0.7);
 }
 
 .contrib-column {
