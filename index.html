@@ -559,13 +559,15 @@
             return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
         }
 
-        function deleteText(textEl, current, interval, callback) {
+        function deleteText(textEl, caretEl, current, interval, callback) {
+            if (caretEl) caretEl.classList.add('deleting');
             function step() {
                 if (current.length > 0) {
                     current = current.slice(0, -1);
                     textEl.textContent = current;
                     setTimeout(step, interval);
                 } else {
+                    if (caretEl) caretEl.classList.remove('deleting');
                     callback();
                 }
             }
@@ -573,7 +575,7 @@
         }
 
         // Terminal-style reveal: type gibberish, delete it, then type + settle on the real word.
-        function runScrambleTyping(textEl, target, onDone) {
+        function runScrambleTyping(textEl, caretEl, target, onDone) {
             var scrambleLen = target.length + 2;
             var scramble = '';
             var i = 0;
@@ -586,7 +588,7 @@
                     setTimeout(typeScramble, 150);
                 } else {
                     setTimeout(function(){
-                        deleteText(textEl, scramble, 90, function(){
+                        deleteText(textEl, caretEl, scramble, 90, function(){
                             setTimeout(function(){ typeFinal(0, ''); }, 360);
                         });
                     }, 480);
@@ -618,8 +620,8 @@
         }
 
         // Occasional delete + retype-with-a-few-typos, for a living-terminal feel while the wordmark is visible.
-        function runTypoRetype(textEl, target, onDone) {
-            deleteText(textEl, target, 80, function(){
+        function runTypoRetype(textEl, caretEl, target, onDone) {
+            deleteText(textEl, caretEl, target, 80, function(){
                 setTimeout(function(){ typeWithTypos(0, ''); }, 320);
             });
 
@@ -631,8 +633,10 @@
                 var makeTypo = Math.random() < 0.35;
                 if (makeTypo) {
                     textEl.textContent = current + randChar();
+                    if (caretEl) caretEl.classList.add('deleting');
                     setTimeout(function(){
                         textEl.textContent = current;
+                        if (caretEl) caretEl.classList.remove('deleting');
                         setTimeout(function(){
                             var next = current + target[index];
                             textEl.textContent = next;
@@ -648,7 +652,7 @@
         }
 
         // Replays the typo-retype every few minutes, only while the wordmark is on screen and the tab is visible.
-        function scheduleRetype(el, textEl, target) {
+        function scheduleRetype(el, textEl, caretEl, target) {
             var isVisible = true;
             if ('IntersectionObserver' in window) {
                 var io = new IntersectionObserver(function(entries) {
@@ -661,7 +665,7 @@
                 var delay = 150000 + Math.random() * 150000; // every 2.5-5 minutes
                 setTimeout(function(){
                     if (isVisible && document.visibilityState === 'visible') {
-                        runTypoRetype(textEl, target, tick);
+                        runTypoRetype(textEl, caretEl, target, tick);
                     } else {
                         tick();
                     }
@@ -676,6 +680,7 @@
             var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             document.querySelectorAll('.typed-out').forEach(function(el) {
                 var textEl = el.querySelector('.brand-type-text');
+                var caretEl = el.querySelector('.brand-caret');
                 el.classList.add('play');
                 if (!textEl) return;
                 var target = (textEl.getAttribute('data-brand') || textEl.textContent).trim();
@@ -684,8 +689,8 @@
                     textEl.textContent = target;
                     return;
                 }
-                runScrambleTyping(textEl, target, function(){
-                    scheduleRetype(el, textEl, target);
+                runScrambleTyping(textEl, caretEl, target, function(){
+                    scheduleRetype(el, textEl, caretEl, target);
                 });
             });
         }

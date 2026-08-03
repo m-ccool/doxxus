@@ -1842,17 +1842,35 @@ body {
   vertical-align: -0.08em;
   background: #39d353;
   border-radius: 1px;
-  animation: caret-blink-glow 950ms step-end infinite;
+  transition: background-color 260ms ease-out;
+  animation: caret-blink-glow 1400ms ease-in-out infinite;
 }
 
 @keyframes caret-blink-glow {
-  0%, 49% {
+  0%, 100% {
     opacity: 1;
     box-shadow: 0 0 12px rgba(57,211,83,0.8), 0 0 26px rgba(57,211,83,0.25);
   }
-  50%, 100% {
-    opacity: 0;
+  50% {
+    opacity: 0.35;
     box-shadow: 0 0 4px rgba(57,211,83,0.15);
+  }
+}
+
+/* red while a delete/backspace sequence is running */
+.brand-caret.deleting {
+  background: #ff3b3b;
+  animation: caret-blink-glow-red 1400ms ease-in-out infinite;
+}
+
+@keyframes caret-blink-glow-red {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 12px rgba(255,59,59,0.8), 0 0 26px rgba(255,59,59,0.25);
+  }
+  50% {
+    opacity: 0.35;
+    box-shadow: 0 0 4px rgba(255,59,59,0.15);
   }
 }
 
