@@ -109,7 +109,7 @@
                 <div class="col-auto col-lg-4 text-center d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex flex-column flex-grow-1 flex-fill justify-content-center align-items-center flex-nowrap justify-content-sm-center align-items-sm-center justify-content-md-center justify-content-lg-center">
                     <div class="d-flex flex-column justify-content-center align-items-center align-content-center" style="width: 100%;/*max-width: 650px;*//*z-index: 5;*/z-index: 25;/*transition: margin 1000ms ease-out;*/">
                         <div class="container text-center d-flex flex-grow-1 align-items-center align-content-center align-self-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center" data-aos="fade" data-aos-duration="800" data-aos-once="true" id="splash-p-2" style="/*overflow: visible;*//*text-shadow: 0px 1px 3px rgb(0,0,0);*/display: inline-block!important;/*margin: 0px;*/padding: 0px;/*transition: all 1200ms ease-in-out!important;*/">
-                            <div class="typed-out"><span class="brand-type-text" data-brand="DOXXUS">DOXXUS</span><span class="brand-caret"></span></div>
+                            <div class="typed-out"><span class="brand-type-text" data-brand="DOXXUS"></span><span class="brand-caret"></span></div>
                         </div>
                         <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient">WEB DEV</h2><span data-aos="fade" data-aos-duration="800" data-aos-delay="1200" data-aos-once="true" class="h2 d-flex flex-column" style="/*opacity: 0.50;*/font-size: .7rem;color: whitesmoke!important;"><span>creating</span><span>webspaces</span></span>
                     </div><!-- Start: neon-btn -->
@@ -559,8 +559,21 @@
             return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
         }
 
+        function deleteText(textEl, current, interval, callback) {
+            function step() {
+                if (current.length > 0) {
+                    current = current.slice(0, -1);
+                    textEl.textContent = current;
+                    setTimeout(step, interval);
+                } else {
+                    callback();
+                }
+            }
+            step();
+        }
+
         // Terminal-style reveal: type gibberish, delete it, then type + settle on the real word.
-        function runScrambleTyping(textEl, target) {
+        function runScrambleTyping(textEl, target, onDone) {
             var scrambleLen = target.length + 2;
             var scramble = '';
             var i = 0;
@@ -570,41 +583,91 @@
                     scramble += randChar();
                     textEl.textContent = scramble;
                     i++;
-                    setTimeout(typeScramble, 100);
+                    setTimeout(typeScramble, 150);
                 } else {
-                    setTimeout(deleteScramble, 380);
-                }
-            }
-
-            function deleteScramble() {
-                if (scramble.length > 0) {
-                    scramble = scramble.slice(0, -1);
-                    textEl.textContent = scramble;
-                    setTimeout(deleteScramble, 60);
-                } else {
-                    setTimeout(function(){ typeFinal(0, ''); }, 280);
+                    setTimeout(function(){
+                        deleteText(textEl, scramble, 90, function(){
+                            setTimeout(function(){ typeFinal(0, ''); }, 360);
+                        });
+                    }, 480);
                 }
             }
 
             function typeFinal(index, current) {
-                if (index >= target.length) return;
+                if (index >= target.length) {
+                    if (onDone) onDone();
+                    return;
+                }
                 var flickers = 3;
                 var f = 0;
                 function flicker() {
                     if (f < flickers) {
                         textEl.textContent = current + randChar();
                         f++;
-                        setTimeout(flicker, 60);
+                        setTimeout(flicker, 90);
                     } else {
                         var next = current + target[index];
                         textEl.textContent = next;
-                        setTimeout(function(){ typeFinal(index + 1, next); }, 170);
+                        setTimeout(function(){ typeFinal(index + 1, next); }, 250);
                     }
                 }
                 flicker();
             }
 
             typeScramble();
+        }
+
+        // Occasional delete + retype-with-a-few-typos, for a living-terminal feel while the wordmark is visible.
+        function runTypoRetype(textEl, target, onDone) {
+            deleteText(textEl, target, 80, function(){
+                setTimeout(function(){ typeWithTypos(0, ''); }, 320);
+            });
+
+            function typeWithTypos(index, current) {
+                if (index >= target.length) {
+                    if (onDone) onDone();
+                    return;
+                }
+                var makeTypo = Math.random() < 0.35;
+                if (makeTypo) {
+                    textEl.textContent = current + randChar();
+                    setTimeout(function(){
+                        textEl.textContent = current;
+                        setTimeout(function(){
+                            var next = current + target[index];
+                            textEl.textContent = next;
+                            setTimeout(function(){ typeWithTypos(index + 1, next); }, 250);
+                        }, 160);
+                    }, 220);
+                } else {
+                    var next2 = current + target[index];
+                    textEl.textContent = next2;
+                    setTimeout(function(){ typeWithTypos(index + 1, next2); }, 220);
+                }
+            }
+        }
+
+        // Replays the typo-retype every few minutes, only while the wordmark is on screen and the tab is visible.
+        function scheduleRetype(el, textEl, target) {
+            var isVisible = true;
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) { isVisible = entry.isIntersecting; });
+                });
+                io.observe(el);
+            }
+
+            function tick() {
+                var delay = 150000 + Math.random() * 150000; // every 2.5-5 minutes
+                setTimeout(function(){
+                    if (isVisible && document.visibilityState === 'visible') {
+                        runTypoRetype(textEl, target, tick);
+                    } else {
+                        tick();
+                    }
+                }, delay);
+            }
+            tick();
         }
 
         function startTyping() {
@@ -616,12 +679,14 @@
                 el.classList.add('play');
                 if (!textEl) return;
                 var target = (textEl.getAttribute('data-brand') || textEl.textContent).trim();
+                textEl.textContent = '';
                 if (reduceMotion) {
                     textEl.textContent = target;
                     return;
                 }
-                textEl.textContent = '';
-                runScrambleTyping(textEl, target);
+                runScrambleTyping(textEl, target, function(){
+                    scheduleRetype(el, textEl, target);
+                });
             });
         }
 
