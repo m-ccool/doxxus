@@ -600,20 +600,10 @@
                     if (onDone) onDone();
                     return;
                 }
-                var flickers = 3;
-                var f = 0;
-                function flicker() {
-                    if (f < flickers) {
-                        textEl.textContent = current + randChar();
-                        f++;
-                        setTimeout(flicker, 90);
-                    } else {
-                        var next = current + target[index];
-                        textEl.textContent = next;
-                        setTimeout(function(){ typeFinal(index + 1, next); }, 250);
-                    }
-                }
-                flicker();
+                var next = current + target[index];
+                textEl.textContent = next;
+                var delay = 140 + Math.random() * 110; // natural, human-like keystroke variance
+                setTimeout(function(){ typeFinal(index + 1, next); }, delay);
             }
 
             typeScramble();
