@@ -1481,23 +1481,25 @@ h1 {
 }
 
 .neon-btn-outline:hover {
-  transform: scale(1.5);
-  transition: all ease 2s;
+  transform: translateY(1px) scale(0.98);
+  transition: transform 180ms ease, box-shadow 180ms ease;
   border-radius: 25px;
   box-shadow: 8px 3px 15px #000000;
 }
 
 .neon-btn-outline:visited {
-  transform: scale(1.5);
-  transition: all ease 2s;
   border-radius: 25px;
-  box-shadow: 8px 3px 15px #000000;
+}
+
+.neon-btn-outline:active {
+  transform: translateY(2px) scale(0.96);
+  transition-duration: 90ms;
 }
 
 .neon-btn-outline {
   /*transition: transform ease 2s;*/
   animation: gradient 5s ease infinite;
-  transition: all ease 1s;
+  transition: transform 180ms ease, box-shadow 180ms ease;
   padding: 1px;
   border-radius: 25px;
   box-shadow: var(--bubble-shadow);
