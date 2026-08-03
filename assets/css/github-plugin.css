@@ -243,42 +243,27 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   overflow: visible;
 }
 
-.calendar-scroll-indicator {
-  height: 3px;
-  margin: 0 0 0.55rem;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.05);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 300ms ease;
-}
-
-.calendar-scroll-indicator.is-active {
-  opacity: 1;
-}
-
-.calendar-scroll-indicator-thumb {
-  display: block;
-  height: 100%;
-  min-width: 12%;
-  border-radius: inherit;
-  background: rgba(255,255,255,0.38);
-  box-shadow: 0 0 8px rgba(255,255,255,0.16);
-  transform-origin: left center;
-  transition: transform 100ms linear, width 100ms linear;
-}
-
 /* Keep daily cells square; the graph viewport scrolls instead of compressing weeks. */
 .js-calendar-graph > div:first-child {
   width: 100%;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.3) transparent;
 }
 
 .js-calendar-graph > div:first-child::-webkit-scrollbar {
-  display: none;
+  height: 5px;
+}
+
+.js-calendar-graph > div:first-child::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.js-calendar-graph > div:first-child::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
+  border-radius: 999px;
 }
 
 .ContributionCalendar-grid {
