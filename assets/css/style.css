@@ -21,8 +21,8 @@ html {
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     inset 0 -1px 0 rgba(0,0,0,0.05);
 
-  /* Navbar/sticky-header — more opaque for readability */
-  --glass-nav-bg:rgba(6,6,8,0.7);
+  /* Navbar/sticky-header — matches footer glass treatment */
+  --glass-nav-bg: rgba(6,6,8,0.45);
 
   /* Dense header for scrolling-content panels */
   --glass-header-bg: rgba(6,6,8,0.7);
@@ -190,7 +190,7 @@ html {
   z-index: 999;
   padding: .25rem 0.75rem !important;
   transition: all .4s ease;
-  /* Navbar uses opaque nav var — not the see-through panel var */
+  /* Navbar shares the footer's dark glass treatment. */
   background: var(--glass-nav-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);

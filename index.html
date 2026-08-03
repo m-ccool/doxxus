@@ -352,7 +352,18 @@
                 <div class="calendar">Loading contributions...</div>
             </div>
             <script>
-                GitHubCalendar(".calendar", "m-ccool", { responsive: true, global_stats: false, tooltips: true });
+                const calendarElement = document.querySelector(".calendar");
+                const scrollCalendarToCurrentWeek = () => {
+                    const graphViewport = calendarElement.querySelector(".js-calendar-graph > div:first-child");
+                    if (!graphViewport || graphViewport.scrollWidth <= graphViewport.clientWidth) return false;
+                    graphViewport.scrollLeft = graphViewport.scrollWidth;
+                    return true;
+                };
+                const calendarObserver = new MutationObserver(() => {
+                    if (scrollCalendarToCurrentWeek()) calendarObserver.disconnect();
+                });
+                calendarObserver.observe(calendarElement, { childList: true, subtree: true });
+                GitHubCalendar(".calendar", "m-ccool", { responsive: false, global_stats: false, tooltips: true });
             </script>
             <div data-aos="fade" data-aos-duration="800" data-aos-once="true" data-aos-delay="500" style="margin-top: 1.5rem;">
                 <p class="text-center mb-1" style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);">recent activity</p>

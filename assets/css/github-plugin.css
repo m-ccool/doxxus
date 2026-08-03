@@ -15,7 +15,7 @@
     inset 0 -1px 0 rgba(0,0,0,0.05);
   /* Neutral dark header — no color filters to avoid blue tint */
   --glass-header-bg: rgba(6,6,8,0.7);
-  --glass-nav-bg:  rgba(6,6,8,0.7);
+  --glass-nav-bg: rgba(6,6,8,0.45);
 }
 
 .contrib-column {
@@ -69,8 +69,8 @@ table.ContributionCalendar-grid td {
 
 table.ContributionCalendar-grid td.ContributionCalendar-day {
   border-radius: 3px !important;
-  width: 10px !important;
-  height: 10px !important;
+  width: 11px !important;
+  height: 11px !important;
 }
 
 table.ContributionCalendar-grid td span.sr-only {
@@ -240,28 +240,23 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   margin: 0 !important;
   color: rgba(255,255,255,0.55) !important;
   font-size: 0.75rem;
-  overflow: hidden;
+  overflow: visible;
 }
 
-/* Render at native size — forcing width:100% distorted/overlapped the week columns non-uniformly */
-.calendar svg,
-.js-calendar-graph-svg {
-  width: auto !important;
-  height: auto !important;
-  max-width: none !important;
-}
-
-.js-yearly-contributions,
-.js-calendar-graph,
+/* Keep daily cells square; the graph viewport scrolls instead of compressing weeks. */
 .js-calendar-graph > div:first-child {
+  width: 100%;
   overflow-x: auto !important;
   overflow-y: hidden !important;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .ContributionCalendar-grid {
-  width: auto !important;
+  width: max-content !important;
+  min-width: 700px;
   max-width: none;
+  table-layout: auto;
 }
 
 @media (max-width: 576px) {
