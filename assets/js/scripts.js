@@ -633,15 +633,61 @@ $(function () {
 
 /* ===============================  Last Online Status  =============================== */
 (function () {
+    function setLastOnline(dateValue) {
+        var d = new Date(dateValue);
+        if (Number.isNaN(d.getTime())) return;
+        var text = 'last online ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.querySelectorAll('.last-online').forEach(function(el) { el.textContent = text; });
+    }
+
+    function getLastContributionDate() {
+        var cells = Array.prototype.slice.call(document.querySelectorAll('.calendar rect[data-date]'));
+        var latest = null;
+
+        cells.forEach(function(cell) {
+            var count = parseInt(cell.getAttribute('data-count') || '0', 10);
+            var level = parseInt(cell.getAttribute('data-level') || '0', 10);
+            if (count <= 0 && level <= 0) return;
+
+            var dateText = cell.getAttribute('data-date');
+            if (!dateText) return;
+
+            var dt = new Date(dateText + 'T00:00:00Z');
+            if (Number.isNaN(dt.getTime())) return;
+            if (!latest || dt > latest) latest = dt;
+        });
+
+        return latest;
+    }
+
+    function tryCalendarFallback(attemptsLeft) {
+        var contributionDate = getLastContributionDate();
+        if (contributionDate) {
+            setLastOnline(contributionDate);
+            return;
+        }
+
+        if (attemptsLeft <= 0) return;
+        setTimeout(function() {
+            tryCalendarFallback(attemptsLeft - 1);
+        }, 700);
+    }
+
     fetch('https://api.github.com/users/m-ccool/events?per_page=1')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            if (!data || !data[0]) return;
-            var d = new Date(data[0].created_at);
-            var text = 'last online ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            document.querySelectorAll('.last-online').forEach(function(el) { el.textContent = text; });
+        .then(function(r) {
+            if (!r.ok) throw new Error('events api unavailable');
+            return r.json();
         })
-        .catch(function() {});
+        .then(function(data) {
+            if (Array.isArray(data) && data[0] && data[0].created_at) {
+                setLastOnline(data[0].created_at);
+                return;
+            }
+            tryCalendarFallback(14);
+        })
+        .catch(function() {
+            tryCalendarFallback(14);
+        });
 })();
 
 /* ===============================  fixed-slider  =============================== */
