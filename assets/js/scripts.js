@@ -36,6 +36,69 @@ document.addEventListener('animationend', function (event) {
     }
 });
 
+/* ===============================  GitHub contributions  =============================== */
+
+(function () {
+    var username = 'm-ccool';
+
+    function formatDate(date) {
+        return date.toISOString().slice(0, 10);
+    }
+
+    function renderCalendar(calendar, contributions) {
+        var contributionMap = new Map(contributions.map(function (entry) {
+            return [entry.date, entry];
+        }));
+        var today = new Date();
+        var start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - 364));
+        start.setUTCDate(start.getUTCDate() - start.getUTCDay());
+
+        var graph = document.createElement('div');
+        graph.className = 'contribution-graph';
+        graph.setAttribute('role', 'img');
+        graph.setAttribute('aria-label', 'GitHub contributions over the last 12 months');
+
+        for (var dayIndex = 0; dayIndex < 371; dayIndex += 1) {
+            var date = new Date(start);
+            date.setUTCDate(start.getUTCDate() + dayIndex);
+            var dateKey = formatDate(date);
+            var entry = contributionMap.get(dateKey) || { count: 0, level: 0 };
+            var day = document.createElement('span');
+            day.className = 'contribution-day';
+            day.dataset.date = dateKey;
+            day.dataset.count = String(entry.count);
+            day.dataset.level = String(entry.level);
+            day.title = entry.count + ' contribution' + (entry.count === 1 ? '' : 's') + ' on ' + date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+            graph.appendChild(day);
+        }
+
+        calendar.replaceChildren(graph);
+    }
+
+    window.renderContributionCalendars = function () {
+        var calendars = Array.prototype.slice.call(document.querySelectorAll('.calendar'));
+        if (!calendars.length) return;
+
+        fetch('https://github-contributions-api.jogruber.de/v4/' + username)
+            .then(function (response) {
+                if (!response.ok) throw new Error('contributions unavailable');
+                return response.json();
+            })
+            .then(function (data) {
+                calendars.forEach(function (calendar) {
+                    renderCalendar(calendar, Array.isArray(data.contributions) ? data.contributions : []);
+                });
+            })
+            .catch(function () {
+                calendars.forEach(function (calendar) {
+                    calendar.textContent = 'Contributions are temporarily unavailable.';
+                });
+            });
+    };
+
+    window.renderContributionCalendars();
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-contact-select]').forEach(function (select) {
         const trigger = select.querySelector('.contact-select-trigger');
@@ -713,7 +776,7 @@ $(function () {
     }
 
     function getLastContributionDate() {
-        var cells = Array.prototype.slice.call(document.querySelectorAll('.calendar rect[data-date]'));
+        var cells = Array.prototype.slice.call(document.querySelectorAll('.contribution-day[data-date]'));
         var latest = null;
 
         cells.forEach(function(cell) {

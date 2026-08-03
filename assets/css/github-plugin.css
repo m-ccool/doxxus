@@ -243,6 +243,34 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   overflow: visible;
 }
 
+.contribution-graph {
+  display: grid;
+  grid-template-rows: repeat(7, 11px);
+  grid-auto-flow: column;
+  grid-auto-columns: 11px;
+  gap: 3px;
+  width: max-content;
+  min-width: 700px;
+}
+
+.contribution-day {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  background: var(--color-calendar-graph-day-bg);
+}
+
+.contribution-day[data-level="1"] { background: var(--color-calendar-graph-day-L1-bg); }
+.contribution-day[data-level="2"] { background: var(--color-calendar-graph-day-L2-bg); }
+.contribution-day[data-level="3"] { background: var(--color-calendar-graph-day-L3-bg); }
+.contribution-day[data-level="4"] { background: var(--color-calendar-graph-day-L4-bg); }
+
+.calendar {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Keep daily cells square; the graph viewport scrolls instead of compressing weeks. */
 .js-calendar-graph > div:first-child {
   width: 100%;
