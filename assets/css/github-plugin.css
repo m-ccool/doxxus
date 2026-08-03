@@ -249,7 +249,11 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   overflow-x: auto !important;
   overflow-y: hidden !important;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+}
+
+.js-calendar-graph > div:first-child::-webkit-scrollbar {
+  display: none;
 }
 
 .ContributionCalendar-grid {
