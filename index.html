@@ -570,9 +570,9 @@
                     scramble += randChar();
                     textEl.textContent = scramble;
                     i++;
-                    setTimeout(typeScramble, 55);
+                    setTimeout(typeScramble, 100);
                 } else {
-                    setTimeout(deleteScramble, 220);
+                    setTimeout(deleteScramble, 380);
                 }
             }
 
@@ -580,25 +580,25 @@
                 if (scramble.length > 0) {
                     scramble = scramble.slice(0, -1);
                     textEl.textContent = scramble;
-                    setTimeout(deleteScramble, 32);
+                    setTimeout(deleteScramble, 60);
                 } else {
-                    setTimeout(function(){ typeFinal(0, ''); }, 160);
+                    setTimeout(function(){ typeFinal(0, ''); }, 280);
                 }
             }
 
             function typeFinal(index, current) {
                 if (index >= target.length) return;
-                var flickers = 2;
+                var flickers = 3;
                 var f = 0;
                 function flicker() {
                     if (f < flickers) {
                         textEl.textContent = current + randChar();
                         f++;
-                        setTimeout(flicker, 35);
+                        setTimeout(flicker, 60);
                     } else {
                         var next = current + target[index];
                         textEl.textContent = next;
-                        setTimeout(function(){ typeFinal(index + 1, next); }, 95);
+                        setTimeout(function(){ typeFinal(index + 1, next); }, 170);
                     }
                 }
                 flicker();

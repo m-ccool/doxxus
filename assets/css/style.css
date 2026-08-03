@@ -1819,9 +1819,9 @@ body {
   display: inline-block;
   white-space: nowrap;
   font-family: 'Lexend Giga', sans-serif;
-  font-weight: 900;
+  font-weight: 400;
   font-size: 1em;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.28em;
   line-height: 1.1;
   padding: 0 0.05em 0.1em 0;
   color: #fff;
