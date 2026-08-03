@@ -110,7 +110,7 @@
                         <div class="container text-center d-flex flex-grow-1 align-items-center align-content-center align-self-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center" data-aos="fade" data-aos-duration="800" data-aos-once="true" id="splash-p-2" style="/*overflow: visible;*//*text-shadow: 0px 1px 3px rgb(0,0,0);*/display: inline-block!important;/*margin: 0px;*/padding: 0px;/*transition: all 1200ms ease-in-out!important;*/">
                             <div class="typed-out"><span class="brand-type-text" data-brand="DOXXUS"></span><span class="brand-caret"></span></div>
                         </div>
-                        <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient">WEB DEV</h2>
+                        <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient"><span data-glitch-letter>W</span>EB DEV</h2>
                     </div><!-- Start: neon-btn -->
 <!-- End: neon-btn -->
                     <p data-aos="fade" data-aos-duration="800" data-aos-delay="2400" data-aos-once="true" class="p p-center-flex" style="z-index: 100;">b mccool</p>
@@ -134,9 +134,9 @@
         <section data-aos="fade-up" data-aos-duration="800" data-aos-once="true" id="begin">
             <div class="begin-panel">
                 <div class="begin-left">
-                    <span class="begin-eyebrow" data-glitch-candidate>Independent Developer</span>
-                    <h2 class="begin-headline">Design.<br>Build.<br>Ship.</h2>
-                    <p class="begin-sub" data-glitch-candidate>One dev. Full stack. Start to finish.</p>
+                    <span class="begin-eyebrow">Independent Developer</span>
+                    <h2 class="begin-headline"><span data-glitch-letter>D</span>esign.<br><span data-glitch-letter>B</span>uild.<br><span data-glitch-letter>S</span>hip.</h2>
+                    <p class="begin-sub">One dev. Full stack. Start to finish.</p>
                 </div>
                 <div class="begin-right">
                     <div class="begin-stack">
@@ -431,22 +431,22 @@
         <div class="footer-inner">
             <div class="footer-cols">
                 <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-candidate>Services</span>
+                    <span class="footer-label" data-glitch-word>Services</span>
                     <a href="#web-card">Web Design</a>
                     <a href="#portfolio">Development</a>
                     <a href="#web-card">Hosting</a>
                 </div>
                 <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-candidate>Work</span>
+                    <span class="footer-label" data-glitch-word>Work</span>
                     <a href="#projects">Portfolio</a>
                     <a href="projects.html">All Projects</a>
                 </div>
                 <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-candidate>Legal</span>
+                    <span class="footer-label" data-glitch-word>Legal</span>
                     <a href="terms.html">Terms &amp; Conditions</a>
                 </div>
                 <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-candidate>Contact</span>
+                    <span class="footer-label" data-glitch-word>Contact</span>
                     <a href="mailto:dev@doxxus.us">dev@doxxus.us</a>
                 </div>
             </div>
@@ -682,11 +682,8 @@
             return items.sort(function(){ return Math.random() - 0.5; }).slice(0, count);
         }
 
-        function runGlitchCandidate(el) {
+        function runGlitchTyping(el) {
             var target = el.textContent.trim();
-            var letters = target.split('');
-            var indices = letters.map(function(letter, index){ return /[A-Za-z0-9]/.test(letter) ? index : -1; }).filter(function(index){ return index >= 0; });
-            var selected = randomItems(indices, Math.min(3 + Math.floor(Math.random() * 2), indices.length));
             var text = document.createElement('span');
             var caret = document.createElement('span');
             caret.className = 'glitch-caret';
@@ -695,24 +692,29 @@
             el.append(text, caret);
             el.classList.add('is-glitch-typing');
 
-            function settle(step) {
-                var frame = letters.slice();
-                selected.slice(step).forEach(function(index){ frame[index] = randChar(); });
-                text.textContent = frame.join('');
-                if (step < selected.length) {
-                    setTimeout(function(){ settle(step + 1); }, 70 + Math.random() * 120);
+            function type(index, current) {
+                if (index < target.length) {
+                    var character = target[index];
+                    if (Math.random() < 0.28 && /[A-Za-z0-9]/.test(character)) {
+                        text.textContent = current + randChar();
+                        setTimeout(function(){ type(index, current); }, 60 + Math.random() * 100);
+                        return;
+                    }
+                    text.textContent = current + character;
+                    setTimeout(function(){ type(index + 1, current + character); }, 80 + Math.random() * 140);
                     return;
                 }
                 setTimeout(function(){ el.classList.remove('is-glitch-typing'); }, 160);
             }
-            settle(0);
+            type(0, '');
         }
 
-        function startGlitchCandidates(reduceMotion) {
+        function startGlitchTargets(reduceMotion) {
             if (reduceMotion) return;
-            var candidates = randomItems(Array.from(document.querySelectorAll('[data-glitch-candidate]')), 3);
-            candidates.forEach(function(el, index){
-                var trigger = function(){ setTimeout(function(){ runGlitchCandidate(el); }, 400 + index * 550 + Math.random() * 900); };
+            var words = randomItems(Array.from(document.querySelectorAll('[data-glitch-word]')), 3);
+            var letters = randomItems(Array.from(document.querySelectorAll('[data-glitch-letter]')), 3 + Math.floor(Math.random() * 2));
+            words.concat(letters).forEach(function(el, index){
+                var trigger = function(){ setTimeout(function(){ runGlitchTyping(el); }, 350 + index * 450 + Math.random() * 700); };
                 if ('IntersectionObserver' in window) {
                     var observer = new IntersectionObserver(function(entries){
                         if (entries[0].isIntersecting) {
@@ -731,7 +733,7 @@
             if (typingStarted) return;
             typingStarted = true;
             var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            startGlitchCandidates(reduceMotion);
+            startGlitchTargets(reduceMotion);
             document.querySelectorAll('.typed-out').forEach(function(el) {
                 var textEl = el.querySelector('.brand-type-text');
                 var caretEl = el.querySelector('.brand-caret');
