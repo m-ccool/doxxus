@@ -1812,9 +1812,27 @@ body {
   display: inline-block;
   overflow: hidden;
   border-right: .75em solid;
-  /*white-space: nowrap;*/
+  white-space: nowrap;
   width: 0;
   max-width: 100%;
+}
+
+/* text-based brand wordmark, typed-reveal replaces the old logo image */
+.brand-type-text {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: 'Lexend Giga', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 1rem + 5vw, 4rem);
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  padding: 0 0.05em 0.1em 0;
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 5s ease infinite;
 }
 
 @keyframes typing-reveal {
@@ -1826,48 +1844,9 @@ body {
   }
 }
 
-@keyframes splash-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.typed-out.typed-fade-in {
-  width: auto !important;
-  border-right: 0 !important;
-  opacity: 0;
-  animation: splash-fade-in 650ms ease-out forwards;
-}
-
-/* Safari/iOS fallback: keep full logo visible without forcing oversized width */
-@supports (-webkit-touch-callout: none) {
-  #splash-p-2 {
-    min-width: min(82vw, 300px)!important;
-    max-width: min(82vw, 300px)!important;
-  }
-
-  #splash-p-2 .typed-out img {
-    min-width: 0!important;
-    width: min(82vw, 300px)!important;
-    max-width: none!important;
-    height: auto!important;
-  }
-}
-
 @media (max-width: 767px) {
   #splash-p-2 {
-    min-width: min(82vw, 300px)!important;
-    max-width: min(82vw, 300px)!important;
-  }
-
-  #splash-p-2 .typed-out img {
-    min-width: 0!important;
-    width: min(82vw, 300px)!important;
-    max-width: none!important;
-    height: auto!important;
+    max-width: 90vw;
   }
 }
 
