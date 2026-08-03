@@ -570,6 +570,8 @@
                 void el.offsetWidth;
 
                 if (isIOS) {
+                    el.style.animation = '';
+                    el.style.webkitAnimation = '';
                     el.classList.add('typed-fade-in');
                     return;
                 }
