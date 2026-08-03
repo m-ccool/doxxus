@@ -692,6 +692,28 @@
             el.append(text, caret);
             el.classList.add('is-glitch-typing');
 
+            function finish() {
+                setTimeout(function(){
+                    el.classList.remove('is-glitch-typing');
+                    if (onDone) onDone();
+                }, 160);
+            }
+
+            if (target.length === 1) {
+                var frames = 3 + Math.floor(Math.random() * 4);
+                function scrambleLetter(frame) {
+                    if (frame < frames) {
+                        text.textContent = randChar();
+                        setTimeout(function(){ scrambleLetter(frame + 1); }, 90 + Math.random() * 100);
+                        return;
+                    }
+                    text.textContent = target;
+                    finish();
+                }
+                scrambleLetter(0);
+                return;
+            }
+
             function type(index, current) {
                 if (index < target.length) {
                     var character = target[index];
@@ -704,10 +726,7 @@
                     setTimeout(function(){ type(index + 1, current + character); }, 80 + Math.random() * 140);
                     return;
                 }
-                setTimeout(function(){
-                    el.classList.remove('is-glitch-typing');
-                    if (onDone) onDone();
-                }, 160);
+                finish();
             }
             type(0, '');
         }

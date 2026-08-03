@@ -1876,35 +1876,45 @@ body {
 /* cursor sized relative to the wordmark's own font-size, same soft glow as .p-explore */
 .brand-caret {
   display: inline-block;
-  width: 0.075em;
+  width: 0;
   height: 0.85em;
-  margin-left: 0.15em;
+  margin-left: 0;
+  overflow: hidden;
   vertical-align: -0.08em;
   background: #39d353;
   border-radius: 1px;
   opacity: 0;
-  transition: opacity 220ms ease, background-color 260ms ease-out;
+  transition: width 180ms ease, margin-left 180ms ease, opacity 220ms ease, background-color 260ms ease-out;
   animation: none;
 }
 
-.brand-caret.is-typing,
-.is-glitch-typing .glitch-caret {
+.brand-caret.is-typing {
+  width: 0.075em;
+  margin-left: 0.15em;
   opacity: 1;
   animation: caret-blink-glow 900ms ease-in-out infinite;
 }
 
 .glitch-caret {
   display: inline-block;
-  width: 0.09em;
+  width: 0;
   height: 0.9em;
-  margin-left: 0.12em;
+  margin-left: 0;
+  overflow: hidden;
   vertical-align: -0.08em;
   border-radius: 1px;
   background: currentColor;
   box-shadow: 0 0 10px currentColor;
   opacity: 0;
-  transition: opacity 180ms ease;
+  transition: width 180ms ease, margin-left 180ms ease, opacity 180ms ease;
   animation: none;
+}
+
+.is-glitch-typing .glitch-caret {
+  width: 0.09em;
+  margin-left: 0.12em;
+  opacity: 1;
+  animation: caret-blink-glow 900ms ease-in-out infinite;
 }
 
 @keyframes caret-blink-glow {
