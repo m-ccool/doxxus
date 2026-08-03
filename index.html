@@ -479,13 +479,19 @@
                         <p id="error" class="p-form-notice">error! 🐛 please try again or email dev@doxxus.us</p>
                         <form id="ajax-form" class="cf" method="post" action="javascript:void(0)">
                             <div class="cf-row">
-                                <label class="cf-label" for="type" data-glitch-modal>TYPE</label>
-                                <select class="form-select" id="type" name="type">
-                                    <option value="website">Website Development</option>
-                                    <option value="software" selected>Software Development</option>
-                                    <option value="repair">PC Support / Repair</option>
-                                    <option value="other">Other (please specify)</option>
-                                </select>
+                                <label class="cf-label" for="type-trigger" data-glitch-modal>TYPE</label>
+                                <div class="contact-select" data-contact-select>
+                                    <input type="hidden" id="type" name="type" value="software">
+                                    <button class="contact-select-trigger" id="type-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="type-options">
+                                        <span>Software Development</span><i class="typcn typcn-chevron-down" aria-hidden="true"></i>
+                                    </button>
+                                    <div class="contact-select-options" id="type-options" role="listbox" aria-label="Project type" hidden>
+                                        <button type="button" role="option" aria-selected="false" data-value="website">Website Development</button>
+                                        <button type="button" role="option" aria-selected="true" data-value="software">Software Development</button>
+                                        <button type="button" role="option" aria-selected="false" data-value="repair">PC Support / Repair</button>
+                                        <button type="button" role="option" aria-selected="false" data-value="other">Other (please specify)</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="cf-row">
                                 <label class="cf-label" for="user-1" data-glitch-modal>NAME</label>
@@ -516,6 +522,14 @@
                             // reset form + notices when modal is closed
                             $('#contact').on('hidden.bs.modal', function(){
                                 $("#ajax-form")[0].reset();
+                                var projectType = document.querySelector('[data-contact-select]');
+                                if (projectType) {
+                                    projectType.querySelector('input[name="type"]').value = 'software';
+                                    projectType.querySelector('.contact-select-trigger span').textContent = 'Software Development';
+                                    projectType.querySelectorAll('[role="option"]').forEach(function(option){
+                                        option.setAttribute('aria-selected', option.dataset.value === 'software');
+                                    });
+                                }
                                 $("#error").hide();
                                 $("#show_message").hide();
                                 var ta = document.getElementById('websummary');

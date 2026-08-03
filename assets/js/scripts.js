@@ -36,6 +36,61 @@ document.addEventListener('animationend', function (event) {
     }
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-contact-select]').forEach(function (select) {
+        const trigger = select.querySelector('.contact-select-trigger');
+        const options = select.querySelector('.contact-select-options');
+        const input = select.querySelector('input[name="type"]');
+
+        const close = function () {
+            options.hidden = true;
+            trigger.setAttribute('aria-expanded', 'false');
+        };
+
+        trigger.addEventListener('click', function (event) {
+            event.stopPropagation();
+            const isOpen = !options.hidden;
+            document.querySelectorAll('.contact-select-options').forEach(function (menu) {
+                menu.hidden = true;
+            });
+            options.hidden = isOpen;
+            trigger.setAttribute('aria-expanded', String(!isOpen));
+        });
+
+        options.addEventListener('click', function (event) {
+            const option = event.target.closest('[role="option"]');
+            if (!option) return;
+
+            input.value = option.dataset.value;
+            trigger.querySelector('span').textContent = option.textContent;
+            options.querySelectorAll('[role="option"]').forEach(function (item) {
+                item.setAttribute('aria-selected', String(item === option));
+            });
+            close();
+        });
+
+        trigger.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                options.hidden = false;
+                trigger.setAttribute('aria-expanded', 'true');
+                options.querySelector('[aria-selected="true"]').focus();
+            }
+        });
+
+        options.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                close();
+                trigger.focus();
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!select.contains(event.target)) close();
+        });
+    });
+});
+
 $(function () {
 
     "use strict";
