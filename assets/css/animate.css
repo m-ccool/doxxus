@@ -43,6 +43,15 @@
   }
 }
 
+/* cycles a focus-ring's box-shadow color only — never touches the element's own image/content */
+@keyframes ringColorCycle {
+  0%   { box-shadow: 0 0 var(--ring-blur, 18px) var(--ring-spread, 3px) var(--pink); }
+  25%  { box-shadow: 0 0 var(--ring-blur, 18px) var(--ring-spread, 3px) var(--purple); }
+  50%  { box-shadow: 0 0 var(--ring-blur, 18px) var(--ring-spread, 3px) var(--teal); }
+  75%  { box-shadow: 0 0 var(--ring-blur, 18px) var(--ring-spread, 3px) var(--indigo); }
+  100% { box-shadow: 0 0 var(--ring-blur, 18px) var(--ring-spread, 3px) var(--pink); }
+}
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;

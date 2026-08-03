@@ -262,6 +262,30 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   max-width: 100%;
 }
 
+/* Below this width the squeezed svg text becomes illegible — scroll instead of squish */
+@media (max-width: 576px) {
+  .cal-container {
+    padding: 0.85rem 0.5rem;
+  }
+
+  .js-yearly-contributions,
+  .js-calendar-graph,
+  .js-calendar-graph > div:first-child {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .calendar svg,
+  .js-calendar-graph-svg {
+    width: auto !important;
+    min-width: 640px;
+  }
+
+  .ContributionCalendar-grid {
+    width: auto !important;
+  }
+}
+
 /* Override light default colors on SVG rects */
 rect.ContributionCalendar-day[data-level="0"] { fill: var(--color-calendar-graph-day-bg) !important; }
 rect.ContributionCalendar-day[data-level="1"] { fill: var(--color-calendar-graph-day-L1-bg) !important; }
@@ -432,32 +456,9 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 }
 
 .gha-footer {
-  position: sticky !important;
-  bottom: 0;
-  left: 0 !important;
-  right: 0;
-  z-index: 5;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  background: rgba(6,6,8,0.45) !important;
-  backdrop-filter: blur(6px) saturate(120%) !important;
-  -webkit-backdrop-filter: blur(6px) saturate(120%) !important;
-  filter: none !important;
-  border-top: 1px solid rgba(255,255,255,0.07) !important;
-  color: rgba(255,255,255,0.4) !important;
-  margin: 0 !important;
-  padding: 0.75rem 1.25rem !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 0.75rem !important;
+  display: none !important;
 }
 
-.gha-footer a {
-  color: #3fb950 !important;
-  float: none !important;
-  padding-right: 0 !important;
-}
 
 .gha-activity,
 .gha-repo {
@@ -477,11 +478,6 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
   -webkit-text-fill-color: rgba(200,210,220,0.6) !important;
   transition: all 0.3s ease !important;
   text-decoration: none !important;
-}
-
-.gha-feed .gha-footer a {
-  color: #3fb950 !important;
-  -webkit-text-fill-color: #3fb950 !important;
 }
 
 .gha-feed a:hover {

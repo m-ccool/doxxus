@@ -188,7 +188,7 @@ html {
   position: sticky;
   top: 0;
   z-index: 999;
-  padding: .25rem 0.75REM !important;
+  padding: .25rem 0.75rem !important;
   transition: all .4s ease;
   /* Navbar uses opaque nav var — not the see-through panel var */
   background: var(--glass-nav-bg);
@@ -304,6 +304,7 @@ footer .footer-item.social > a:hover {
   color: var(--rainbow-gradient);
   background: var(--rainbow-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: gradient 500ms ease-in-out;
   -webkit-text-size-adjust: 100%;
@@ -315,6 +316,7 @@ footer .footer-item.social > a:hover {
   color: var(--rainbow-gradient);
   background: var(--rainbow-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient 5s ease infinite;
 }
@@ -651,7 +653,7 @@ footer .footer-item.social > a:hover {
   font-size: 0.65rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--teal);
+  color: #ffffff;
   margin-bottom: 1rem;
   font-family: 'Lexend Giga', sans-serif;
 }
@@ -672,9 +674,12 @@ footer .footer-item.social > a:hover {
 }
 
 .begin-sub {
-  font-size: 0.95rem;
-  color: rgba(255,255,255,0.45);
-  letter-spacing: 0.05em;
+  font-size: 1rem;
+  font-family: Dongle, sans-serif;
+  color: var(--mute-white);
+  letter-spacing: .075rem;
+  line-height: 1.5rem;
+  text-shadow: 0px 1px 3px rgba(0,0,0,0.5);
   margin: 0;
 }
 
@@ -857,7 +862,7 @@ footer .footer-item.social > a:hover {
 .gradient-bg {
   background: var(--rainbow-gradient);
   background-size: 250%;
-  S: margin 500ms ease;
+  transition: margin 500ms ease;
   -webkit-text-size-adjust: 100%;
   animation: gradient 15s ease infinite;
 }
@@ -922,13 +927,13 @@ footer .footer-item.social > a:hover {
   --bs-font-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
   --bs-body-font-family: var(--bs-font-sans-serif);
-  --bs-body-font-size: 1.rem;
+  --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
   --bs-body-color: #0d0d0e;
   --bs-body-bg: #0f0f10;
   --bg-stars: #0a0a0a;
-  --body: --bs-body-bg;
+  --body: var(--bs-body-bg);
   --time: 0.2s;
   --swiper-navigation-size: 44px;
 }
@@ -1099,10 +1104,6 @@ tbody, td, tfoot, th, thead, tr {
   font-family: Kanit, sans-serif;
 }
 
-.form-create-website {
-  /*max-width: 500px;*/
-}
-
 .bgn-btn.nav-btn {
   font-size: .55em;
   /*line-height: 1REM;*/
@@ -1116,7 +1117,7 @@ tbody, td, tfoot, th, thead, tr {
 
 h1 {
   font-family: 'Lexend Giga', sans-serif;
-  font-size: 2REM !IMPORTANT;
+  font-size: 2rem !important;
   /*margin-left: 0px;*/
   /*margin-right: 0;*/
   color: var(--bs-light);
@@ -1243,7 +1244,7 @@ h1 {
 
 .btn-neon-outline {
   background: inherit;
-  padding: .75REM;
+  padding: .75rem;
   border-radius: var(--medium-radius);
   border: none;
   position: initial;
@@ -1363,9 +1364,6 @@ h1 {
   justify-content: center!important;
 }
 
-.div-glow-frame {
-}
-
 .neon-bar-icon {
   /*transform: translateX(1rem);*/
   z-index: 100!important;
@@ -1389,7 +1387,7 @@ h1 {
   font-family: Dongle, sans-serif;
 }
 .work-carousel .swiper-slide {
-  padding: 0px 15px;
+  padding: 40px 30px;
 }
 
 .work-carousel .swiper-slide-active .noraidus .cont {
@@ -1443,6 +1441,21 @@ h1 {
   position: relative;
 }
 
+/* glow ring around the currently selected/focused card — ring only, image itself stays untouched */
+.work-carousel .swiper-slide-active .content .item-img {
+  --ring-blur: 18px;
+  --ring-spread: 3px;
+  animation: ringColorCycle 6s linear infinite;
+  transition: box-shadow 400ms ease;
+}
+
+.work-carousel .swiper-slide-active .content:hover .item-img,
+.work-carousel .swiper-slide-active .content:focus-within .item-img {
+  --ring-blur: 26px;
+  --ring-spread: 5px;
+  animation-duration: 2.5s;
+}
+
 .work-carousel .content .item-img {
   background-repeat: no-repeat;
   overflow: hidden;
@@ -1450,6 +1463,7 @@ h1 {
   background-size: cover;
   background-position: center;
   position: relative;
+  border-radius: 14px !important;
   /*height: 480px;*/
   line-height: 0;
 }
@@ -1540,9 +1554,7 @@ h1 {
   position: absolute;
   padding: 1rem 2rem;
   border-radius: 1rem 1rem 0rem 0rem!important;
-  background: var(--glass-bg)!important;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--bs-body-bg)!important;
   border: var(--glass-border);
   border-bottom: none;
   box-shadow: 0 -4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15);
@@ -1637,10 +1649,6 @@ section {
   animation: gradient 5s ease infinite;
 }
 
-#github-icon {
-  /*color: var(--indigo);*/
-  /*animation: slow-blink 5s ease-in-out infinite;*/
-}
 
 #twitter-icon {
   /*color: var(--teal);*/
@@ -1663,6 +1671,7 @@ body {
   overflow-x: hidden!important;
   background: var(--bs-body-color);
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .div-comet {
@@ -1719,14 +1728,28 @@ body {
 }
 
 .web-host-div {
-  max-width: calc(250pt + 5vw);
+  width: min(63.75vw, calc(187.5pt + 3.75vw));
+  max-width: calc(187.5pt + 3.75vw);
   margin-top: calc(50px);
   margin-bottom: 2rem;
   overflow: visible!important;
   transition: width ease 900ms;
 }
 
-#web-portfolio-h {
+/* service card body: consistent gap-based rhythm instead of per-child margins */
+.service-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.service-card-body h2,
+.service-card-body p {
+  margin: 0;
+}
+
+.web-portfolio-h {
   margin-bottom: 3rem;
   padding: 1rem;
   /*white-space: nowrap;*/
@@ -1746,12 +1769,15 @@ body {
   font-size: .5em;
 }
 
-#iconRowRainbow {
+.service-icon-row {
   width: initial;
-  justify-content: center!important;
+  justify-content: space-evenly!important;
   flex-direction: row!important;
   display: flex!important;
+  align-items: center!important;
   text-align: center!important;
+  gap: 1rem;
+  overflow: visible!important;
 }
 
 .icon1 {
@@ -1763,19 +1789,18 @@ body {
 }
 
 .icon2 {
-  margin: .5rem 1rem;
+  margin: .5rem 0;
   background-size: 500%!important;
   font-size: 1.25rem;
+  overflow: visible!important;
+  line-height: 1;
 }
 
-#icon-globe-webhost-col {
+.service-icon-col {
   padding: 2rem 0;
   width: 0;
   /*height: calc(25px + 5vw);*/
   /*flex: 1 0 0%;*/
-}
-
-.p.web-hst-p {
 }
 
 #splash-p-5 {
@@ -1788,10 +1813,6 @@ body {
   margin-right: .25rem;
 }
 
-.p.splash-p {
-  /*margin: 2.5rem 0;*/
-}
-
 .nav-link-icon {
   font-size: 1.4rem;
   /*opacity: .5;*/
@@ -1799,6 +1820,7 @@ body {
   background: white;
   /*background-color: var(--mute-white);*/
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 100%;
   transition: gradient 900ms ease-in-out;
@@ -1894,6 +1916,7 @@ body {
   letter-spacing: .25rem;
   background: var(--rainbow-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 500% 500%;
   transition: gradient 900ms ease-in-out;
@@ -1912,6 +1935,7 @@ p {
   color: var(--rainbow-gradient);
   background: var(--rainbow-gradient);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 250% 250%;
   animation: gradient 5s ease infinite;
@@ -2062,10 +2086,6 @@ dl, ol, ul {
   color: white;
   width: 1.5rem;
   transition: all 800ms ease;
-}
-
-#skill-cards {
-  /*margin: 25px calc(25px + 2.5vw);*/
 }
 
 .btn-link {
@@ -2237,17 +2257,15 @@ a {
   margin-left: calc(10px + 6vw);
   margin-right: calc(10px + 6vw);
   margin-bottom: calc(10px + 2vw);
-  border-radius: 75px;
-  overflow: hidden;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  background: var(--glass-bg);
+  border-radius: var(--small-radius);
+  overflow: visible;
+  background: transparent;
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
 
 .portfolio-content > .row {
-  background: rgba(6,6,8,0.45);
+  background: transparent;
 }
 
 .portfolio-content > .col,
@@ -2255,7 +2273,7 @@ a {
   background: transparent;
 }
 
-.portfolio-content #web-portfolio-h {
+.portfolio-content .web-portfolio-h {
   margin: 0;
   padding: 0.85rem 0;
 }
@@ -2266,12 +2284,8 @@ a {
 }
 
 .portfolio-content > .col-12 {
-  background: rgba(6,6,8,0.45);
+  background: transparent;
   padding: 1.25rem 2vw !important;
-}
-
-.inner, .outer, ::after, ::before {
-  /*animation: 5s linear infinite reverse color-borders;*/
 }
 
 #begin {
@@ -2661,6 +2675,7 @@ button.swiper-pagination-bullet {
   border-radius: 10px;
   position: relative;
   -ms-touch-action: none;
+  touch-action: none;
   background: rgba(0,0,0,.1);
 }
 
@@ -3098,6 +3113,7 @@ button.swiper-pagination-bullet {
   background: var(--rainbow-gradient);
   background-size: 200%;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient 5s ease infinite;
 }
@@ -3166,6 +3182,7 @@ button.swiper-pagination-bullet {
   background: var(--rainbow-gradient);
   background-size: 200%;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient 5s ease infinite;
   margin-bottom: 0.25rem;

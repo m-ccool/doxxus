@@ -205,3 +205,33 @@
   /*text-shadow: 0 5px 25px;*/
 }
 
+/* iOS Safari: background-clip:text does not extend to ::before pseudo-elements.
+   Applies to all icon-font families used in the project (typcn, fa, la, simple-line-icons). */
+.typcn.rainbow-gradient,
+.fab.rainbow-gradient,
+.fas.rainbow-gradient,
+.far.rainbow-gradient,
+.la.rainbow-gradient,
+.icon-globe.rainbow-gradient {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  color: unset !important;
+}
+
+.typcn.rainbow-gradient::before,
+.fab.rainbow-gradient::before,
+.fas.rainbow-gradient::before,
+.far.rainbow-gradient::before,
+.la.rainbow-gradient::before,
+.icon-globe.rainbow-gradient::before {
+  background: var(--rainbow-gradient);
+  background-size: 200% !important;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradient 5s ease infinite;
+}
+
