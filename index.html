@@ -731,36 +731,29 @@
             type(0, '');
         }
 
-        function scheduleGlitchTarget(el, initialDelay) {
-            var isVisible = false;
-            if ('IntersectionObserver' in window) {
-                var observer = new IntersectionObserver(function(entries){
-                    isVisible = entries[0].isIntersecting;
-                }, { threshold: 0.25 });
-                observer.observe(el);
-            } else {
-                isVisible = true;
+        function startGlitchTargets(reduceMotion) {
+            if (reduceMotion) return;
+            var selector = '[data-glitch-word], [data-glitch-letter], .begin-stack span, #skill-cards .skill-card span';
+
+            function visibleTargets() {
+                return Array.from(document.querySelectorAll(selector)).filter(function(el){
+                    var rect = el.getBoundingClientRect();
+                    return rect.top < window.innerHeight * 0.85 && rect.bottom > window.innerHeight * 0.15 && !el.classList.contains('is-glitch-typing');
+                });
             }
 
             function tick(delay) {
                 setTimeout(function(){
-                    if (isVisible && document.visibilityState === 'visible' && !el.classList.contains('is-glitch-typing')) {
-                        runGlitchTyping(el, function(){ tick(6000 + Math.random() * 8000); });
+                    var targets = visibleTargets();
+                    if (document.visibilityState === 'visible' && targets.length) {
+                        runGlitchTyping(randomItems(targets, 1)[0], function(){ tick(4500 + Math.random() * 5500); });
                     } else {
-                        tick(1500);
+                        tick(1200);
                     }
                 }, delay);
             }
-            tick(initialDelay);
-        }
 
-        function startGlitchTargets(reduceMotion) {
-            if (reduceMotion) return;
-            var words = randomItems(Array.from(document.querySelectorAll('[data-glitch-word]')), 3);
-            var letters = randomItems(Array.from(document.querySelectorAll('[data-glitch-letter]')), 3 + Math.floor(Math.random() * 2));
-            words.concat(letters).forEach(function(el, index){
-                scheduleGlitchTarget(el, 350 + index * 450 + Math.random() * 700);
-            });
+            tick(900 + Math.random() * 1300);
         }
 
         function startTyping() {

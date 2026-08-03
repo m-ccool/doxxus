@@ -1917,6 +1917,11 @@ body {
   animation: caret-blink-glow 900ms ease-in-out infinite;
 }
 
+#skill-cards .skill-card span.is-glitch-typing {
+  color: white !important;
+  text-shadow: 0 0 12px rgba(255,255,255,0.35);
+}
+
 @keyframes caret-blink-glow {
   0%, 100% {
     opacity: 1;
