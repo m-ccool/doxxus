@@ -19,6 +19,23 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 /* smooth scroll -end */
 
+document.addEventListener('pointerup', function (event) {
+    if (event.pointerType !== 'touch') return;
+
+    const skillCard = event.target.closest('.skill-card');
+    if (!skillCard) return;
+
+    skillCard.classList.remove('skill-card-touch-active');
+    skillCard.offsetWidth;
+    skillCard.classList.add('skill-card-touch-active');
+});
+
+document.addEventListener('animationend', function (event) {
+    if (event.animationName === 'skill-card-touch') {
+        event.target.classList.remove('skill-card-touch-active');
+    }
+});
+
 $(function () {
 
     "use strict";

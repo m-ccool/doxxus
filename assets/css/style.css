@@ -2261,6 +2261,20 @@ dl, ol, ul {
   }
 }
 
+.skill-card.skill-card-touch-active {
+  animation: skill-card-touch 800ms ease-out;
+  background-color: rgba(13,13,14,0) !important;
+  color: white !important;
+  font-size: 10px;
+  text-shadow: 0 0 20px black;
+}
+
+@keyframes skill-card-touch {
+  0% { opacity: .5; transform: scale(1); }
+  55% { z-index: 999; opacity: 1; transform: scale(2.75); }
+  100% { opacity: .5; transform: scale(1); }
+}
+
 .skill-card {
   opacity: .5;
   backdrop-filter: blur(3px);
