@@ -34,6 +34,20 @@
   100% { box-shadow: 0 0 var(--ring-blur, 18px) var(--ring-spread, 3px) var(--pink); }
 }
 
+/* one-shot entrance for the focus ring — fades/grows in, slightly overshoots, then settles */
+@keyframes ringEnter {
+  0%   { box-shadow: 0 0 0px 0px var(--pink); transform: scale(0.97); }
+  55%  { box-shadow: 0 0 28px 7px var(--purple); transform: scale(1.045); }
+  100% { box-shadow: 0 0 18px 3px var(--pink); transform: scale(1); }
+}
+
+/* soft pixel-star sparkles around the active focus ring, matching the background stars' glow feel */
+@keyframes sparkleTwinkle {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  45%      { opacity: 0.9; transform: scale(1.05); }
+  55%      { opacity: 0.9; transform: scale(1.05); }
+}
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
