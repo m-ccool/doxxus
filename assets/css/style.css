@@ -366,6 +366,11 @@ footer .footer-item.social > a:hover {
   display: flex;
 }
 
+#contact .modal-dialog {
+  width: min(34rem, calc(100% - 3rem));
+  margin: clamp(1.5rem, 5vw, 3rem) auto;
+}
+
 .modal-form-label {
   text-align: center!important;
   color: rgba(255,255,255,0.75);
@@ -559,21 +564,21 @@ footer .footer-item.social > a:hover {
 }
 
 .cf-btn {
-  background: var(--bs-body-color);
+  background: rgba(8,8,12,0.92) !important;
   color: rgba(255,255,255,0.85);
   font-family: 'Lexend Giga', sans-serif;
   font-size: calc(.5rem + .5vw);
   letter-spacing: calc(2.5px + .5vw);
   text-transform: uppercase;
-  border: none;
-  border-radius: 24px;
+  border: 0;
+  border-radius: var(--medium-radius);
   padding: 0.75rem 1.5rem;
-  transition: color 0.5s;
+  transition: color 0.5s, background-color 0.5s;
 }
 
 .cf-btn:hover {
   color: #ffffff;
-  background: var(--bs-body-color);
+  background: rgba(255,255,255,0.06) !important;
 }
 
 .cf .form-control,
@@ -611,6 +616,11 @@ footer .footer-item.social > a:hover {
 }
 
 @media (max-width: 576px) {
+  #contact .modal-dialog {
+    width: calc(100% - 3rem);
+    margin: 1rem auto;
+  }
+
   .modal-header {
     padding: 1.25rem 1.25rem 0.5rem;
   }
