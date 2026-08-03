@@ -349,14 +349,34 @@
                 <p class="text-center mb-1" style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);">contributions &mdash; last 12 months</p>
             </div>
             <div class="cal-container" data-aos="fade" data-aos-duration="800" data-aos-once="true" data-aos-delay="300">
+                <div class="calendar-scroll-indicator" aria-hidden="true"><span class="calendar-scroll-indicator-thumb"></span></div>
                 <div class="calendar">Loading contributions...</div>
             </div>
             <script>
                 const calendarElement = document.querySelector(".calendar");
+                const calendarIndicator = document.querySelector(".calendar-scroll-indicator");
+                const calendarIndicatorThumb = calendarIndicator.querySelector(".calendar-scroll-indicator-thumb");
+                let calendarIndicatorTimeout;
+                const updateCalendarIndicator = (graphViewport) => {
+                    const scrollableWidth = graphViewport.scrollWidth - graphViewport.clientWidth;
+                    if (scrollableWidth <= 0) return;
+                    const thumbWidth = (graphViewport.clientWidth / graphViewport.scrollWidth) * 100;
+                    const scrollPosition = graphViewport.scrollLeft / scrollableWidth;
+                    calendarIndicatorThumb.style.width = `${thumbWidth}%`;
+                    calendarIndicatorThumb.style.transform = `translateX(${scrollPosition * (100 / thumbWidth - 1) * 100}%)`;
+                };
+                const showCalendarIndicator = (graphViewport) => {
+                    updateCalendarIndicator(graphViewport);
+                    calendarIndicator.classList.add("is-active");
+                    clearTimeout(calendarIndicatorTimeout);
+                    calendarIndicatorTimeout = setTimeout(() => calendarIndicator.classList.remove("is-active"), 1100);
+                };
                 const scrollCalendarToCurrentWeek = () => {
                     const graphViewport = calendarElement.querySelector(".js-calendar-graph > div:first-child");
                     if (!graphViewport || graphViewport.scrollWidth <= graphViewport.clientWidth) return false;
                     graphViewport.scrollLeft = graphViewport.scrollWidth;
+                    updateCalendarIndicator(graphViewport);
+                    graphViewport.addEventListener("scroll", () => showCalendarIndicator(graphViewport), { passive: true });
                     return true;
                 };
                 const calendarObserver = new MutationObserver(() => {
