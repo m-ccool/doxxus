@@ -1810,14 +1810,10 @@ body {
 .typed-out {
   transition: margin 1200ms ease-in-out;
   display: inline-block;
-  overflow: hidden;
-  border-right: .75em solid;
   white-space: nowrap;
-  width: 0;
-  max-width: 100%;
 }
 
-/* text-based brand wordmark, typed-reveal replaces the old logo image */
+/* text-based brand wordmark, letters fade/rise in one at a time */
 .brand-type-text {
   display: inline-block;
   white-space: nowrap;
@@ -1827,21 +1823,54 @@ body {
   letter-spacing: 0.1em;
   line-height: 1.1;
   padding: 0 0.05em 0.1em 0;
+}
+
+.brand-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
   background: var(--rainbow-gradient);
   background-size: 200%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient 5s ease infinite;
 }
 
-@keyframes typing-reveal {
+.typed-out.play .brand-letter {
+  animation: letterIn 650ms cubic-bezier(.16,.84,.32,1) forwards, gradient 5s ease infinite;
+}
+
+.typed-out.play .brand-letter:nth-child(1) { animation-delay: 0ms, 0ms; }
+.typed-out.play .brand-letter:nth-child(2) { animation-delay: 110ms, 0ms; }
+.typed-out.play .brand-letter:nth-child(3) { animation-delay: 220ms, 0ms; }
+.typed-out.play .brand-letter:nth-child(4) { animation-delay: 330ms, 0ms; }
+.typed-out.play .brand-letter:nth-child(5) { animation-delay: 440ms, 0ms; }
+.typed-out.play .brand-letter:nth-child(6) { animation-delay: 550ms, 0ms; }
+
+@keyframes letterIn {
   from {
-    width: 0;
+    opacity: 0;
+    transform: translateY(0.35em);
   }
   to {
-    width: var(--typed-target, 100%);
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.brand-caret {
+  display: inline-block;
+  width: 0.075em;
+  height: 0.85em;
+  margin-left: 0.15em;
+  vertical-align: -0.08em;
+  background: #3bff50;
+  opacity: 0;
+}
+
+.typed-out.play .brand-caret {
+  opacity: 1;
+  animation: blink-caret 950ms step-end infinite;
 }
 
 @media (max-width: 767px) {
@@ -1851,8 +1880,15 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .typed-out {
-    animation-duration: 1.2s, 950ms;
+  .brand-letter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .brand-caret {
+    animation: none !important;
+    opacity: 1 !important;
   }
 }
 

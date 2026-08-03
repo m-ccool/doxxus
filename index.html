@@ -109,7 +109,7 @@
                 <div class="col-auto col-lg-4 text-center d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex flex-column flex-grow-1 flex-fill justify-content-center align-items-center flex-nowrap justify-content-sm-center align-items-sm-center justify-content-md-center justify-content-lg-center">
                     <div class="d-flex flex-column justify-content-center align-items-center align-content-center" style="width: 100%;/*max-width: 650px;*//*z-index: 5;*/z-index: 25;/*transition: margin 1000ms ease-out;*/">
                         <div class="container text-center d-flex flex-grow-1 align-items-center align-content-center align-self-center justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center justify-content-lg-center align-items-lg-center" data-aos="fade" data-aos-duration="800" data-aos-once="true" id="splash-p-2" style="/*overflow: visible;*//*text-shadow: 0px 1px 3px rgb(0,0,0);*/display: inline-block!important;/*margin: 0px;*/padding: 0px;/*transition: all 1200ms ease-in-out!important;*/">
-                            <div class="typed-out blink-caret"><span class="brand-type-text">DOXXUS</span></div>
+                            <div class="typed-out"><span class="brand-type-text"><span class="brand-letter">D</span><span class="brand-letter">O</span><span class="brand-letter">X</span><span class="brand-letter">X</span><span class="brand-letter">U</span><span class="brand-letter">S</span></span><span class="brand-caret"></span></div>
                         </div>
                         <h2 data-aos="fade" data-aos-duration="800" data-aos-delay="800" id="splash-p-5" class="h2 rainbow-gradient">WEB DEV</h2><span data-aos="fade" data-aos-duration="800" data-aos-delay="1200" data-aos-once="true" class="h2 d-flex flex-column" style="/*opacity: 0.50;*/font-size: .7rem;color: whitesmoke!important;"><span>creating</span><span>webspaces</span></span>
                     </div><!-- Start: neon-btn -->
@@ -553,29 +553,12 @@
         var overlay = document.getElementById('splash-overlay');
         var startTime = Date.now();
         var typingStarted = false;
-        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         function startTyping() {
             if (typingStarted) return;
             typingStarted = true;
             document.querySelectorAll('.typed-out').forEach(function(el) {
-                var text = el.querySelector('.brand-type-text');
-                var targetWidth = text ? Math.max(Math.round(text.getBoundingClientRect().width), 1) : 300;
-                var steps = text ? Math.max(text.textContent.trim().length, 1) : 6;
-
-                el.style.animation = 'none';
-                el.style.webkitAnimation = 'none';
-                el.style.width = '0';
-                el.style.setProperty('--typed-target', targetWidth + 'px');
-                void el.offsetWidth;
-
-                if (reduceMotion) {
-                    el.style.width = targetWidth + 'px';
-                    return;
-                }
-
-                el.style.animation = 'typing-reveal 1.4s steps(' + steps + ', end) forwards, blink-caret 950ms step-end infinite';
-                el.style.webkitAnimation = 'typing-reveal 1.4s steps(' + steps + ', end) forwards, blink-caret 950ms step-end infinite';
+                el.classList.add('play');
             });
         }
 
