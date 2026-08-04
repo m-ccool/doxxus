@@ -135,7 +135,7 @@
             <div class="begin-panel">
                 <div class="begin-left">
                     <span class="begin-eyebrow">Independent Developer</span>
-                    <h2 class="begin-headline"><span data-glitch-letter>D</span>esign.<br><span data-glitch-letter>B</span>uild.<br><span data-glitch-letter>S</span>hip.</h2>
+                    <h2 class="begin-headline"><span>D</span>esign.<br><span>B</span>uild.<br><span>S</span>hip.</h2>
                     <p class="begin-sub">One dev. Full stack. Start to finish.</p>
                 </div>
                 <div class="begin-right">
@@ -733,7 +733,7 @@
 
         function startGlitchTargets(reduceMotion) {
             if (reduceMotion) return;
-            var selector = '[data-glitch-word], [data-glitch-letter], [data-glitch-modal], .begin-stack span, #skill-cards .skill-card span';
+            var selector = '[data-glitch-word], [data-glitch-letter], [data-glitch-modal], #skill-cards .skill-card span';
 
             function visibleTargets() {
                 return Array.from(document.querySelectorAll(selector)).filter(function(el){
