@@ -794,11 +794,16 @@ footer .footer-item.social > a:hover {
   margin-top: clamp(1rem, 4vw, 1.5rem);
 }
 
-.service-card-cta .btn-neon-outline {
+.service-card-cta .btn-neon-outline,
+.service-card-cta .btn-neon-outline:hover,
+.service-card-cta .btn-neon-outline:visited,
+.service-card-cta .btn-neon-outline:active,
+.service-card-cta .btn-neon-outline:focus {
   min-width: 10.5rem;
   padding: .85rem 1.5rem;
-  font-size: clamp(.82rem, 2.4vw, .95rem);
-  letter-spacing: clamp(.35em, 1.5vw, .5em);
+  font-size: clamp(.82rem, 2.4vw, .95rem)!important;
+  letter-spacing: clamp(.35em, 1.5vw, .5em)!important;
+  line-height: 1.5;
 }
 
 .service-card-row--web {
@@ -1462,7 +1467,11 @@ h1 {
   background-color: var(--bs-body-color)!important;
 }
 
-.btn-neon-outline {
+.btn-neon-outline,
+.btn-neon-outline:hover,
+.btn-neon-outline:visited,
+.btn-neon-outline:active,
+.btn-neon-outline:focus {
   background: inherit;
   padding: .75rem;
   border-radius: var(--medium-radius);
@@ -1478,6 +1487,9 @@ h1 {
   font-size: calc(.5rem + .5vw);
   white-space: nowrap!important;
   background-color: var(--bs-body-color)!important;
+  line-height: 1.5;
+  font-size: calc(.5rem + .5vw);
+  letter-spacing: calc(2.5px + .5vw);
 }
 
 .neon-btn-outline:hover {
@@ -1653,6 +1665,22 @@ h1 {
 
 .work-carousel .simp-prev {
   left: 30px;
+}
+
+@media (max-width: 767.98px) {
+  .work-carousel {
+    padding-bottom: 2rem;
+  }
+
+  .work-carousel .swiper-container {
+    overflow: visible;
+    clip-path: inset(-2rem 0 -3rem);
+  }
+
+  .work-carousel .simp-next,
+  .work-carousel .simp-prev {
+    bottom: -2rem;
+  }
 }
 
 .work-carousel:hover .next-ctrl, .work-carousel:hover .prev-ctrl {
