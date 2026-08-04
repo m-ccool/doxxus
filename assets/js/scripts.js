@@ -651,11 +651,6 @@ $(document).ready(function () {
 /* ===============================  Mouse effect  =============================== */
 
 function mousecursor() {
-    if (
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-        !window.matchMedia('(pointer: fine)').matches
-    ) return;
-
     // Blurred canvas — soft glow trail + cursor glow
     const trailCanvas = document.createElement('canvas');
     trailCanvas.id = 'cursor-trail-canvas';
@@ -685,13 +680,6 @@ function mousecursor() {
 
     let mx = -200, my = -200;
     let lastSparkleX = -999, lastSparkleY = -999;
-    let animationFrameId = null;
-
-    function scheduleRender() {
-        if (!animationFrameId && !document.hidden) {
-            animationFrameId = requestAnimationFrame(render);
-        }
-    }
 
     window.addEventListener('mousemove', function(e) {
         mx = e.clientX;
@@ -713,11 +701,9 @@ function mousecursor() {
                 });
             }
         }
-        scheduleRender();
     });
 
-    function render() {
-        animationFrameId = null;
+    (function renderLoop() {
         const now = Date.now();
         while (trail.length > 0 && now - trail[0].t > LIFETIME) trail.shift();
 
@@ -763,17 +749,8 @@ function mousecursor() {
             sCtx.fillRect(Math.round(sp.x), Math.round(sp.y), 1, 1);
         }
 
-        if (trail.length || sparkles.length) scheduleRender();
-    }
-
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden && animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        } else if (!document.hidden && (trail.length || sparkles.length)) {
-            scheduleRender();
-        }
-    });
+        requestAnimationFrame(renderLoop);
+    })();
 
     document.addEventListener('mousedown', function(ev) {
         const burst = document.createElement('div');
