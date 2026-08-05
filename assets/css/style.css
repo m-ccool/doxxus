@@ -2145,6 +2145,19 @@ body {
   font-family: 'Lexend Giga', sans-serif;
   font-weight: 900;
   text-transform: uppercase;
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 5s ease infinite;
+}
+
+.web-portfolio-h.section-terminal-title {
+  font-size: clamp(2rem, 1rem + 3.2vw, 4.25rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+  animation: gradient 5s ease infinite;
 }
 
 .section-terminal-suffix {
@@ -2158,12 +2171,20 @@ body {
 }
 
 .section-terminal-text {
+  display: inline-block;
+  min-width: 1.8em;
   background: var(--rainbow-gradient);
   background-size: 200%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient 5s ease infinite;
+  transition: opacity 180ms ease, filter 180ms ease;
+}
+
+.section-terminal-suffix.is-typing .section-terminal-text {
+  opacity: 0.7;
+  filter: brightness(1.35);
 }
 
 .section-terminal-caret {
