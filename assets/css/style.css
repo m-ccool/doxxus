@@ -1655,6 +1655,22 @@ h1 {
   left: 30px;
 }
 
+@media (max-width: 767.98px) {
+  .work-carousel {
+    padding-bottom: 3.5rem;
+  }
+
+  .work-carousel .swiper-container {
+    overflow: visible;
+    clip-path: inset(-2rem 0 -3rem);
+  }
+
+  .work-carousel .simp-next,
+  .work-carousel .simp-prev {
+    bottom: -2.75rem;
+  }
+}
+
 .work-carousel:hover .next-ctrl, .work-carousel:hover .prev-ctrl {
   opacity: 1;
 }
