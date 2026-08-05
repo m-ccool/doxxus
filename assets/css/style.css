@@ -2141,6 +2141,41 @@ body {
   justify-content: center!important;
 }
 
+.section-terminal-title {
+  font-family: 'Lexend Giga', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.section-terminal-suffix {
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 3.1em;
+  margin-left: 0.35em;
+  color: var(--bs-light);
+  font: inherit;
+  letter-spacing: 0.08em;
+}
+
+.section-terminal-text {
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 5s ease infinite;
+}
+
+.section-terminal-caret {
+  width: 0.09em;
+  height: 0.9em;
+  margin-left: 0.18em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+  animation: caret-blink-glow 900ms ease-in-out infinite;
+}
+
 .h3 {
   /*line-height: 1.5rem;*/
   /*margin: 1em;*/

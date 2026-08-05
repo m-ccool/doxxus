@@ -241,7 +241,7 @@
             <div data-aos="fade-up" data-aos-duration="750" data-aos-once="true" class="portfolio-content">
                 <div class="row g-0 row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-1 row-cols-xl-1 row-cols-xxl-1">
                     <div class="col" data-aos="fade" data-aos-duration="800" data-aos-once="true">
-                        <h2 class="text-break text-center h2 h_animated web-portfolio-h">&nbsp;PORTFOLIO&nbsp;<span class="text-nowrap meta-card-gradient">...</span>|</h2>
+                        <h2 class="text-break text-center h2 h_animated web-portfolio-h section-terminal-title">PORTFOLIO<span class="section-terminal-suffix" data-terminal-title><span class="section-terminal-text">...</span><span class="section-terminal-caret" aria-hidden="true"></span></span></h2>
                     </div>
                 </div>
                 <div data-aos="zoom-out" class="gallery-div"><section class="work-carousel metro position-re">
@@ -343,7 +343,7 @@
         </div><!-- End: comet -->
         <section class="d-flex d-md-flex flex-column justify-content-center align-items-center align-items-xl-center" id="about" style="padding-bottom: 2rem;">
             <div data-aos="fade" data-aos-duration="800" data-aos-once="true">
-                <h2 class="text-center h2 web-portfolio-h">THE DEVELOPER<span class="meta-card-gradient">...</span>|</h2>
+                <h2 class="text-center h2 web-portfolio-h section-terminal-title">THE DEVELOPER<span class="section-terminal-suffix" data-terminal-title><span class="section-terminal-text">...</span><span class="section-terminal-caret" aria-hidden="true"></span></span></h2>
             </div>
             <div data-aos="fade" data-aos-duration="800" data-aos-once="true" data-aos-delay="200">
                 <p class="text-center mb-1" style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);">contributions &mdash; last 12 months</p>
@@ -767,12 +767,57 @@
             });
         }
 
+        function startTerminalTitleTyping(reduceMotion) {
+            var titles = Array.from(document.querySelectorAll('[data-terminal-title]'));
+            if (!titles.length || reduceMotion) return;
+
+            titles.forEach(function(title, index) {
+                var text = title.querySelector('.section-terminal-text');
+                if (!text) return;
+
+                function isVisible() {
+                    var rect = title.getBoundingClientRect();
+                    return rect.top < window.innerHeight * 0.9 && rect.bottom > window.innerHeight * 0.1;
+                }
+
+                function replay() {
+                    var delay = 7000 + Math.random() * 7000;
+                    setTimeout(function(){
+                        if (!isVisible()) {
+                            replay();
+                            return;
+                        }
+
+                        title.classList.add('is-typing');
+                        text.textContent = '';
+                        var dots = 0;
+
+                        function typeDot() {
+                            if (dots < 3) {
+                                text.textContent += '.';
+                                dots++;
+                                setTimeout(typeDot, 180);
+                                return;
+                            }
+                            title.classList.remove('is-typing');
+                            replay();
+                        }
+
+                        typeDot();
+                    }, delay);
+                }
+
+                setTimeout(replay, 1200 + index * 900);
+            });
+        }
+
         function startTyping() {
             if (typingStarted) return;
             typingStarted = true;
             var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             startGlitchTargets(reduceMotion);
             startContactGlitch(reduceMotion);
+            startTerminalTitleTyping(reduceMotion);
             document.querySelectorAll('.typed-out').forEach(function(el) {
                 var textEl = el.querySelector('.brand-type-text');
                 var caretEl = el.querySelector('.brand-caret');
