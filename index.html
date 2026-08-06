@@ -586,7 +586,7 @@
 
         // Terminal-style reveal: type gibberish, delete it, then type + settle on the real word.
         function runScrambleTyping(textEl, caretEl, target, onDone) {
-            var scrambleLen = target.length + 2;
+            var scrambleLen = target.length;
             var scramble = '';
             var i = 0;
             if (caretEl) caretEl.classList.add('is-typing');
