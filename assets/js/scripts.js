@@ -19,6 +19,43 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 /* smooth scroll -end */
 
+/* iphone-bezel hover-cycle -start */
+
+document.querySelectorAll('.iphone-bezel').forEach(bezel => {
+    const frames = bezel.querySelectorAll('.iphone-bezel-screen');
+    if (frames.length < 2) return; // nothing to cycle
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let index = 0;
+    let timer = null;
+
+    function show(i) {
+        frames.forEach((frame, fi) => frame.classList.toggle('is-active', fi === i));
+    }
+
+    function start() {
+        if (reduceMotion || timer) return;
+        timer = setInterval(() => {
+            index = (index + 1) % frames.length;
+            show(index);
+        }, 1600);
+    }
+
+    function stop() {
+        clearInterval(timer);
+        timer = null;
+        index = 0;
+        show(0);
+    }
+
+    bezel.addEventListener('mouseenter', start);
+    bezel.addEventListener('mouseleave', stop);
+    bezel.addEventListener('focusin', start);
+    bezel.addEventListener('focusout', stop);
+});
+
+/* iphone-bezel hover-cycle -end */
+
 document.addEventListener('pointerup', function (event) {
     if (event.pointerType !== 'touch') return;
 
