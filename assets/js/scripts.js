@@ -56,12 +56,30 @@ document.querySelectorAll('.iphone-bezel').forEach(bezel => {
 
 /* iphone-bezel hover-cycle -end */
 
-/* copy background image to ::before pseudo-element for blur effect */
+/* create blurred background layer behind phone preview */
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.work-carousel .noraidus .item-img').forEach(itemImg => {
         const bgUrl = itemImg.getAttribute('data-background');
         if (bgUrl) {
-            itemImg.style.setProperty('--item-bg-image', `url('${bgUrl}')`);
+            // Create a div for the blurred background
+            const blurLayer = document.createElement('div');
+            blurLayer.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url('${bgUrl}');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                filter: blur(4px);
+                z-index: 1;
+                pointer-events: none;
+            `;
+            
+            // Insert at the start of item-img so it's behind everything
+            itemImg.insertAdjacentElement('afterbegin', blurLayer);
         }
     });
 });
