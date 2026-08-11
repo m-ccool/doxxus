@@ -1865,6 +1865,17 @@ h1 {
   -webkit-background-clip: initial;
   background-clip: initial;
   -webkit-text-fill-color: #ffffff;
+  transition: all 400ms ease;
+}
+
+.work-carousel .content:hover .cont h6 a,
+.work-carousel .content:hover .cont h4 a {
+  background: var(--rainbow-gradient);
+  background-size: 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 3s ease infinite;
 }
 
 /* CSS-drawn iPhone frame overlaid on a project card's blurred backdrop image */
