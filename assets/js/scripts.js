@@ -56,6 +56,14 @@ document.querySelectorAll('.iphone-bezel').forEach(bezel => {
 
 /* iphone-bezel hover-cycle -end */
 
+/* copy background image to ::before pseudo-element for blur effect */
+document.querySelectorAll('.work-carousel .noraidus .item-img').forEach(itemImg => {
+    const bgImage = window.getComputedStyle(itemImg).backgroundImage;
+    if (bgImage && bgImage !== 'none') {
+        itemImg.style.setProperty('--item-bg-image', bgImage);
+    }
+});
+
 document.addEventListener('pointerup', function (event) {
     if (event.pointerType !== 'touch') return;
 

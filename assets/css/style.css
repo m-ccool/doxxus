@@ -1823,9 +1823,27 @@ h1 {
 
 .work-carousel .noraidus .item-img {
   height: 450px;
+  position: relative;
+  background: none !important;
   /*margin: 0 2rem;*/
   /*max-width: 740px;*/
   /*border-radius: 2rem!important;*/
+}
+
+.work-carousel .noraidus .item-img::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--item-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(4px);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .work-carousel .noraidus .cont {
@@ -1901,7 +1919,7 @@ h1 {
   background: #0b0b0d;
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6);
   overflow: hidden;
-  z-index: 2;
+  z-index: 3;
   animation: iphone-bezel-glow 5s ease-in-out infinite;
 }
 
