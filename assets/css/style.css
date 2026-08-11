@@ -1850,15 +1850,21 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 10px;
+  white-space: nowrap;
 }
 
 .work-carousel .noraidus .cont h4 {
   font-size: 17px;
+  white-space: nowrap;
 }
 
 .work-carousel .noraidus .cont h6 a,
 .work-carousel .noraidus .cont h4 a {
   color: #ffffff;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: #ffffff;
 }
 
 /* CSS-drawn iPhone frame overlaid on a project card's blurred backdrop image */
