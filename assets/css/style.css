@@ -1823,6 +1823,7 @@ h1 {
 
 .work-carousel .noraidus .item-img {
   height: 450px;
+  filter: blur(4px);
   /*margin: 0 2rem;*/
   /*max-width: 740px;*/
   /*border-radius: 2rem!important;*/
@@ -1831,7 +1832,9 @@ h1 {
 .work-carousel .noraidus .cont {
   z-index: 1000;
   position: absolute;
-  padding: 1rem 2rem;
+  width: calc(100% - 1.5rem);
+  max-width: 90%;
+  padding: 0.75rem 1.5rem;
   border-radius: 1rem 1rem 0rem 0rem!important;
   background: var(--bs-body-bg)!important;
   border: var(--glass-border);
@@ -1904,11 +1907,11 @@ h1 {
 }
 
 @keyframes iphone-bezel-glow {
-  0%   { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 22px 4px var(--pink); }
-  25%  { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 22px 4px var(--indigo); }
-  50%  { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 22px 4px var(--purple); }
-  75%  { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 22px 4px var(--teal); }
-  100% { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 22px 4px var(--pink); }
+  0%   { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 16px 2px var(--pink); }
+  25%  { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 16px 2px var(--indigo); }
+  50%  { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 16px 2px var(--purple); }
+  75%  { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 16px 2px var(--teal); }
+  100% { box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 0 0 6px rgba(0, 0, 0, 0.6), 0 0 16px 2px var(--pink); }
 }
 
 .iphone-bezel-notch {
