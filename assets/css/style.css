@@ -1655,6 +1655,13 @@ h1 {
   left: 30px;
 }
 
+/* Cap carousel width on ultra-wide viewports so slides don't stretch/break */
+.work-carousel .swiper-container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media (max-width: 767.98px) {
   .work-carousel {
     padding-bottom: 3.5rem;
