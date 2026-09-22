@@ -73,18 +73,42 @@ The positioning is a technical liaison and launch manager: one person accountabl
 
 ## Public Website MVP
 
-Restructure the homepage around this order:
+The public site is five pages:
 
-1. Positioning statement and primary call to action
-2. Rabbit Habit flagship project
-3. Three service packages
-4. Add-on pills
-5. Consultation booking
-6. Selected work
-7. How the process works
-8. Contact and client login
+| Page | Purpose |
+| --- | --- |
+| `index.html` | Splash, positioning, software tier teaser, condensed IT tier, portfolio, about |
+| `services.html` | Full software spec sheet, package tier comparison, add-ons, consultation, IT tier |
+| `build.html` | Package builder — assemble a package and send the request |
+| `signin.html` | Client portal placeholder (no authentication yet) |
+| `terms.html` | Terms and conditions |
+
+Homepage order:
+
+1. Splash and positioning statement
+2. Stack marquee
+3. Software design services tier with primary call to action
+4. IT consultation and repair tier, visually quieter
+5. Selected work
+6. About and contact
+
+Package tiers and add-ons live on `services.html` rather than the homepage, presented as a
+terminal-style spec sheet and a diff-style comparison table instead of pricing cards.
 
 The current visual shell should remain recognizable. The copy should shift from generic web-services language toward product delivery and launch management.
+
+### Package Builder
+
+`build.html` is a five-step builder: base package, add-ons, project details, contact details, review.
+
+- A running estimate is shown while selecting, labelled as an estimate and never as a quote.
+- Submission posts to the existing `ajax-form-store.php` contact endpoint using its field contract
+  (`type`, `user`, `email`, `phone`, `websummary`); the package summary is packed into `websummary`
+  and truncated on a line boundary to respect the 500-character limit.
+- **Fail closed:** the confirmation state is shown only when the endpoint returns the literal
+  `success` token. Every other response, including network failure, shows an error with the
+  `dev@doxxus.us` fallback.
+- After confirmation the client chooses **Client sign in** or **Contact the dev**.
 
 ### Flagship: Rabbit Habit
 
@@ -186,23 +210,17 @@ Use compact selectable pills similar to the Fitndex pricing interface. Prices ar
 | Domain setup | $75 plus domain cost |
 | Monthly maintenance | $75/month |
 | Priority support | $150/month |
-| Additional consultation hour | $110 |
+| Additional consultation hour | $150 |
 
 The selected package and add-ons must be summarized before checkout. Final pricing must never be calculated only in client-side code.
 
 ## Consultation Products
 
-### 30-Minute Clarity Call
+### 30-Minute Project-Plan Consultation
 
-**Placeholder price:** `$60`
+**Price:** `$150`
 
-Defines the idea, identifies the appropriate package, and answers initial technical questions.
-
-### 60-Minute Build Plan
-
-**Placeholder price:** `$110`
-
-Covers project scope, priorities, integrations, launch steps, and risks in more depth.
+Covers project scope, priorities, integrations, launch steps, and risks. The client leaves with a plan they could hand to any developer. Deliberately priced to filter out unfocused meetings.
 
 Payment is collected during booking. Use this explanation everywhere the fee appears:
 
@@ -220,6 +238,30 @@ After successful payment, email:
 The preparation checklist requests the project goal, audience, existing domain, desired launch date, reference sites, integrations, brand assets, budget range, and decision-maker contact.
 
 Google Meet is the primary meeting option. Zoom and WhatsApp can be offered as alternate preferences without building separate integrations in the first release.
+
+## IT Consultation and Repair
+
+A secondary, client-only service tier. It exists so clients on an active software contract, a retainer, or a special arrangement can have their machines dealt with by the same person building their software.
+
+### 30-Minute Diagnostic
+
+**Price:** `$100`
+
+Triage the problem, walk the options, agree on next steps. The fee is applied toward the resulting repair ticket.
+
+### Quoted per job
+
+- OS repair and restore
+- Malware cleanup
+- Security and data backup
+- Hardware repair
+
+Rules that must hold everywhere this tier appears:
+
+- Every service is quoted individually; no public rate card.
+- The client-only gate is stated in the copy.
+- **IT fees are never credited toward a software project.** The diagnostic credit applies only to repair work.
+- The tier is presented below the software tier and at lower visual weight.
 
 ## Commerce MVP
 
@@ -412,19 +454,22 @@ Keep the public site and private API deployment separate so the showcase can rem
 ## MVP Outline Status
 
 - **Planning:** Defined
-- **Public positioning:** Ready for copy and layout implementation
+- **Public positioning:** Implemented — software tier leads, IT tier is a quiet client-only secondary
+- **Public site:** Five pages live (`index`, `services`, `build`, `signin`, `terms`) on a shared design system
 - **Package pricing:** Placeholder values selected for first market test
+- **Consultation pricing:** `$150` software project-plan consult (credited) and `$100` IT diagnostic (applied to repair, never credited)
+- **Package builder:** Implemented against the existing contact endpoint; fail-closed on submission
 - **Commerce:** Stripe selected for MVP investigation and implementation
 - **Bitcoin:** Deferred pending operational decision
-- **Authentication:** Email/password required; Google login deferred
+- **Authentication:** Email/password required; Google login deferred. `signin.html` is a placeholder with no login fields.
 - **Client portal:** Minimal profile, project, status, invoice, and scheduling scope defined
 - **Admin panel:** Required for MVP operations; scope intentionally small
 - **Data policy:** Contact and project metadata only
-- **Implementation:** Phase 1 public pricing surface and Node backend foundation started
+- **Implementation:** Phase 1 public surface complete; Node backend foundation started
 
 ## Shortest Path To Live UI Readback
 
-1. Update the public site copy, domain references, package cards, add-on pills, consultation explanation, and Rabbit Habit case study.
+1. ~~Update the public site copy, domain references, package tiers, add-ons, and consultation explanation.~~ Done.
 2. Deploy the static public site and verify the live `doxxus.us` experience on desktop and mobile.
 3. Add one Stripe test-mode consultation Checkout flow behind a small backend endpoint.
 4. Verify the signed webhook and preparation-email flow in an isolated test environment.

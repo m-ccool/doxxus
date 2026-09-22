@@ -164,67 +164,6 @@ document.addEventListener('animationend', function (event) {
     window.renderContributionCalendars();
 })();
 
-function initializePricing() {
-    var pricingSection = document.getElementById('pricing');
-
-    if (pricingSection) {
-        var addonButtons = Array.prototype.slice.call(pricingSection.querySelectorAll('[data-addon-price]'));
-        var priceDisplays = Array.prototype.slice.call(pricingSection.querySelectorAll('[data-base-price]'));
-
-        function updatePricing() {
-            var selectedTotal = addonButtons.reduce(function (total, button) {
-                return button.getAttribute('aria-pressed') === 'true' ? total + Number(button.dataset.addonPrice) : total;
-            }, 0);
-
-            priceDisplays.forEach(function (priceDisplay) {
-                var basePrice = Number(priceDisplay.dataset.basePrice);
-                var targetPrice = basePrice + selectedTotal;
-                var amount = priceDisplay.querySelector('.pricing-amount');
-                var suffix = priceDisplay.querySelectorAll('span');
-                var startPrice = Number(priceDisplay.dataset.currentPrice || basePrice);
-                var startTime = performance.now();
-                var duration = 760;
-                var animate = function (timestamp) {
-                    var progress = Math.min((timestamp - startTime) / duration, 1);
-                    var eased = 1 - Math.pow(1 - progress, 3);
-                    var currentPrice = Math.round(startPrice + (targetPrice - startPrice) * eased);
-                    amount.textContent = '$' + currentPrice.toLocaleString('en-US');
-                    priceDisplay.dataset.currentPrice = String(currentPrice);
-                    if (progress < 1) priceDisplay._pricingFrame = requestAnimationFrame(animate);
-                };
-
-                cancelAnimationFrame(priceDisplay._pricingFrame || 0);
-                amount.classList.remove('is-counting-up', 'is-counting-down');
-                void amount.offsetWidth;
-                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    amount.textContent = '$' + targetPrice.toLocaleString('en-US');
-                    priceDisplay.dataset.currentPrice = String(targetPrice);
-                } else {
-                    amount.classList.add(targetPrice >= startPrice ? 'is-counting-up' : 'is-counting-down');
-                    priceDisplay._pricingFrame = requestAnimationFrame(animate);
-                }
-                priceDisplay.setAttribute('aria-label', 'Starting price $' + targetPrice.toLocaleString('en-US'));
-                suffix.forEach(function (span) {
-                    if (span.textContent === '+') span.hidden = selectedTotal === 0;
-                });
-            });
-        }
-
-        addonButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                var isSelected = button.getAttribute('aria-pressed') === 'true';
-                var selected = !isSelected;
-                button.setAttribute('aria-pressed', String(selected));
-                button.style.setProperty('background', selected ? '#fff' : '', 'important');
-                button.style.setProperty('color', selected ? '#08090b' : '', 'important');
-                updatePricing();
-            });
-        });
-    }
-
-}
-
-initializePricing();
 
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-contact-select]').forEach(function (select) {
@@ -311,6 +250,7 @@ $(function () {
 
     /* ===============================  Swiper slider  =============================== */
 
+    if (typeof Swiper !== 'undefined') {
 
     var swiperWorkMetro = new Swiper('.metro .swiper-container', {
         slidesPerView: 2,
@@ -353,77 +293,7 @@ $(function () {
             prevEl: '.metro .swiper-button-prev'
         },
     });
-
-    var swiperWorkCaroul = new Swiper('.caroul .swiper-container', {
-        spaceBetween: 0,
-        speed: 1000,
-        loop: true,
-
-        breakpoints: {
-            320: {
-                slidesPerView: 1,
-                spaceBetween: 0
-            },
-            767: {
-                slidesPerView: 2,
-                spaceBetween: 0
-            },
-            991: {
-                slidesPerView: 3,
-                spaceBetween: 0
-            },
-            1024: {
-                slidesPerView: 4,
-                spaceBetween: 0
-            }
-        },
-
-        pagination: {
-            el: '.caroul .swiper-pagination',
-            type: 'progressbar',
-        },
-
-        navigation: {
-            nextEl: '.caroul .swiper-button-next',
-            prevEl: '.caroul .swiper-button-prev'
-        },
-    });
-
-
-    var swiperBlogImg = new Swiper('.blog-crv .swiper-img', {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        speed: 800,
-        loop: true,
-        effect: 'fade',
-
-        pagination: {
-            el: '.blog-crv .controls .swiper-pagination',
-            type: 'fraction',
-        },
-
-        navigation: {
-            nextEl: '.next-ctrl',
-            prevEl: '.prev-ctrl'
-        },
-    });
-
-    var swiperBlogContent = new Swiper('.blog-crv .swiper-content', {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        speed: 800,
-        loop: true,
-
-        pagination: {
-            el: '.blog-crv .controls .swiper-pagination',
-            type: 'fraction',
-        },
-
-        navigation: {
-            nextEl: '.blog-crv .controls .next-ctrl',
-            prevEl: '.blog-crv .controls .prev-ctrl'
-        },
-    });
+    } // end Swiper guard
 
 
     /* ===============================  Var Background image  =============================== */
@@ -437,299 +307,19 @@ $(function () {
     });
 
 
-    /* ===============================  slick Carousel  =============================== */
-
-    $('.testimonials .slic-item').slick({
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        centerMode: true,
-        arrows: true,
-        prevArrow: '.testimonials .prev',
-        nextArrow: '.testimonials .next',
-        dots: false,
-        autoplay: true,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 1,
-                    centerMode: false,
-                }
-            },
-            {
-                breakpoint: 767,
-                settings: {
-                    slidesToShow: 1,
-                    centerMode: false,
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    centerMode: false,
-                }
-            }
-        ]
-    });
-
-    $('.testim-box .slic-item').slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-        dots: true,
-        autoplay: true
-    });
-
-
-    /* ===============================  Mouse Hover  =============================== */
-
-    $('.feat .items').on('mouseenter', function () {
-        $(this).addClass("active").siblings().removeClass("active");
-    });
-
-    document.querySelectorAll('.button').forEach(button => button.innerHTML = '<div><span>' + button.textContent.trim().split('').join('</span><span>') + '</span></div>');
-
-
-    /* ===============================  YouTubePopUp  =============================== */
-
-    $("a.vid").YouTubePopUp();
-
-
-    /* ===============================  parallaxie  =============================== */
-
-    $('.parallaxie').parallaxie({
-        speed: 0.2,
-        size: "cover"
-    });
-
-
-    /* ===============================  magnificPopup  =============================== */
-
-    $('.popup-img , .gallery').magnificPopup({
-        delegate: '.popimg',
-        type: 'image',
-        gallery: {
-            enabled: true
-        }
-    });
-
-
-    /* ===============================  justifiedGallery  =============================== */
-
-    $('.justified-gallery').justifiedGallery({
-        rowHeight: 400,
-        lastRow: 'nojustify',
-        margins: 15
-    });
-
-
-    /* ===============================  skills-circle  =============================== */
-
-    var c4 = $('.skills-circle .skill');
-    var myVal = $(this).attr('data-value');
-
-    $(".skills-circle .skill").each(function () {
-
-        c4.circleProgress({
-            startAngle: -Math.PI / 2 * 1,
-            value: myVal,
-            thickness: 2,
-            size: 110,
-            fill: { color: "rgb(18, 194, 233)" }
-        });
-
-    });
-
-    wind.on('scroll', function () {
-        $(".skill-progress .progres").each(function () {
-            var bottom_of_object =
-                $(this).offset().top + $(this).outerHeight();
-            var bottom_of_window =
-                $(window).scrollTop() + $(window).height();
-            var myVal = $(this).attr('data-value');
-            if (bottom_of_window > bottom_of_object) {
-                $(this).css({
-                    width: myVal
-                });
-            }
-        });
-    });
-
-
-    /* ===============================  countUp  =============================== */
-
-    $('.number-sec .count').countUp({
-        delay: 10,
-        time: 500
-    });
-
-
-    /* ===============================  tooltip  =============================== */
-
-    $('[data-tooltip-tit]').hover(function () {
-        $('<div class="div-tooltip-tit"></div>').text($(this).attr('data-tooltip-tit')).appendTo('body').fadeIn('slow');
-    }, function () {
-        $('.div-tooltip-tit').remove();
-    }).mousemove(function (e) {
-        $('.div-tooltip-tit').css({ top: e.pageY + 10, left: e.pageX + 20 })
-    });
-    $('[data-tooltip-sub]').hover(function () {
-        $('<div class="div-tooltip-sub"></div>').text($(this).attr('data-tooltip-sub')).appendTo('body').fadeIn('slow');
-    }, function () {
-        $('.div-tooltip-sub').remove();
-    }).mousemove(function (e) {
-        $('.div-tooltip-sub').css({ top: e.pageY + (-15), left: e.pageX + 30 })
-    });
 
 });
 
 
 /* ===============================  Wow Animation  =============================== */
 
-wow = new WOW({
-    animateClass: 'animated',
-    offset: 100
-});
-wow.init();
-
-
-// === window When Loading === //
-
-$(window).on("load", function () {
-
-
-    /* ===============================  SPLITTING TEXT  =============================== */
-
-    Splitting();
-
-
-    /* ===============================  thumparallax  =============================== */
-
-    var imageUp = document.getElementsByClassName('thumparallax');
-    new simpleParallax(imageUp, {
-        delay: 1,
-        scale: 1.1
+if (typeof WOW !== 'undefined') {
+    var wow = new WOW({
+        animateClass: 'animated',
+        offset: 100
     });
-
-    var imageDown = document.getElementsByClassName('thumparallax-down');
-    new simpleParallax(imageDown, {
-        orientation: 'down',
-        delay: 1,
-        scale: 1.1
-    });
-
-
-    /* ===============================  isotope Masonery  =============================== */
-
-    // isotope
-    $('.gallery-mons').isotope({
-        // options
-        itemSelector: '.items',
-        masonry: {
-            // use element for option
-            columnWidth: '.width2'
-        }
-    });
-
-    $('.gallery').isotope({
-        // options
-        itemSelector: '.items'
-    });
-
-    var $gallery = $('.gallery , .gallery-mons').isotope();
-
-    $('.filtering').on('click', 'span', function () {
-        var filterValue = $(this).attr('data-filter');
-        $gallery.isotope({ filter: filterValue });
-    });
-
-    $('.filtering').on('click', 'span', function () {
-        $(this).addClass('active').siblings().removeClass('active');
-    });
-
-
-    /* ===============================  contact validator  =============================== */
-
-    $('#contact-form').validator();
-
-    $('#contact-form').on('submit', function (e) {
-        if (!e.isDefaultPrevented()) {
-            var url = "contact.php";
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: $(this).serialize(),
-                success: function (data) {
-                    var messageAlert = 'alert-' + data.type;
-                    var messageText = data.message;
-
-                    var alertBox = '<div class="alert ' + messageAlert + ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + messageText + '</div>';
-                    if (messageAlert && messageText) {
-                        $('#contact-form').find('.messages').html(alertBox);
-                        $('#contact-form')[0].reset();
-                    }
-                }
-            });
-            return false;
-        }
-    });
-
-});
-
-
-
-/* ===============================  Hide / show navbar  =============================== */
-
-var didScroll;
-var lastScrollTop = 0;
-var delta = 5;
-var navbarHeight = $('#navi').outerHeight();
-$(window).on("scroll", function (event) {
-    didScroll = true;
-});
-
-setInterval(function () {
-    if (didScroll) {
-        hasScrolled();
-        didScroll = false;
-    }
-}, 250);
-
-function hasScrolled() {
-    var st = $(this).scrollTop();
-
-    if (Math.abs(lastScrollTop - st) <= delta)
-        return;
-
-    if (st > lastScrollTop && st > navbarHeight) {
-        $('#navi').css('top', '-100px');
-
-    } else {
-
-        if (st + $(window).height() < $(document).height()) {
-            $('#navi').css('top', '0');
-        }
-    }
-
-    lastScrollTop = st;
+    wow.init();
 }
-
-
-
-/* ===============================  Preloader page  =============================== */
-
-paceOptions = {
-    ajax: true,
-    document: true,
-    eventLag: false
-};
-
-Pace.on('done', function () {
-    $('#preloader').addClass("isdone");
-    $('.loading').addClass("isdone");
-});
 
 
 /* ===============================  Scroll back to top  =============================== */
@@ -1149,7 +739,7 @@ $('[data-carousel="swiper"]').each(function () {
     };
 
     // Initialization
-    if (containe) {
+    if (containe && typeof Swiper !== 'undefined') {
         var initID = '#' + containe;
         var init = new Swiper(initID, conf);
     };

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html data-bs-theme="dark" class="scrollbar-hidden" lang="en">
 
 <head>
@@ -47,7 +47,7 @@
 <script src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js"></script>
 </head>
 
-<body class="scrollbar-hidden FADE">
+<body class="scrollbar-hidden FADE" data-page="home">
 
     <!-- SPLASH -->
     <div id="splash-overlay">
@@ -56,39 +56,7 @@
 
     <div class="cursor-outer"></div>
     <div class="cursor-inner"></div>
-    <nav class="navbar navbar-expand-md">
-        <div class="container-fluid px-3 position-relative">
-            <!-- Brand (left) -->
-            <a class="navbar-brand" href="#">
-                <i class="icon-globe" style="font-size: calc(1.05rem + .14vw); color: #ffffff;"></i>
-            </a>
-
-            <!-- Last-online: absolutely centered on desktop, hidden on mobile -->
-            <span class="last-online d-none d-md-block position-absolute start-50 translate-middle-x" id="last-online-nav">last online &mdash;</span>
-
-            <!-- Toggler (right, auto-hidden at md+ by Bootstrap) -->
-            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navcol-2"
-                style="border: none; filter: brightness(1000%); box-shadow: none;">
-                <span style="color: #f0f9ff; display: flex; align-items: center;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1.4em" height="1.4em" viewBox="0 0 24 24" fill="none">
-                        <path d="M20 12H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                </span>
-            </button>
-
-            <!-- Collapse -->
-            <div class="collapse navbar-collapse justify-content-end" id="navcol-2" style="font-family: Dongle, sans-serif;">
-                <!-- Last-online centered on mobile only (inside collapse) -->
-                <span class="last-online d-flex d-md-none justify-content-center w-100 py-1" id="last-online-mobile">last online &mdash;</span>
-                <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center gap-1">
-                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#splash" target="_parent" title="Home"><i class="typcn typcn-home-outline nav-link-icon" style="font-size: 1.2rem;"></i></a></li>
-                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#services" title="Services"><i class="typcn typcn-spanner nav-link-icon"></i></a></li>
-                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#about" title="About"><i class="typcn typcn-business-card nav-link-icon"></i></a></li>
-                    <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contact" title="Contact"><i class="typcn typcn-mail nav-link-icon"></i></a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div data-site-nav></div>
     <main>
         <!-- Start: comet -->
         <div id="comet-1" class="div-comet">
@@ -178,134 +146,89 @@
                 </div>
             </div>
         </section>
-        <div class="text-center" style="color: rgba(255,255,255,0.5); font-style: italic; font-size: 0.85rem; padding: 1.5rem 0 0.5rem; letter-spacing: 0.04em;">i just... really like playing with computers.</div>
-                <section id="services" class="ds-section services-section">
+        <div class="tagline-quip">i just... really like playing with computers.</div>
+        <section id="services" class="ds-section services-section" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
             <div class="ds-shell">
+                <div class="software-tier">
+                    <header class="ds-section-head ds-section-head--left">
+                        <span class="ds-eyebrow">Software design services</span>
+                        <h2 class="ds-section-title">Products designed, built, and shipped by one developer.</h2>
+                        <p class="ds-section-sub">Apps, interfaces, storefronts, APIs, and AI features &mdash; scoped honestly and delivered end to end. This is the work I care about most.</p>
+                    </header>
+                    <div class="capability-strip" aria-label="Software capabilities">
+                        <span class="ds-label">App development</span>
+                        <span class="ds-label">UX &amp; interface design</span>
+                        <span class="ds-label">E-commerce</span>
+                        <span class="ds-label">API integration</span>
+                        <span class="ds-label">AI features</span>
+                        <span class="ds-label">Automation</span>
+                    </div>
+                    <div class="tier-actions">
+                        <a class="ds-btn ds-btn--primary ds-btn--lg" href="build.html">Build your package</a>
+                        <a class="ds-btn ds-btn--lg" href="services.html">Learn more <i class="typcn typcn-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+
                 <div class="services-support">
                     <header class="ds-section-head ds-section-head--left">
                         <span class="ds-eyebrow">Client support</span>
-                        <h3 class="ds-section-title">IT Consultation & Repair</h3>
-                        <p class="ds-section-sub">Hands-on help keeping your machines running. Available to clients on active software contracts or by special arrangement.</p>
+                        <h3 class="ds-section-title">IT Consultation &amp; Repair</h3>
+                        <p class="ds-section-sub">Hands-on help keeping your machines running &mdash; offered to clients on an active software contract, a retainer, or by special arrangement.</p>
                     </header>
                     <div class="ds-callout ds-callout--note">
                         <i class="typcn typcn-info-large" aria-hidden="true"></i>
-                        <span><strong>How it works:</strong> Every service below is quoted individually. Book a consultation call first and we'll scope the work and confirm the rate.</span>
+                        <span><strong>How it works:</strong> every service is quoted per job. Start with the diagnostic, then we confirm the rate before any work begins. IT fees are separate from software projects and are not credited toward them.</span>
                     </div>
-                    <div class="ds-box support-list">
+                    <div class="ds-box">
                         <div class="ds-box-header">
                             <span>Services available</span>
                             <span class="ds-label ds-label--accent">Client rate on request</span>
                         </div>
-                        <div class="ds-box-row">
-                            <span class="support-row-icon"><i class="typcn typcn-messages" aria-hidden="true"></i></span>
-                            <div class="support-row-body">
-                                <h4>30-Minute Consultation</h4>
-                                <p>Triage call to scope the problem, walk options, and agree on next steps.</p>
+                        <div class="ds-box-row ds-box-row--compact">
+                            <span class="ds-row-icon"><i class="typcn typcn-messages" aria-hidden="true"></i></span>
+                            <div class="ds-row-body">
+                                <h4>30-Minute Diagnostic</h4>
+                                <p>Triage the problem, walk the options, agree on next steps.</p>
                             </div>
+                            <span class="ds-row-meta">$100 &middot; applied to repair</span>
                         </div>
-                        <div class="ds-box-row">
-                            <span class="support-row-icon"><i class="typcn typcn-cog-outline" aria-hidden="true"></i></span>
-                            <div class="support-row-body">
-                                <h4>OS Repair & Restore</h4>
+                        <div class="ds-box-row ds-box-row--compact">
+                            <span class="ds-row-icon"><i class="typcn typcn-cog-outline" aria-hidden="true"></i></span>
+                            <div class="ds-row-body">
+                                <h4>OS Repair &amp; Restore</h4>
                                 <p>Boot recovery, reinstalls, drivers, profile restoration.</p>
                             </div>
+                            <span class="ds-row-meta">Quoted per job</span>
                         </div>
-                        <div class="ds-box-row">
-                            <span class="support-row-icon"><i class="typcn typcn-warning-outline" aria-hidden="true"></i></span>
-                            <div class="support-row-body">
+                        <div class="ds-box-row ds-box-row--compact">
+                            <span class="ds-row-icon"><i class="typcn typcn-warning-outline" aria-hidden="true"></i></span>
+                            <div class="ds-row-body">
                                 <h4>Malware Cleanup</h4>
                                 <p>Removal, hardening, and verification the machine is clean.</p>
                             </div>
+                            <span class="ds-row-meta">Quoted per job</span>
                         </div>
-                        <div class="ds-box-row">
-                            <span class="support-row-icon"><i class="typcn typcn-lock-closed-outline" aria-hidden="true"></i></span>
-                            <div class="support-row-body">
-                                <h4>Security & Data Backup</h4>
+                        <div class="ds-box-row ds-box-row--compact">
+                            <span class="ds-row-icon"><i class="typcn typcn-lock-closed-outline" aria-hidden="true"></i></span>
+                            <div class="ds-row-body">
+                                <h4>Security &amp; Data Backup</h4>
                                 <p>Backup setup, restore testing, device hardening.</p>
                             </div>
+                            <span class="ds-row-meta">Quoted per job</span>
                         </div>
-                        <div class="ds-box-row">
-                            <span class="support-row-icon"><i class="typcn typcn-spanner-outline" aria-hidden="true"></i></span>
-                            <div class="support-row-body">
+                        <div class="ds-box-row ds-box-row--compact">
+                            <span class="ds-row-icon"><i class="typcn typcn-spanner-outline" aria-hidden="true"></i></span>
+                            <div class="ds-row-body">
                                 <h4>Hardware Repair</h4>
                                 <p>Diagnostics, component replacement, upgrades, rebuilds.</p>
                             </div>
+                            <span class="ds-row-meta">Quoted per job</span>
                         </div>
                     </div>
                     <div class="services-support-footer">
                         <p>Questions about availability or cost? Reach out and we'll confirm the details before any work starts.</p>
-                        <a class="ds-btn ds-btn--primary" href="#contact" data-bs-toggle="modal" data-contact-interest="IT consultation">Request support</a>
+                        <a class="ds-btn" href="#contact" data-bs-toggle="modal" data-contact-interest="IT support" data-contact-type="repair">Request support</a>
                     </div>
-                </div>
-            </div>
-        </section>
-
-<section id="pricing" class="pricing-section" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
-            <div class="pricing-shell">
-                <div class="pricing-heading">
-                    <span class="pricing-eyebrow">STARTING POINTS</span>
-                    <h2 class="section-terminal-title">BUILD SOMETHING REAL<span class="section-terminal-suffix"><span class="section-terminal-text">...</span><span class="section-terminal-caret" aria-hidden="true"></span></span></h2>
-                    <p>Simple packages for small ideas, local businesses, and passion projects. Every build gets one person accountable from first conversation to launch.</p>
-                </div>
-                <div class="pricing-grid">
-                    <article class="pricing-card">
-                        <div class="pricing-card-top"><span class="pricing-card-index">01</span><span class="pricing-card-label">FOCUS</span></div>
-                        <h3>Launch Site</h3>
-                        <p class="pricing-card-description">A polished, focused home for your idea or business.</p>
-                        <p class="pricing-price" data-base-price="900"><span class="pricing-amount">$900</span> <span>starting point</span></p>
-                        <ul>
-                            <li>Responsive website up to five sections</li>
-                            <li>Custom styling, contact form, and basic SEO</li>
-                            <li>GitHub deployment and launch handoff</li>
-                            <li>One revision round</li>
-                        </ul>
-                        <a class="pricing-action" href="#contact" data-bs-toggle="modal" data-contact-interest="Launch Site">START A CONVERSATION <i class="typcn typcn-arrow-right"></i></a>
-                    </article>
-                    <article class="pricing-card pricing-card-featured">
-                        <div class="pricing-card-top"><span class="pricing-card-index">02</span><span class="pricing-card-label">MOST POPULAR</span></div>
-                        <h3>Growth Site</h3>
-                        <p class="pricing-card-description">A stronger business presence with useful integrations.</p>
-                        <p class="pricing-price" data-base-price="1800"><span class="pricing-amount">$1,800</span> <span>starting point</span></p>
-                        <ul>
-                            <li>Everything in Launch Site</li>
-                            <li>Up to ten pages or major sections</li>
-                            <li>Scheduling, calendar, or email workflow</li>
-                            <li>Thirty days of launch support</li>
-                        </ul>
-                        <a class="pricing-action" href="#contact" data-bs-toggle="modal" data-contact-interest="Growth Site">PLAN THE BUILD <i class="typcn typcn-arrow-right"></i></a>
-                    </article>
-                    <article class="pricing-card">
-                        <div class="pricing-card-top"><span class="pricing-card-index">03</span><span class="pricing-card-label">PRODUCT</span></div>
-                        <h3>Product Site</h3>
-                        <p class="pricing-card-description">A public-facing product with deeper technical ambition.</p>
-                        <p class="pricing-price" data-base-price="3500"><span class="pricing-amount">$3,500</span><span>+</span> <span>starting point</span></p>
-                        <ul>
-                            <li>Everything in Growth Site</li>
-                            <li>Custom application interface and APIs</li>
-                            <li>AI-assisted feature integration</li>
-                            <li>Architecture plan and documentation</li>
-                        </ul>
-                        <a class="pricing-action" href="#contact" data-bs-toggle="modal" data-contact-interest="Product Site">TALK THROUGH IT <i class="typcn typcn-arrow-right"></i></a>
-                    </article>
-                </div>
-                <div class="pricing-addons">
-                    <div>
-                        <span class="pricing-eyebrow">ADD-ONS</span>
-                        <h3>Shape the build.</h3>
-                    </div>
-                    <div class="pricing-pills" aria-label="Available add-ons">
-                        <button type="button" data-addon-price="175" aria-pressed="false" aria-describedby="addon-scheduling-tip"><span>Scheduling</span><b>$175</b><i id="addon-scheduling-tip" role="tooltip">Calendar and booking integration.</i></button>
-                        <button type="button" data-addon-price="300" aria-pressed="false" aria-describedby="addon-ai-tip"><span>AI integration</span><b>$300+</b><i id="addon-ai-tip" role="tooltip">Connect an AI feature or assistant.</i></button>
-                        <button type="button" data-addon-price="500" aria-pressed="false" aria-describedby="addon-auth-tip"><span>Authentication</span><b>$500+</b><i id="addon-auth-tip" role="tooltip">Secure sign-in and account access.</i></button>
-                        <button type="button" data-addon-price="600" aria-pressed="false" aria-describedby="addon-commerce-tip"><span>E-commerce</span><b>$600+</b><i id="addon-commerce-tip" role="tooltip">Payments, checkout, and purchase flow.</i></button>
-                        <button type="button" data-addon-price="600" aria-pressed="false" aria-describedby="addon-database-tip"><span>Custom database</span><b>$600+</b><i id="addon-database-tip" role="tooltip">Store and manage structured project data.</i></button>
-                        <button type="button" data-addon-price="75" aria-pressed="false" aria-describedby="addon-maintenance-tip"><span>Maintenance</span><b>$75/mo</b><i id="addon-maintenance-tip" role="tooltip">Ongoing updates, fixes, and small changes.</i></button>
-                        <button type="button" data-addon-price="75" aria-pressed="false" aria-describedby="addon-domain-tip"><span>Domain setup</span><b>$75+</b><i id="addon-domain-tip" role="tooltip">Domain connection, DNS, and renewal handling.</i></button>
-                    </div>
-                </div>
-                <div class="consultation-strip">
-                    <div><span class="pricing-eyebrow">NOT SURE WHERE TO START?</span><h3>Book a clarity call.</h3><p>Your consultation fee is credited toward a website package purchased within 30 days.</p></div>
-                    <div class="consultation-options"><a href="#contact" data-bs-toggle="modal" data-contact-interest="30-minute clarity call"><strong>30 MIN</strong><span>$60</span></a><a href="#contact" data-bs-toggle="modal" data-contact-interest="60-minute build plan"><strong>60 MIN</strong><span>$110</span></a></div>
                 </div>
             </div>
         </section>
@@ -518,158 +441,16 @@
         </section>
     </main>
    
-    <footer class="d-flex flex-fill justify-content-center" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
-        <div class="footer-inner">
-            <div class="footer-cols">
-                <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-word>Services</span>
-                    <a href="#services">IT Consultation</a>
-                    <a href="#pricing">Software Packages</a>
-                    <a href="#about">About</a>
-                </div>
-                <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-word>Work</span>
-                    <a href="#projects">Portfolio</a>
-                </div>
-                <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-word>Legal</span>
-                    <a href="terms.html">Terms &amp; Conditions</a>
-                </div>
-                <div class="footer-col-group">
-                    <span class="footer-label" data-glitch-word>Contact</span>
-                    <a href="mailto:dev@doxxus.us">dev@doxxus.us</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span class="footer-copy">
-                    <i class="icon-globe" style="font-size:.77rem;color:#ffffff;vertical-align:middle;margin-right:.4rem;"></i>
-                    DOXXUS &copy;2026
-                </span>
-                <div class="footer-social">
-                    <a href="https://www.linkedin.com/in/b-m-ccool/" target="_blank" aria-label="LinkedIn"><i class="typcn typcn-social-linkedin"></i></a>
-                    <a href="https://github.com/m-ccool" target="_blank" aria-label="GitHub"><i class="typcn typcn-social-github"></i></a>
-                    <a href="mailto:dev@doxxus.us" aria-label="Email"><i class="typcn typcn-mail"></i></a>
-                    <a href="https://cash.app/$doxxus" target="_blank" aria-label="CashApp"><i class="typcn typcn-credit-card"></i></a>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <div class="modal fade scrollbar-hidden" role="dialog" tabindex="-1" id="contact">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                    <div class="modal-header d-flex justify-content-between align-items-start">
-                        <div class="d-flex flex-column align-items-start">
-                            <span class="modal-eyebrow" data-glitch-modal>you found me.</span>
-                            <h2 class="modal-headline" data-glitch-modal><span class="glitch-line">Leave a</span><span class="glitch-line">Message.</span></h2>
-                        </div>
-                        <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="show_message" class="p-form-notice">sent! 🚀 we'll contact you in the next 24 hours!</p>
-                        <p id="error" class="p-form-notice">error! 🐛 please try again or email dev@doxxus.us</p>
-                        <form id="ajax-form" class="cf" method="post" action="javascript:void(0)">
-                            <div class="cf-row">
-                                <label class="cf-label" for="type-trigger" data-glitch-modal>TYPE</label>
-                                <div class="contact-select" data-contact-select>
-                                    <input type="hidden" id="type" name="type" value="software">
-                                    <button class="contact-select-trigger" id="type-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="type-options">
-                                        <span>Software Development</span><i class="typcn typcn-chevron-down" aria-hidden="true"></i>
-                                    </button>
-                                    <div class="contact-select-options" id="type-options" role="listbox" aria-label="Project type" hidden>
-                                        <button type="button" role="option" aria-selected="false" data-value="website">Website Development</button>
-                                        <button type="button" role="option" aria-selected="true" data-value="software">Software Development</button>
-                                        <button type="button" role="option" aria-selected="false" data-value="repair">PC Support / Repair</button>
-                                        <button type="button" role="option" aria-selected="false" data-value="other">Other (please specify)</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cf-row">
-                                <label class="cf-label" for="user-1" data-glitch-modal>NAME</label>
-                                <input class="form-control" type="text" id="user-1" name="user" required placeholder="john doe" autocomplete="off" maxlength="50">
-                            </div>
-                            <div class="cf-row">
-                                <label class="cf-label" for="email" data-glitch-modal>EMAIL</label>
-                                <input class="form-control" type="email" id="email" name="email" required placeholder="email@example.com" inputmode="email" autocomplete="off" maxlength="50">
-                            </div>
-                            <div class="cf-row">
-                                <label class="cf-label" for="phone" data-glitch-modal>PHONE</label>
-                                <input class="form-control" type="tel" id="phone" name="phone" required placeholder="1 (123) 567 8910" inputmode="tel" autocomplete="off" maxlength="13" minlength="10">
-                            </div>
-                            <div class="cf-row cf-row-full">
-                                <label class="cf-label cf-label-top" for="websummary" data-glitch-modal>NOTE</label>
-                                <textarea class="form-control" id="websummary" name="websummary" placeholder="Explain your idea here! ✨" rows="3" style="overflow-y:hidden;resize:none;" required minlength="10" maxlength="500" spellcheck="true"></textarea>
-                            </div>
-                            <div class="cf-submit">
-                                <span class="neon-btn-outline">
-                                    <button class="btn cf-btn" type="submit" name="submit" value="submit">SEND</button>
-                                </span>
-                            </div>
-                        </form>
-                        <script type="text/javascript">
-                        document.addEventListener('DOMContentLoaded', function(){
-                            $("#error").hide();
-                            $("#show_message").hide();
-                            // reset form + notices when modal is closed
-                            $('#contact').on('hidden.bs.modal', function(){
-                                $("#ajax-form")[0].reset();
-                                var projectType = document.querySelector('[data-contact-select]');
-                                if (projectType) {
-                                    projectType.querySelector('input[name="type"]').value = 'software';
-                                    projectType.querySelector('.contact-select-trigger span').textContent = 'Software Development';
-                                    projectType.querySelectorAll('[role="option"]').forEach(function(option){
-                                        option.setAttribute('aria-selected', option.dataset.value === 'software');
-                                    });
-                                }
-                                $("#error").hide();
-                                $("#show_message").hide();
-                                var ta = document.getElementById('websummary');
-                                if (ta) ta.style.height = '';
-                            });
-                            $('#contact').on('show.bs.modal', function(event){
-                                var trigger = event.relatedTarget;
-                                var interest = trigger && trigger.dataset ? trigger.dataset.contactInterest : '';
-                                var ta = document.getElementById('websummary');
-                                if (interest && ta && !ta.value.trim()) {
-                                    ta.value = 'I am interested in the ' + interest + '.';
-                                    ta.style.height = 'auto';
-                                    ta.style.height = ta.scrollHeight + 'px';
-                                }
-                            });
-                            // auto-resize textarea
-                            $('#websummary').on('input', function(){
-                                this.style.height = 'auto';
-                                this.style.height = this.scrollHeight + 'px';
-                            });
-                            $('#ajax-form').submit(function(e){
-                                e.preventDefault();
-                                $("#error").hide();
-                                $("#show_message").hide();
-                                $.ajax({
-                                    type: "POST",
-                                    url: "https://doxxus.us/ajax-form-store.php",
-                                    data: $(this).serialize(),
-                                    success: function(response){
-                                        if ((response || '').trim() === 'success') {
-                                            $("#show_message").fadeIn();
-                                        } else {
-                                            $("#error").fadeIn();
-                                        }
-                                    },
-                                    error: function(){ $("#error").fadeIn(); }
-                                });
-                            });
-                        });
-                        </script>
-                    </div>
-            </div>
-        </div>
-    </div>
+    <div data-site-footer></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!-- plugins.js bundles Bootstrap 4; it must load before Bootstrap 5 so the
+         window.bootstrap global resolves to v5 for tooltips, modals and collapse. -->
+    <script src="assets/js/plugins.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="assets/js/site-shell.js"></script>
     <script src="assets/js/bs-init.js"></script>
     <script src="assets/js/comet.js"></script>
-    <script src="assets/js/plugins.js"></script>
     <script src="assets/js/scripts.js"></script>
     <script>
     (function () {
