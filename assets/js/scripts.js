@@ -164,6 +164,68 @@ document.addEventListener('animationend', function (event) {
     window.renderContributionCalendars();
 })();
 
+function initializePricing() {
+    var pricingSection = document.getElementById('pricing');
+
+    if (pricingSection) {
+        var addonButtons = Array.prototype.slice.call(pricingSection.querySelectorAll('[data-addon-price]'));
+        var priceDisplays = Array.prototype.slice.call(pricingSection.querySelectorAll('[data-base-price]'));
+
+        function updatePricing() {
+            var selectedTotal = addonButtons.reduce(function (total, button) {
+                return button.getAttribute('aria-pressed') === 'true' ? total + Number(button.dataset.addonPrice) : total;
+            }, 0);
+
+            priceDisplays.forEach(function (priceDisplay) {
+                var basePrice = Number(priceDisplay.dataset.basePrice);
+                var targetPrice = basePrice + selectedTotal;
+                var amount = priceDisplay.querySelector('.pricing-amount');
+                var suffix = priceDisplay.querySelectorAll('span');
+                var startPrice = Number(priceDisplay.dataset.currentPrice || basePrice);
+                var startTime = performance.now();
+                var duration = 760;
+                var animate = function (timestamp) {
+                    var progress = Math.min((timestamp - startTime) / duration, 1);
+                    var eased = 1 - Math.pow(1 - progress, 3);
+                    var currentPrice = Math.round(startPrice + (targetPrice - startPrice) * eased);
+                    amount.textContent = '$' + currentPrice.toLocaleString('en-US');
+                    priceDisplay.dataset.currentPrice = String(currentPrice);
+                    if (progress < 1) priceDisplay._pricingFrame = requestAnimationFrame(animate);
+                };
+
+                cancelAnimationFrame(priceDisplay._pricingFrame || 0);
+                amount.classList.remove('is-counting-up', 'is-counting-down');
+                void amount.offsetWidth;
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    amount.textContent = '$' + targetPrice.toLocaleString('en-US');
+                    priceDisplay.dataset.currentPrice = String(targetPrice);
+                } else {
+                    amount.classList.add(targetPrice >= startPrice ? 'is-counting-up' : 'is-counting-down');
+                    priceDisplay._pricingFrame = requestAnimationFrame(animate);
+                }
+                priceDisplay.setAttribute('aria-label', 'Starting price $' + targetPrice.toLocaleString('en-US'));
+                suffix.forEach(function (span) {
+                    if (span.textContent === '+') span.hidden = selectedTotal === 0;
+                });
+            });
+        }
+
+        addonButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var isSelected = button.getAttribute('aria-pressed') === 'true';
+                var selected = !isSelected;
+                button.setAttribute('aria-pressed', String(selected));
+                button.style.setProperty('background', selected ? '#fff' : '', 'important');
+                button.style.setProperty('color', selected ? '#08090b' : '', 'important');
+                updatePricing();
+            });
+        });
+    }
+
+}
+
+initializePricing();
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-contact-select]').forEach(function (select) {
         const trigger = select.querySelector('.contact-select-trigger');

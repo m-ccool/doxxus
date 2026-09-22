@@ -1,6 +1,10 @@
-# doxxus.dev
+# doxxus.us
 
 Personal portfolio & service site for **B McCool** — freelance web developer.
+
+## Product Planning
+
+- [E-commerce MVP outline](docs/mvp-outline.md) — approved direction for packages, consultations, payments, client portal, and admin operations.
 
 ## Stack
 
@@ -16,6 +20,8 @@ index.html          — main landing page (splash, services, portfolio, about)
 host.html           — hosting/plans page
 projects.html       — full portfolio page
 terms.html          — terms of service
+docs/mvp-outline.md — ecommerce MVP and client portal plan
+server/             — Node.js commerce API foundation
 assets/
   css/
     style.css             — primary custom styles, CSS variables, component styles
@@ -39,7 +45,8 @@ assets/
 - CSS variables in `:root` inside `style.css` define the full color/gradient system
 - Rainbow gradient: `--rainbow-gradient: linear-gradient(-45deg, var(--pink), var(--indigo), var(--purple), var(--teal), var(--green))`
 - Dark theme: `--bs-body-color: #0d0d0e`, `--bs-body-bg: #0f0f10`
-- Contact form posts to `https://doxxus.dev/ajax-form-store.php`
+- Contact form posts to `https://doxxus.us/ajax-form-store.php`
+- Commerce backend starts in `server/`; run `cd server` then `npm start` for the health endpoint.
 
 ## Style References for Agents
 - Liquid Glass Pro Max - https://codepen.io/fand/pen/azmPjqd
@@ -50,4 +57,4 @@ assets/
 
 ## Contact
 
-**dev@doxxus.dev** · [linkedin](https://www.linkedin.com/in/b-m-ccool/) · [github](https://github.com/m-ccool)
+**dev@doxxus.us** · [linkedin](https://www.linkedin.com/in/b-m-ccool/) · [github](https://github.com/m-ccool)

@@ -1,0 +1,13 @@
+{
+  "name": "doxxus-commerce-api",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Backend foundation for Doxxus commerce and client portal features.",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

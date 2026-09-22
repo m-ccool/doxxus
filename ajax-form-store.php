@@ -10,7 +10,7 @@ header('Content-Type: text/plain; charset=utf-8');
 // ── Config ────────────────────────────────────────────────────────────────────
 $to      = 'dev@doxxus.us';
 $from    = 'dev@doxxus.us';   // must match a domain on your host
-$subject = '[doxxus.dev] New Contact Form Submission';
+$subject = '[doxxus.us] New Contact Form Submission';
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Only accept POST
@@ -44,7 +44,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 // Build email body
-$body  = "New contact form submission from doxxus.dev\n";
+$body  = "New contact form submission from doxxus.us\n";
 $body .= str_repeat('-', 48) . "\n";
 $body .= "Type:    $type\n";
 $body .= "Name:    $name\n";
@@ -54,7 +54,7 @@ $body .= "Note:\n$websummary\n";
 $body .= str_repeat('-', 48) . "\n";
 
 // Headers
-$headers  = "From: doxxus.dev <$from>\r\n";
+$headers  = "From: doxxus.us <$from>\r\n";
 $headers .= "Reply-To: $name <$email>\r\n";
 $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
 $headers .= "MIME-Version: 1.0\r\n";
