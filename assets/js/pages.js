@@ -38,6 +38,29 @@
         });
 
         if (commands.length) commands[0].click();
+
+        var rebootButton = terminal.querySelector('[data-terminal-reboot]');
+        if (rebootButton) {
+            rebootButton.addEventListener('click', function () {
+                if (terminal.classList.contains('is-rebooting')) return;
+                terminal.classList.add('is-rebooting');
+
+                // Collapse back to the opening state while the panel is invisible.
+                var resetAt = window.setTimeout(function () {
+                    commands.forEach(function (command, index) {
+                        var output = document.getElementById(command.getAttribute('aria-controls'));
+                        command.setAttribute('aria-expanded', String(index === 0));
+                        if (output) output.hidden = index !== 0;
+                    });
+                }, 720);
+
+                terminal.addEventListener('animationend', function done() {
+                    window.clearTimeout(resetAt);
+                    terminal.classList.remove('is-rebooting');
+                    terminal.removeEventListener('animationend', done);
+                });
+            });
+        }
     }
 
     /* ────────────────────────────────────────────────────────────────

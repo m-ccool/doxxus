@@ -4654,8 +4654,15 @@ summary:focus-visible,
 
 .ds-terminal-dots {
   display: inline-flex;
+  align-items: center;
   gap: .35rem;
   margin-right: var(--ds-space-2);
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  line-height: 1;
+  cursor: pointer;
 }
 
 .ds-terminal-dots span {
@@ -4663,6 +4670,45 @@ summary:focus-visible,
   height: 9px;
   background: var(--ds-border-emphasis);
   border-radius: 50%;
+  transition: background var(--ds-dur) var(--ds-ease),
+              box-shadow var(--ds-dur) var(--ds-ease);
+}
+
+/* macOS traffic lights: close, minimize, zoom. */
+.ds-terminal-dots:hover span:nth-child(1),
+.ds-terminal-dots:focus-visible span:nth-child(1) {
+  background: #ff5f57;
+  box-shadow: 0 0 6px rgba(255,95,87,.55);
+}
+
+.ds-terminal-dots:hover span:nth-child(2),
+.ds-terminal-dots:focus-visible span:nth-child(2) {
+  background: #febc2e;
+  box-shadow: 0 0 6px rgba(254,188,46,.55);
+}
+
+.ds-terminal-dots:hover span:nth-child(3),
+.ds-terminal-dots:focus-visible span:nth-child(3) {
+  background: #28c840;
+  box-shadow: 0 0 6px rgba(40,200,64,.55);
+}
+
+/* Wobble, vanish, then fade back in. */
+.ds-terminal.is-rebooting {
+  animation: ds-terminal-reboot 1.15s var(--ds-ease) both;
+}
+
+@keyframes ds-terminal-reboot {
+  0%   { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+  8%   { transform: translate3d(-7px,0,0) rotate(-1.1deg) scale(.995); }
+  16%  { transform: translate3d(6px,0,0) rotate(.9deg); }
+  24%  { transform: translate3d(-5px,0,0) rotate(-.75deg); }
+  32%  { transform: translate3d(4px,0,0) rotate(.6deg); }
+  40%  { transform: translate3d(-2px,0,0) rotate(-.35deg); }
+  48%  { transform: translate3d(0,0,0) rotate(0deg) scale(1); opacity: 1; }
+  62%  { transform: translate3d(0,6px,0) scale(.94); opacity: 0; }
+  63%  { opacity: 0; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity: 1; }
 }
 
 .ds-terminal-body {
@@ -5186,12 +5232,14 @@ textarea.ds-input {
   .ds-choice,
   .ds-choice-mark,
   .ds-input,
-  .ds-stepper button {
+  .ds-stepper button,
+  .ds-terminal-dots span {
     transition: none;
   }
 
   .ds-btn--primary::before,
-  .ds-terminal-caret {
+  .ds-terminal-caret,
+  .ds-terminal.is-rebooting {
     animation: none;
   }
 }
