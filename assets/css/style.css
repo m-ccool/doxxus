@@ -4657,9 +4657,23 @@ summary:focus-visible,
 .ds-window-title {
   flex: 1 1 auto;
   min-width: 0;
+  padding: var(--ds-space-2) 0;
   overflow: hidden;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  font: inherit;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--ds-dur) var(--ds-ease);
+}
+
+.ds-window-title:hover,
+.ds-window-title:focus-visible {
+  color: var(--ds-fg-default);
 }
 
 .ds-window-hint {
@@ -4782,6 +4796,7 @@ summary:focus-visible,
 }
 
 .ds-terminal-cmd {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--ds-space-2);
@@ -4795,11 +4810,33 @@ summary:focus-visible,
   text-align: left;
   cursor: pointer;
   transition: background var(--ds-dur) var(--ds-ease),
-              color var(--ds-dur) var(--ds-ease);
+              color var(--ds-dur) var(--ds-ease),
+              box-shadow var(--ds-dur) var(--ds-ease);
 }
 
 .ds-terminal-cmd:hover {
-  background: rgba(255,255,255,.035);
+  background: rgba(87,215,255,.07);
+  box-shadow: inset 2px 0 0 var(--ds-accent-fg);
+}
+
+.ds-terminal-cmd:hover .ds-terminal-name {
+  color: #fff;
+  text-shadow: 0 0 12px rgba(87,215,255,.55);
+}
+
+/* The open entry stays lit so the selection is obvious. */
+.ds-terminal-cmd[aria-expanded="true"] {
+  background: rgba(87,215,255,.09);
+  box-shadow: inset 2px 0 0 var(--ds-accent-fg);
+}
+
+.ds-terminal-cmd[aria-expanded="true"] .ds-terminal-name {
+  color: #fff;
+  text-shadow: 0 0 14px rgba(87,215,255,.6);
+}
+
+.ds-terminal-cmd[aria-expanded="true"] .ds-terminal-prompt {
+  text-shadow: 0 0 10px rgba(87,215,255,.8);
 }
 
 .ds-terminal-prompt {
@@ -5293,6 +5330,7 @@ textarea.ds-input {
   .ds-stepper button,
   .ds-dot,
   .ds-window-body,
+  .ds-window-title,
   .ds-terminal-body {
     transition: none;
   }

@@ -34,6 +34,8 @@
             if (body) body.setAttribute('aria-hidden', String(minimized));
             var toggle = win.querySelector('[data-terminal-action="minimize"]');
             if (toggle) toggle.setAttribute('aria-expanded', String(!minimized));
+            var titleToggle = win.querySelector('.ds-window-title');
+            if (titleToggle) titleToggle.setAttribute('aria-expanded', String(!minimized));
         }
 
         // Only windows that hold a command list get the accordion behaviour.
@@ -90,6 +92,16 @@
                 });
             }
         };
+
+        // Clicking the window title toggles the same as the yellow dot.
+        var title = win.querySelector('.ds-window-title');
+        if (title) {
+            title.addEventListener('click', function () {
+                if (win.classList.contains('is-rebooting')) return;
+                win.classList.remove('is-zoomed');
+                setMinimized(!win.classList.contains('is-minimized'));
+            });
+        }
 
         // Scope to this window so nested windows never steal each other's dots.
         win.querySelectorAll('[data-terminal-action]').forEach(function (button) {
