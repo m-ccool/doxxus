@@ -47,9 +47,8 @@
 
         <header class="ds-page-hero">
             <div class="ds-shell">
-                <span class="ds-eyebrow">Software design services</span>
                 <h1>Everything I build, spelled out.</h1>
-                <p>Run through the services below like a spec sheet. Pick what fits, compare the tiers, then assemble a package and send it over &mdash; no sales call required to get a number.</p>
+                <p>Open a panel to see the detail. No sales call required to get a number.</p>
                 <div class="tier-actions">
                     <a class="ds-btn ds-btn--primary ds-btn--lg" href="build.html">Build your package</a>
                     <a class="ds-btn ds-btn--lg" href="#tiers">Compare tiers</a>
@@ -59,22 +58,17 @@
 
         <section class="ds-section ds-section--tight" id="capabilities" data-aos="fade-up" data-aos-duration="700" data-aos-once="true">
             <div class="ds-shell ds-stack">
-                <header class="ds-section-head ds-section-head--left">
-                    <span class="ds-eyebrow">Capabilities</span>
-                    <h2 class="ds-section-title">Select a service to expand it.</h2>
-                    <p class="ds-section-sub">Each entry explains what it is, what you actually receive, and a realistic timeline.</p>
-                </header>
-
-                <div class="ds-terminal" data-service-terminal>
-                    <div class="ds-terminal-bar">
+                <div class="ds-window" data-window data-window-start="expanded">
+                    <div class="ds-window-bar">
                         <span class="ds-terminal-dots">
-                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Close the capabilities panel"></button>
-                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-label="Minimize the capabilities panel"></button>
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the capabilities panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Minimize the capabilities panel"></button>
                             <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand every capability"></button>
                         </span>
-                        <span>doxxus@services &mdash; ~/capabilities</span>
+                        <span class="ds-window-title">doxxus@services &mdash; ~/capabilities</span>
+                        <span class="ds-window-hint">select a service</span>
                     </div>
-                    <div class="ds-terminal-body">
+                    <div class="ds-window-body">
 
                         <div class="ds-terminal-item">
                             <button class="ds-terminal-cmd" type="button" aria-expanded="false" aria-controls="svc-app">
@@ -215,18 +209,26 @@
 
         <section class="ds-section ds-section--tight" id="tiers" data-aos="fade-up" data-aos-duration="700" data-aos-once="true">
             <div class="ds-shell ds-stack">
-                <header class="ds-section-head ds-section-head--left">
-                    <span class="ds-eyebrow">Package tiers</span>
-                    <h2 class="ds-section-title">Each tier is the one before it, plus more.</h2>
-                    <p class="ds-section-sub">Read it like a diff. Starting points, not final quotes &mdash; scope decides the number.</p>
-                    <div class="svc-legend" aria-hidden="true">
-                        <span><b class="ds-mark ds-mark--same">=</b> carried over</span>
-                        <span><b class="ds-mark ds-mark--add">+</b> added at this tier</span>
-                        <span><b class="ds-mark ds-mark--none">&middot;</b> not included</span>
+                <div class="ds-window" data-window data-window-start="collapsed">
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the package tier panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="false" aria-label="Show or hide the package tier comparison"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Open the package tier comparison"></button>
+                        </span>
+                        <span class="ds-window-title">doxxus@services &mdash; ~/package-tiers</span>
+                        <span class="ds-window-hint">$900 &ndash; $3,500+</span>
                     </div>
-                </header>
-
-                <div class="ds-table-wrap">
+                    <div class="ds-window-body ds-window-body--plain">
+                        <div class="ds-window-pad">
+                            <p class="ds-section-sub">Each tier is the one before it, plus more. Read it like a diff &mdash; starting points, not final quotes.</p>
+                            <div class="svc-legend" aria-hidden="true">
+                                <span><b class="ds-mark ds-mark--same">=</b> carried over</span>
+                                <span><b class="ds-mark ds-mark--add">+</b> added at this tier</span>
+                                <span><b class="ds-mark ds-mark--none">&middot;</b> not included</span>
+                            </div>
+                        </div>
+                        <div class="ds-table-wrap">
                     <table class="ds-table ds-table-diff">
                         <caption class="visually-hidden">Comparison of the Launch Site, Growth Site, and Product Site packages</caption>
                         <thead>
@@ -304,20 +306,28 @@
                         <span>starting points &mdash; final scope is quoted before any payment</span>
                         <a class="ds-btn ds-btn--sm ds-btn--primary" href="build.html">Assemble a package</a>
                     </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="ds-section ds-section--tight" id="addons" data-aos="fade-up" data-aos-duration="700" data-aos-once="true">
             <div class="ds-shell ds-stack">
-                <header class="ds-section-head ds-section-head--left">
-                    <span class="ds-eyebrow">Add-ons</span>
-                    <h2 class="ds-section-title">Shape the build.</h2>
-                    <p class="ds-section-sub">Bolt any of these onto a tier. Select them in the builder to see a running estimate.</p>
-                </header>
-                <div class="ds-box">
+                <div class="ds-window" data-window data-window-start="collapsed">
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the add-ons panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="false" aria-label="Show or hide the add-ons"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Open the add-ons"></button>
+                        </span>
+                        <span class="ds-window-title">doxxus@services &mdash; ~/add-ons</span>
+                        <span class="ds-window-hint">from $75</span>
+                    </div>
+                    <div class="ds-window-body ds-window-body--plain">
+                <div class="ds-box" style="border:0;border-radius:0;background:none;">
                     <div class="ds-box-header">
-                        <span>Available add-ons</span>
+                        <span>Bolt any of these onto a tier</span>
                         <span class="ds-label">Starting prices</span>
                     </div>
                     <div class="ds-box-row ds-box-row--compact">
@@ -385,9 +395,13 @@
                         <span class="ds-row-meta">$75/mo</span>
                     </div>
                 </div>
-                <div class="ds-callout ds-callout--attention">
-                    <i class="typcn typcn-warning-outline" aria-hidden="true"></i>
-                    <span><strong>Domains:</strong> if I register a domain for you, you remain its legal owner. The domain cost plus a disclosed handling fee and monthly renewal are shown before anything is purchased.</span>
+                        <div class="ds-window-pad">
+                            <div class="ds-callout ds-callout--attention">
+                                <i class="typcn typcn-warning-outline" aria-hidden="true"></i>
+                                <span><strong>Domains:</strong> if I register a domain for you, you remain its legal owner. The domain cost plus a disclosed handling fee and monthly renewal are shown before anything is purchased.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -412,17 +426,25 @@
 
         <section class="ds-section" id="it-support" data-aos="fade-up" data-aos-duration="700" data-aos-once="true">
             <div class="ds-shell">
-                <div class="services-support" style="margin-top:0;padding-top:0;border-top:0;">
-                    <header class="ds-section-head ds-section-head--left">
-                        <span class="ds-eyebrow">Client support</span>
-                        <h3 class="ds-section-title">IT Consultation &amp; Repair</h3>
-                        <p class="ds-section-sub">Hands-on help keeping your machines running &mdash; offered to clients on an active software contract, a retainer, or by special arrangement.</p>
-                    </header>
-                    <div class="ds-callout ds-callout--note">
-                        <i class="typcn typcn-info-large" aria-hidden="true"></i>
-                        <span><strong>How it works:</strong> every service is quoted per job. Start with the diagnostic, then we confirm the rate before any work begins. IT fees are separate from software projects and are not credited toward them.</span>
+                <div class="ds-window" data-window data-window-start="expanded">
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the IT support panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Show or hide IT support"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Open IT support"></button>
+                        </span>
+                        <span class="ds-window-title">doxxus@services &mdash; ~/it-support</span>
+                        <span class="ds-window-hint">clients only</span>
                     </div>
-                    <div class="ds-box">
+                    <div class="ds-window-body ds-window-body--plain">
+                        <div class="ds-window-pad">
+                            <p class="ds-section-sub"><strong>IT Consultation &amp; Repair</strong> &mdash; hands-on help keeping your machines running, for clients on an active software contract, a retainer, or by special arrangement.</p>
+                            <div class="ds-callout ds-callout--note">
+                                <i class="typcn typcn-info-large" aria-hidden="true"></i>
+                                <span><strong>How it works:</strong> every service is quoted per job. Start with the diagnostic, then we confirm the rate before any work begins. IT fees are separate from software projects and are not credited toward them.</span>
+                            </div>
+                        </div>
+                    <div class="ds-box" style="border:0;border-radius:0;background:none;">
                         <div class="ds-box-header">
                             <span>Services available</span>
                             <span class="ds-label ds-label--accent">Client rate on request</span>
@@ -468,9 +490,12 @@
                             <span class="ds-row-meta">Quoted per job</span>
                         </div>
                     </div>
-                    <div class="services-support-footer">
-                        <p>Questions about availability or cost? Reach out and we'll confirm the details before any work starts.</p>
-                        <a class="ds-btn" href="#contact" data-bs-toggle="modal" data-contact-interest="IT support" data-contact-type="repair">Request support</a>
+                        <div class="ds-window-pad">
+                            <div class="services-support-footer" style="margin-top:0;">
+                                <p>Questions about availability or cost? Reach out and we'll confirm the details before any work starts.</p>
+                                <a class="ds-btn" href="#contact" data-bs-toggle="modal" data-contact-interest="IT support" data-contact-type="repair">Request support</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

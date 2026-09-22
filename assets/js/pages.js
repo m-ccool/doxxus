@@ -10,14 +10,14 @@
     var NOTE_LIMIT = 500;
 
     /* ────────────────────────────────────────────────────────────────
-       Services page — terminal command list
+       Mac-style windows (capabilities, tiers, add-ons, IT support)
+       Each window owns its own traffic lights and collapse state.
        ──────────────────────────────────────────────────────────────── */
 
-    function initServiceTerminal() {
-        var terminal = document.querySelector('[data-service-terminal]');
-        if (!terminal) return;
-
-        var commands = Array.prototype.slice.call(terminal.querySelectorAll('.ds-terminal-cmd'));
+    function initWindow(win) {
+        var commands = Array.prototype.slice.call(win.querySelectorAll('.ds-terminal-cmd'));
+        var body = win.querySelector('.ds-window-body, .ds-terminal-body');
+        var startCollapsed = win.dataset.windowStart === 'collapsed';
 
         function outputFor(command) {
             return document.getElementById(command.getAttribute('aria-controls'));
@@ -29,12 +29,19 @@
             if (output) output.hidden = !open;
         }
 
+        function setMinimized(minimized) {
+            win.classList.toggle('is-minimized', minimized);
+            if (body) body.setAttribute('aria-hidden', String(minimized));
+            var toggle = win.querySelector('[data-terminal-action="minimize"]');
+            if (toggle) toggle.setAttribute('aria-expanded', String(!minimized));
+        }
+
+        // Only windows that hold a command list get the accordion behaviour.
         commands.forEach(function (command) {
             command.addEventListener('click', function () {
                 if (!outputFor(command)) return;
                 var isOpen = command.getAttribute('aria-expanded') === 'true';
-                // Expanding one collapses the rest, unless zoom opened them all.
-                if (!terminal.classList.contains('is-zoomed')) {
+                if (!win.classList.contains('is-zoomed')) {
                     commands.forEach(function (other) {
                         if (other !== command) setOpen(other, false);
                     });
@@ -44,49 +51,58 @@
         });
 
         if (commands.length) setOpen(commands[0], true);
+        setMinimized(startCollapsed);
 
         var actions = {
             // Red — wobble, vanish, fade back in, reset to the opening state.
             close: function () {
-                if (terminal.classList.contains('is-rebooting')) return;
-                terminal.classList.remove('is-minimized', 'is-zoomed');
-                terminal.classList.add('is-rebooting');
+                if (win.classList.contains('is-rebooting')) return;
+                win.classList.remove('is-zoomed');
+                win.classList.add('is-rebooting');
 
                 var resetAt = window.setTimeout(function () {
                     commands.forEach(function (command, index) {
                         setOpen(command, index === 0);
                     });
+                    setMinimized(startCollapsed);
                 }, 720);
 
-                terminal.addEventListener('animationend', function done() {
+                win.addEventListener('animationend', function done(event) {
+                    if (event.target !== win) return;
                     window.clearTimeout(resetAt);
-                    terminal.classList.remove('is-rebooting');
-                    terminal.removeEventListener('animationend', done);
+                    win.classList.remove('is-rebooting');
+                    win.removeEventListener('animationend', done);
                 });
             },
             // Yellow — collapse the body into the title bar, click again to restore.
             minimize: function () {
-                if (terminal.classList.contains('is-rebooting')) return;
-                terminal.classList.remove('is-zoomed');
-                terminal.classList.toggle('is-minimized');
+                if (win.classList.contains('is-rebooting')) return;
+                win.classList.remove('is-zoomed');
+                setMinimized(!win.classList.contains('is-minimized'));
             },
-            // Green — expand every entry at once, click again to go back to one.
+            // Green — open everything at once, click again to go back to one.
             zoom: function () {
-                if (terminal.classList.contains('is-rebooting')) return;
-                terminal.classList.remove('is-minimized');
-                var zoomed = terminal.classList.toggle('is-zoomed');
+                if (win.classList.contains('is-rebooting')) return;
+                setMinimized(false);
+                var zoomed = win.classList.toggle('is-zoomed');
                 commands.forEach(function (command, index) {
                     setOpen(command, zoomed ? true : index === 0);
                 });
             }
         };
 
-        terminal.querySelectorAll('[data-terminal-action]').forEach(function (button) {
+        // Scope to this window so nested windows never steal each other's dots.
+        win.querySelectorAll('[data-terminal-action]').forEach(function (button) {
+            if (button.closest('[data-window]') !== win) return;
             button.addEventListener('click', function () {
                 var run = actions[button.dataset.terminalAction];
                 if (run) run();
             });
         });
+    }
+
+    function initWindows() {
+        document.querySelectorAll('[data-window]').forEach(initWindow);
     }
 
     /* ────────────────────────────────────────────────────────────────
@@ -341,7 +357,7 @@
     }
 
     function init() {
-        initServiceTerminal();
+        initWindows();
         initPackageBuilder();
     }
 

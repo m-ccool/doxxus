@@ -4630,8 +4630,9 @@ summary:focus-visible,
   white-space: nowrap;
 }
 
-/* ── Terminal (services spec sheet) ── */
+/* ── Window (reusable mac-style panel; .ds-terminal is the spec-sheet alias) ── */
 
+.ds-window,
 .ds-terminal {
   overflow: hidden;
   background: var(--ds-canvas-inset);
@@ -4640,6 +4641,7 @@ summary:focus-visible,
   box-shadow: var(--ds-shadow-md);
 }
 
+.ds-window-bar,
 .ds-terminal-bar {
   display: flex;
   align-items: center;
@@ -4650,6 +4652,20 @@ summary:focus-visible,
   font-family: var(--ds-font-mono);
   font-size: var(--ds-text-xs);
   color: var(--ds-fg-subtle);
+}
+
+.ds-window-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-window-hint {
+  flex: none;
+  color: var(--ds-fg-subtle);
+  opacity: .75;
 }
 
 .ds-terminal-dots {
@@ -4702,6 +4718,7 @@ summary:focus-visible,
 .ds-terminal-dots:hover .ds-dot--zoom { background: #28c840; }
 
 /* Close: wobble, vanish, fade back in. */
+.ds-window.is-rebooting,
 .ds-terminal.is-rebooting {
   animation: ds-terminal-reboot 1.15s var(--ds-ease) both;
 }
@@ -4719,7 +4736,8 @@ summary:focus-visible,
   100% { transform: translate3d(0,0,0) scale(1); opacity: 1; }
 }
 
-/* Minimize: collapse the body into the title bar, then restore. */
+/* Minimize / collapse: fold the body into the title bar. */
+.ds-window-body,
 .ds-terminal-body {
   padding: var(--ds-space-2) 0;
   overflow: hidden;
@@ -4728,11 +4746,31 @@ summary:focus-visible,
               padding 420ms var(--ds-ease);
 }
 
+.ds-window.is-minimized .ds-window-body,
+.ds-window.is-minimized .ds-terminal-body,
 .ds-terminal.is-minimized .ds-terminal-body {
   max-height: 0;
   padding-top: 0;
   padding-bottom: 0;
   opacity: 0;
+}
+
+/* Windows holding prose or a table rather than terminal rows. */
+.ds-window-body--plain {
+  padding: 0;
+}
+
+.ds-window-pad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  padding: var(--ds-space-4);
+}
+
+.ds-window-body--plain .ds-table-wrap {
+  background: none;
+  border: 0;
+  border-radius: 0;
 }
 
 .ds-terminal-item {
@@ -5254,12 +5292,14 @@ textarea.ds-input {
   .ds-input,
   .ds-stepper button,
   .ds-dot,
+  .ds-window-body,
   .ds-terminal-body {
     transition: none;
   }
 
   .ds-btn--primary::before,
   .ds-terminal-caret,
+  .ds-window.is-rebooting,
   .ds-terminal.is-rebooting {
     animation: none;
   }
