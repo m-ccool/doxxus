@@ -67,7 +67,11 @@
 
                 <div class="ds-terminal" data-service-terminal>
                     <div class="ds-terminal-bar">
-                        <button class="ds-terminal-dots" type="button" data-terminal-reboot aria-label="Reset the capabilities list"><span></span><span></span><span></span></button>
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Close the capabilities panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-label="Minimize the capabilities panel"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand every capability"></button>
+                        </span>
                         <span>doxxus@services &mdash; ~/capabilities</span>
                     </div>
                     <div class="ds-terminal-body">

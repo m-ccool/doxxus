@@ -19,38 +19,42 @@
 
         var commands = Array.prototype.slice.call(terminal.querySelectorAll('.ds-terminal-cmd'));
 
+        function outputFor(command) {
+            return document.getElementById(command.getAttribute('aria-controls'));
+        }
+
+        function setOpen(command, open) {
+            command.setAttribute('aria-expanded', String(open));
+            var output = outputFor(command);
+            if (output) output.hidden = !open;
+        }
+
         commands.forEach(function (command) {
             command.addEventListener('click', function () {
-                var output = document.getElementById(command.getAttribute('aria-controls'));
-                if (!output) return;
+                if (!outputFor(command)) return;
                 var isOpen = command.getAttribute('aria-expanded') === 'true';
-
-                commands.forEach(function (other) {
-                    if (other === command) return;
-                    other.setAttribute('aria-expanded', 'false');
-                    var otherOutput = document.getElementById(other.getAttribute('aria-controls'));
-                    if (otherOutput) otherOutput.hidden = true;
-                });
-
-                command.setAttribute('aria-expanded', String(!isOpen));
-                output.hidden = isOpen;
+                // Expanding one collapses the rest, unless zoom opened them all.
+                if (!terminal.classList.contains('is-zoomed')) {
+                    commands.forEach(function (other) {
+                        if (other !== command) setOpen(other, false);
+                    });
+                }
+                setOpen(command, !isOpen);
             });
         });
 
-        if (commands.length) commands[0].click();
+        if (commands.length) setOpen(commands[0], true);
 
-        var rebootButton = terminal.querySelector('[data-terminal-reboot]');
-        if (rebootButton) {
-            rebootButton.addEventListener('click', function () {
+        var actions = {
+            // Red — wobble, vanish, fade back in, reset to the opening state.
+            close: function () {
                 if (terminal.classList.contains('is-rebooting')) return;
+                terminal.classList.remove('is-minimized', 'is-zoomed');
                 terminal.classList.add('is-rebooting');
 
-                // Collapse back to the opening state while the panel is invisible.
                 var resetAt = window.setTimeout(function () {
                     commands.forEach(function (command, index) {
-                        var output = document.getElementById(command.getAttribute('aria-controls'));
-                        command.setAttribute('aria-expanded', String(index === 0));
-                        if (output) output.hidden = index !== 0;
+                        setOpen(command, index === 0);
                     });
                 }, 720);
 
@@ -59,8 +63,30 @@
                     terminal.classList.remove('is-rebooting');
                     terminal.removeEventListener('animationend', done);
                 });
+            },
+            // Yellow — collapse the body into the title bar, click again to restore.
+            minimize: function () {
+                if (terminal.classList.contains('is-rebooting')) return;
+                terminal.classList.remove('is-zoomed');
+                terminal.classList.toggle('is-minimized');
+            },
+            // Green — expand every entry at once, click again to go back to one.
+            zoom: function () {
+                if (terminal.classList.contains('is-rebooting')) return;
+                terminal.classList.remove('is-minimized');
+                var zoomed = terminal.classList.toggle('is-zoomed');
+                commands.forEach(function (command, index) {
+                    setOpen(command, zoomed ? true : index === 0);
+                });
+            }
+        };
+
+        terminal.querySelectorAll('[data-terminal-action]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var run = actions[button.dataset.terminalAction];
+                if (run) run();
             });
-        }
+        });
     }
 
     /* ────────────────────────────────────────────────────────────────

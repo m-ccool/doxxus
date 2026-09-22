@@ -4657,43 +4657,51 @@ summary:focus-visible,
   align-items: center;
   gap: .35rem;
   margin-right: var(--ds-space-2);
-  padding: 0;
-  background: none;
-  border: 0;
-  border-radius: var(--ds-radius-sm);
   line-height: 1;
-  cursor: pointer;
 }
 
-.ds-terminal-dots span {
-  width: 9px;
-  height: 9px;
+.ds-dot {
+  width: 11px;
+  height: 11px;
+  padding: 0;
   background: var(--ds-border-emphasis);
+  border: 0;
   border-radius: 50%;
+  cursor: pointer;
   transition: background var(--ds-dur) var(--ds-ease),
-              box-shadow var(--ds-dur) var(--ds-ease);
+              box-shadow var(--ds-dur) var(--ds-ease),
+              transform var(--ds-dur) var(--ds-ease);
 }
 
-/* macOS traffic lights: close, minimize, zoom. */
-.ds-terminal-dots:hover span:nth-child(1),
-.ds-terminal-dots:focus-visible span:nth-child(1) {
+/* macOS traffic lights — each lights up on its own. */
+.ds-dot--close:hover,
+.ds-dot--close:focus-visible {
   background: #ff5f57;
-  box-shadow: 0 0 6px rgba(255,95,87,.55);
+  box-shadow: 0 0 7px rgba(255,95,87,.6);
 }
 
-.ds-terminal-dots:hover span:nth-child(2),
-.ds-terminal-dots:focus-visible span:nth-child(2) {
+.ds-dot--min:hover,
+.ds-dot--min:focus-visible {
   background: #febc2e;
-  box-shadow: 0 0 6px rgba(254,188,46,.55);
+  box-shadow: 0 0 7px rgba(254,188,46,.6);
 }
 
-.ds-terminal-dots:hover span:nth-child(3),
-.ds-terminal-dots:focus-visible span:nth-child(3) {
+.ds-dot--zoom:hover,
+.ds-dot--zoom:focus-visible {
   background: #28c840;
-  box-shadow: 0 0 6px rgba(40,200,64,.55);
+  box-shadow: 0 0 7px rgba(40,200,64,.6);
 }
 
-/* Wobble, vanish, then fade back in. */
+.ds-dot:active {
+  transform: scale(.88);
+}
+
+/* Hovering anywhere in the cluster previews all three, like macOS. */
+.ds-terminal-dots:hover .ds-dot--close { background: #ff5f57; }
+.ds-terminal-dots:hover .ds-dot--min { background: #febc2e; }
+.ds-terminal-dots:hover .ds-dot--zoom { background: #28c840; }
+
+/* Close: wobble, vanish, fade back in. */
 .ds-terminal.is-rebooting {
   animation: ds-terminal-reboot 1.15s var(--ds-ease) both;
 }
@@ -4711,8 +4719,20 @@ summary:focus-visible,
   100% { transform: translate3d(0,0,0) scale(1); opacity: 1; }
 }
 
+/* Minimize: collapse the body into the title bar, then restore. */
 .ds-terminal-body {
   padding: var(--ds-space-2) 0;
+  overflow: hidden;
+  transition: max-height 420ms var(--ds-ease),
+              opacity 260ms var(--ds-ease),
+              padding 420ms var(--ds-ease);
+}
+
+.ds-terminal.is-minimized .ds-terminal-body {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
 }
 
 .ds-terminal-item {
@@ -5233,7 +5253,8 @@ textarea.ds-input {
   .ds-choice-mark,
   .ds-input,
   .ds-stepper button,
-  .ds-terminal-dots span {
+  .ds-dot,
+  .ds-terminal-body {
     transition: none;
   }
 
