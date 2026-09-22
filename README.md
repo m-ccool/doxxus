@@ -16,15 +16,18 @@ Personal portfolio & service site for **B McCool** — freelance web developer.
 ## Structure
 
 ```
-index.html          — main landing page (splash, services, portfolio, about)
-host.html           — hosting/plans page
-projects.html       — full portfolio page
+index.html          — landing page (splash, software tier, IT tier, portfolio, about)
+services.html       — software spec sheet, package tiers, add-ons, consultation, IT tier
+build.html          — package builder (assemble a package and send the request)
+signin.html         — client portal placeholder (no authentication yet)
 terms.html          — terms of service
+sitemap.xml         — public URL list
+ajax-form-store.php — contact/package form endpoint (host-side, not GitHub Pages)
 docs/mvp-outline.md — ecommerce MVP and client portal plan
 server/             — Node.js commerce API foundation
 assets/
   css/
-    style.css             — primary custom styles, CSS variables, component styles
+    style.css             — primary custom styles, CSS variables, ds-* design system
     animate.css           — custom keyframe animations (gradient, hueRotate, typing, etc.)
     bs-theme-overrides.css — Bootstrap :root overrides
     comet.compiled.css    — comet background animation
@@ -32,10 +35,12 @@ assets/
     particle.compiled.css — particle background animation
     swiper-icons.css      — swiper nav icon overrides
   js/
+    site-shell.js   — injects navbar, footer and contact modal on every page
+    pages.js        — services terminal expander, package builder
     bs-init.js      — Bootstrap tooltip/AOS init
     comet.js        — comet animation
-    plugins.js      — Swiper carousel init
-    scripts.js      — navbar scroll, smooth scroll, misc
+    plugins.js      — vendor bundle (Swiper, WOW, Pace); loads before Bootstrap 5
+    scripts.js      — navbar scroll, carousel, cursor, last-online, misc
   fonts/
   img/
 ```
@@ -43,10 +48,16 @@ assets/
 ## Dev Notes
 
 - CSS variables in `:root` inside `style.css` define the full color/gradient system
+- `ds-*` classes are the design system primitives shared by every page
 - Rainbow gradient: `--rainbow-gradient: linear-gradient(-45deg, var(--pink), var(--indigo), var(--purple), var(--teal), var(--green))`
 - Dark theme: `--bs-body-color: #0d0d0e`, `--bs-body-bg: #0f0f10`
-- Contact form posts to `https://doxxus.us/ajax-form-store.php`
-- Commerce backend starts in `server/`; run `cd server` then `npm start` for the health endpoint.
+- Navbar, footer and contact modal are injected by `site-shell.js` via the
+  `data-site-nav` / `data-site-footer` mount points — edit them there, not per page
+- `plugins.js` bundles Bootstrap 4, so it must load **before** Bootstrap 5
+- Contact and package forms post to `https://doxxus.us/ajax-form-store.php` and only
+  treat the literal `success` response as sent
+- Commerce backend starts in `server/`; run `cd server` then `npm start` for the health endpoint
+- Serve locally with `python -m http.server 8777`
 
 ## Style References for Agents
 - Liquid Glass Pro Max - https://codepen.io/fand/pen/azmPjqd
