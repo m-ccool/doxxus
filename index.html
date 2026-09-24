@@ -39,6 +39,12 @@
     <link rel="stylesheet" href="assets/css/globe.css">
     <link rel="stylesheet" href="assets/css/particle.compiled.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/github-activity-feed@latest/dist/github-activity.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.css">
+    <link rel="stylesheet" href="assets/css/github-plugin.css">
+    <script type="text/javascript" src="https://unpkg.com/mustache@4.2.0/mustache.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/github-activity-feed@latest/dist/github-activity.min.js"></script>
+    <script src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js"></script>
 </head>
 
 <body class="scrollbar-hidden FADE" data-page="home">
@@ -325,6 +331,21 @@
                     <a class="ds-btn ds-btn--lg" href="#contact" data-bs-toggle="modal" data-contact-interest="a software project" data-contact-type="software">Ask a question</a>
                 </div>
             </div>
+            <div class="ds-shell" data-aos="fade" data-aos-duration="800" data-aos-once="true" data-aos-delay="300" style="max-width:920px;padding:2rem 1rem 0;">
+                <p class="text-center mb-1" style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);">github calendar &mdash; last 12 months</p>
+                <div class="cal-container">
+                    <div class="calendar">Loading contributions...</div>
+                </div>
+            </div>
+            <div class="ds-shell" data-aos="fade" data-aos-duration="800" data-aos-once="true" data-aos-delay="400" style="max-width:920px;padding:1.5rem 1rem 0;">
+                <p class="text-center mb-2" style="font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);display:flex;justify-content:center;align-items:center;gap:.45rem;">
+                    <i class="fab fa-github" aria-hidden="true"></i>
+                    <span>recent github activity</span>
+                </p>
+                <div class="gha-container">
+                    <div id="github-activity-feed"></div>
+                </div>
+            </div>
             <div class="row text-center d-flex flex-row justify-content-center mb-4 mt-4" id="skill-cards" style="padding: 3%;max-width: 700px;width: 90%;">
                 <div class="col-auto d-flex skillCol" data-aos="fade-up" data-aos-duration="800" data-aos-once="true" id="react">
                     <div id="skill-card-2" class="skill-card"><img class="skill-card-img" src="assets/img/react.svg"><span>react.js</span></div>
@@ -381,6 +402,9 @@
                     <span><strong>Need machine help instead?</strong> IT consultation and repair is still available, but it stays a quieter, client-only path separate from software projects.</span>
                 </div>
             </div>
+            <script>
+                GitHubActivity.feed({ username: "m-ccool", selector: "#github-activity-feed" });
+            </script>
         </section>
         <section class="ds-section" id="it-support" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
             <div class="ds-shell">
