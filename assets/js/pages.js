@@ -125,6 +125,29 @@
         return '$' + Number(value).toLocaleString('en-US');
     }
 
+    function resolvePrice(path) {
+        return path.split('.').reduce(function (acc, key) {
+            return acc && Object.prototype.hasOwnProperty.call(acc, key) ? acc[key] : undefined;
+        }, window.DoxxusPrices || null);
+    }
+
+    function initPriceBindings() {
+        if (!window.DoxxusPrices) return;
+
+        document.querySelectorAll('[data-price-ref]').forEach(function (node) {
+            var value = resolvePrice(node.dataset.priceRef);
+            if (value === undefined || value === null) return;
+
+            var datasetKey = node.dataset.priceDataset;
+            if (datasetKey) {
+                node.dataset[datasetKey] = String(value);
+            }
+
+            if (!node.hasAttribute('data-price-text')) return;
+            node.textContent = String(value);
+        });
+    }
+
     function initPackageBuilder() {
         var builder = document.querySelector('[data-package-builder]');
         if (!builder) return;
@@ -369,6 +392,7 @@
     }
 
     function init() {
+        initPriceBindings();
         initWindows();
         initPackageBuilder();
     }
