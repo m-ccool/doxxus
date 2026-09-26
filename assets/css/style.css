@@ -2116,43 +2116,51 @@ body {
 }
 
 .web-portfolio-h {
-  margin-bottom: 3rem;
-  padding: 1rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
   /*white-space: nowrap;*/
   /*font-weight: 900;*/
   font-size: calc(.5em + .75vw);
   letter-spacing: calc(.2em + 1vw);
-  transition: all 500ms ease-out;
+  transition: color 320ms ease, filter 320ms ease, text-shadow 320ms ease, background-size 320ms ease;
   animation: pulse-fade 25s ease infinite;
   color: rgb(255,255,255);
   text-align: center!important;
   justify-content: center!important;
+  will-change: transform, opacity, filter, background-position;
+  transform: translateZ(0);
 }
 
 .section-terminal-title {
   font-family: 'Lexend Giga', sans-serif;
   font-weight: 900;
   text-transform: uppercase;
-  background: var(--rainbow-gradient);
-  background-size: 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient 5s ease infinite;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.18em;
+  color: rgba(255,255,255,0.96);
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  animation: none;
+  transition: color 280ms ease, filter 320ms ease, text-shadow 320ms ease, background-size 320ms ease;
 }
 
 .web-portfolio-h.section-terminal-title {
   font-size: clamp(2rem, 1rem + 3.2vw, 4.25rem);
   line-height: 1.08;
   letter-spacing: 0;
-  animation: gradient 5s ease infinite;
+  animation: pulse-fade 25s ease infinite;
 }
 
 .section-terminal-suffix {
   display: inline-flex;
   align-items: baseline;
   min-width: 3.1em;
-  margin-left: 0.35em;
+  margin-left: 0;
   color: var(--bs-light);
   font: inherit;
   letter-spacing: 0.08em;
@@ -2161,18 +2169,137 @@ body {
 .section-terminal-text {
   display: inline-block;
   min-width: 1.8em;
-  background: var(--rainbow-gradient);
-  background-size: 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradient 5s ease infinite;
-  transition: opacity 180ms ease, filter 180ms ease;
+  color: rgba(255,255,255,0.92);
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  animation: none;
+  transition: opacity 180ms ease, filter 180ms ease, color 280ms ease, text-shadow 320ms ease;
 }
 
 .section-terminal-suffix.is-typing .section-terminal-text {
   opacity: 0.7;
   filter: brightness(1.35);
+}
+
+.section-terminal-title:hover,
+.section-terminal-title:focus-visible {
+  background: var(--rainbow-gradient);
+  background-size: 240% 240%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradient 5s ease infinite;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.12)) drop-shadow(0 0 18px rgba(87,215,255,0.22));
+  text-shadow: 0 0 18px rgba(255,255,255,0.12);
+}
+
+.web-portfolio-h.section-terminal-title:hover,
+.web-portfolio-h.section-terminal-title:focus-visible {
+  animation: pulse-fade 25s ease infinite, gradient 5s ease infinite;
+}
+
+.section-terminal-title:hover .section-terminal-text,
+.section-terminal-title:focus-visible .section-terminal-text {
+  background: var(--rainbow-gradient);
+  background-size: 240% 240%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradient 5s ease infinite;
+  text-shadow: 0 0 14px rgba(255,255,255,0.12);
+}
+
+.home-about {
+  padding: 0 0 2.75rem;
+  gap: 1.25rem;
+}
+
+.home-about-title-wrap,
+.home-about-intro,
+.home-about-panel,
+.home-about-note-shell {
+  width: min(100%, 920px);
+  padding: 0 1rem;
+}
+
+.home-about-title-wrap {
+  max-width: 860px;
+  padding-top: 0.25rem;
+}
+
+.home-about-intro {
+  max-width: 820px;
+  padding-top: 0;
+}
+
+.home-about-actions {
+  margin-top: 1.25rem;
+}
+
+.home-about-panel {
+  padding-top: 0;
+}
+
+.home-about-panel .cal-container,
+.home-about-panel .gha-container {
+  margin: 0.85rem auto 0;
+}
+
+.home-about-meta-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.42);
+  margin-bottom: 0;
+}
+
+.home-about-meta-label--icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.home-about-skills {
+  width: min(100%, 720px);
+  max-width: 720px;
+  padding: 0.35rem 1rem 0.1rem;
+  margin: 0 auto;
+  row-gap: 0.95rem;
+  column-gap: 0.45rem;
+}
+
+.home-about-note-shell {
+  padding-top: 0;
+}
+
+.home-about-note {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .home-about {
+    padding-bottom: 2rem;
+    gap: 1rem;
+  }
+
+  .home-about-title-wrap,
+  .home-about-intro,
+  .home-about-panel,
+  .home-about-note-shell {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .home-about-skills {
+    width: min(100%, 720px);
+    padding: 0.2rem 0.25rem 0;
+  }
 }
 
 .section-terminal-caret {
