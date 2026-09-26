@@ -165,6 +165,21 @@
         var submitButton = builder.querySelector('[data-builder-submit]');
         var confirmPane = document.querySelector('[data-builder-confirm]');
         var current = 0;
+        var allOptionInputs = packageInputs.concat(addonInputs);
+
+        function inputPrice(input) {
+            var hydrated = Number(input.dataset.price);
+            if (Number.isFinite(hydrated) && hydrated > 0) return hydrated;
+
+            var resolved = Number(resolvePrice(input.dataset.priceRef || ''));
+            return Number.isFinite(resolved) && resolved > 0 ? resolved : NaN;
+        }
+
+        function pricingReady() {
+            return allOptionInputs.every(function (input) {
+                return Number.isFinite(inputPrice(input));
+            });
+        }
 
         function selectedPackage() {
             return packageInputs.filter(function (input) { return input.checked; })[0] || null;
@@ -175,9 +190,9 @@
         }
 
         function estimate() {
-            var base = selectedPackage() ? Number(selectedPackage().dataset.price) : 0;
+            var base = selectedPackage() ? inputPrice(selectedPackage()) : 0;
             return selectedAddons().reduce(function (total, input) {
-                return total + Number(input.dataset.price);
+                return total + inputPrice(input);
             }, base);
         }
 
@@ -187,10 +202,10 @@
             var rows = [];
 
             if (pkg) {
-                rows.push('<li><span>' + pkg.dataset.label + '</span><b>' + currency(pkg.dataset.price) + '</b></li>');
+                rows.push('<li><span>' + pkg.dataset.label + '</span><b>' + currency(inputPrice(pkg)) + '</b></li>');
             }
             addons.forEach(function (input) {
-                rows.push('<li><span>' + input.dataset.label + '</span><b>+' + currency(input.dataset.price) + '</b></li>');
+                rows.push('<li><span>' + input.dataset.label + '</span><b>+' + currency(inputPrice(input)) + '</b></li>');
             });
             if (!rows.length) {
                 rows.push('<li class="ds-summary-empty">Nothing selected yet.</li>');
@@ -208,9 +223,9 @@
             var lines = [];
 
             lines.push('PACKAGE REQUEST');
-            lines.push('Base: ' + (pkg ? pkg.dataset.label + ' ' + currency(pkg.dataset.price) : 'not selected'));
+            lines.push('Base: ' + (pkg ? pkg.dataset.label + ' ' + currency(inputPrice(pkg)) : 'not selected'));
             lines.push('Add-ons: ' + (addons.length
-                ? addons.map(function (input) { return input.dataset.short + ' ' + currency(input.dataset.price); }).join(', ')
+                ? addons.map(function (input) { return input.dataset.short + ' ' + currency(inputPrice(input)); }).join(', ')
                 : 'none'));
             lines.push('Estimate: ' + currency(estimate()) + ' (estimate only)');
 
@@ -308,7 +323,7 @@
             statusBox.innerHTML = '<i class="typcn ' + (kind === 'error' ? 'typcn-warning-outline' : 'typcn-info-large') + '" aria-hidden="true"></i><span>' + message + '</span>';
         }
 
-        packageInputs.concat(addonInputs).forEach(function (input) {
+        allOptionInputs.forEach(function (input) {
             input.addEventListener('change', function () {
                 renderSummary();
                 if (steps[current].hasAttribute('data-step-review')) renderReview();
@@ -386,6 +401,12 @@
                     setStatus('error', 'That request could not be delivered. Please try again, or email <a href="mailto:dev@doxxus.us">dev@doxxus.us</a> with your selections.');
                 });
         });
+
+        if (!pricingReady()) {
+            submitButton.disabled = true;
+            setStatus('error', 'Pricing is temporarily unavailable. Refresh this page and try again, or email <a href="mailto:dev@doxxus.us">dev@doxxus.us</a>.');
+            return;
+        }
 
         renderSummary();
         showStep(0, false);
