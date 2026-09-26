@@ -132,7 +132,12 @@
     }
 
     function initPriceBindings() {
-        if (!window.DoxxusPrices) return;
+        if (!window.DoxxusPrices) {
+            document.querySelectorAll('[data-price-text]').forEach(function (node) {
+                if (!node.textContent.trim()) node.textContent = 'Pricing unavailable';
+            });
+            return;
+        }
 
         document.querySelectorAll('[data-price-ref]').forEach(function (node) {
             var value = resolvePrice(node.dataset.priceRef);

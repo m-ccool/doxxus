@@ -22,7 +22,7 @@
             consultation: { amount: 150, display: '$150' }
         },
         ranges: {
-            packageTiers: '$900 – $3,500+',
+            packageTiers: '$900 \u2013 $3,500+',
             addonsFrom: 'from $75'
         }
     };
