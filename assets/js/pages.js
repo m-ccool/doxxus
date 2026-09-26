@@ -403,6 +403,12 @@
         });
 
         if (!pricingReady()) {
+            showStep(0, false);
+            allOptionInputs.forEach(function (input) { input.disabled = true; });
+            navButtons.forEach(function (button) { button.disabled = true; });
+            builder.querySelectorAll('[data-step-next], [data-step-back]').forEach(function (button) {
+                button.disabled = true;
+            });
             submitButton.disabled = true;
             setStatus('error', 'Pricing is temporarily unavailable. Refresh this page and try again, or email <a href="mailto:dev@doxxus.us">dev@doxxus.us</a>.');
             return;
