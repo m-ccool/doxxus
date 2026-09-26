@@ -3,7 +3,7 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
-      - copilot/research-webspace-implementation
+      - main
   workflow_dispatch:
 
 permissions:
