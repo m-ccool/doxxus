@@ -2617,6 +2617,15 @@ dl, ol, ul {
   text-shadow: 0 0 15px currentColor;
 }
 
+/* Bootstrap's .nav-link:focus{outline:0} outranks the global a:focus-visible
+   outline rule by specificity, so keyboard focus on nav links otherwise falls
+   back to the glow alone. Restore an explicit outline here for a clear
+   focus-visible ring in addition to the glow. */
+.navbar .navbar-nav .nav-link:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: 2px;
+}
+
 .nav-link-icon {
   display: inline-block;
   transition: transform 300ms var(--ds-ease), filter 300ms var(--ds-ease);

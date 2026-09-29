@@ -421,10 +421,10 @@ Keep the public site and private API deployment separate so the showcase can rem
 - [x] Add add-on pill selector
 - [x] Add consultation section and preparation expectations
 - [ ] Make Rabbit Habit the flagship case study
-- [ ] Remove dead `#0` links
+- [x] Remove dead `#0` links (verified none remain in current markup)
 - [ ] Replace inactive GitHub activity presentation with useful project evidence
-- [ ] Update metadata, social preview image, footer year, and contact details
-- [ ] Test mobile layout, keyboard navigation, reduced motion, and visible focus states
+- [ ] Update metadata and social preview image (footer year and contact details are already current; `og:image` is a 999x1030 icon, not a proper 1200x630 social card)
+- [x] Test mobile layout, keyboard navigation, reduced motion, and visible focus states (fixed: Bootstrap's higher-specificity `.nav-link:focus{outline:0}` was silently suppressing the global focus-visible outline on navbar links)
 
 ### Phase 2: Payment MVP
 
