@@ -124,9 +124,7 @@
         '            <textarea class="form-control" id="websummary" name="websummary" placeholder="Explain your idea here! &#10024;" rows="3" style="overflow-y:hidden;resize:none;" required minlength="10" maxlength="500" spellcheck="true"></textarea>',
         '          </div>',
         '          <div class="cf-submit">',
-        '            <span class="neon-btn-outline">',
-        '              <button class="btn cf-btn" type="submit" name="submit" value="submit">SEND</button>',
-        '            </span>',
+        '            <button class="neon-btn cf-btn" type="submit" name="submit" value="submit">SEND</button>',
         '          </div>',
         '        </form>',
         '      </div>',
@@ -153,11 +151,69 @@
             document.body.insertAdjacentHTML('beforeend', MODAL_HTML);
         }
 
-        var page = document.body.getAttribute('data-page');
-        if (page) {
-            var active = document.querySelector('.navbar [data-nav="' + page + '"]');
-            if (active) active.classList.add('is-current');
+        setupNavIndicator();
+    }
+
+    /* Sliding gradient marker under the active nav item. Follows body[data-page] and,
+       on pages that host them, the #splash / #projects / #about sections. */
+    var SECTION_NAV = { splash: 'home', projects: 'projects', about: 'about' };
+
+    function setupNavIndicator() {
+        var list = document.querySelector('.navbar .navbar-nav');
+        if (!list) return;
+
+        var indicator = document.createElement('span');
+        indicator.className = 'nav-indicator';
+        indicator.setAttribute('aria-hidden', 'true');
+        list.appendChild(indicator);
+
+        function moveIndicator() {
+            var active = list.querySelector('.nav-link.is-current');
+            var item = active && active.parentElement;
+            var visible = !!(item && item.offsetWidth);
+            list.classList.toggle('has-indicator', visible);
+            if (!visible) return;
+            list.style.setProperty('--nav-ind-x', (item.offsetLeft + item.offsetWidth / 2) + 'px');
         }
+
+        function setCurrent(navKey) {
+            var next = list.querySelector('[data-nav="' + navKey + '"]');
+            if (!next || next.classList.contains('is-current')) return;
+            Array.prototype.forEach.call(list.querySelectorAll('.nav-link.is-current'), function (el) {
+                el.classList.remove('is-current');
+            });
+            next.classList.add('is-current');
+            moveIndicator();
+        }
+
+        var page = document.body.getAttribute('data-page');
+        if (page) setCurrent(page);
+        moveIndicator();
+
+        window.addEventListener('resize', moveIndicator);
+        var collapse = document.getElementById('navcol-2');
+        if (collapse) {
+            collapse.addEventListener('shown.bs.collapse', moveIndicator);
+            collapse.addEventListener('transitionend', moveIndicator);
+        }
+
+        var sections = Object.keys(SECTION_NAV)
+            .map(function (id) { return document.getElementById(id); })
+            .filter(Boolean);
+        if (!sections.length || !('IntersectionObserver' in window)) return;
+
+        var covered = {};
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                covered[entry.target.id] = entry.isIntersecting ? entry.intersectionRect.height : 0;
+            });
+            var best = Object.keys(covered).reduce(function (winner, id) {
+                return covered[id] > 0 && (!winner || covered[id] > covered[winner]) ? id : winner;
+            }, null);
+            if (best) setCurrent(SECTION_NAV[best]);
+        }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1], rootMargin: '-20% 0px -45% 0px' });
+
+        sections.forEach(function (section) { observer.observe(section); });
     }
 
     function resetContactForm() {

@@ -110,6 +110,20 @@ The current visual shell should remain recognizable. The copy should shift from 
   `dev@doxxus.us` fallback.
 - After confirmation the client chooses **Client sign in** or **Contact the dev**.
 
+### Portfolio Carousel Card Types
+
+The `#projects` carousel on `index.html` mixes two card types:
+
+- **Mobile app cards** — background mockup image plus an `.iphone-bezel` device frame showing
+  one or more app screenshots (ACNH Live Editor, FITNDEX, A New Leaf, Forecast).
+- **Code snippet cards** — a `.code-snippet-item` card rendering a live `<pre><code>` block
+  instead of a device mockup, for projects better shown as code than as a UI screenshot
+  (e.g. the Pokemon Cards holo carousel). Currently seeded with placeholder code pending the
+  real snippet.
+
+Both card types share the same `.noraidus` bottom glass title panel, active-slide sparkle
+animation, and ring glow treatment so the carousel reads as one consistent system.
+
 ### Flagship: Rabbit Habit
 
 Present Rabbit Habit as evidence of product thinking and shipping ability, not only as a habit tracker.

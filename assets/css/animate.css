@@ -11,9 +11,9 @@
 }
 
 @keyframes pulse-fade {
-  0%   { transform: scale(.85); opacity: .45; }
-  50%  { transform: scale(1.05); opacity: .9; }
-  100% { transform: scale(.85); opacity: .45; }
+  0%   { transform: scale(.985); opacity: .88; }
+  50%  { transform: scale(1.015); opacity: 1; }
+  100% { transform: scale(.985); opacity: .88; }
 }
 
 @keyframes hueRotate {
