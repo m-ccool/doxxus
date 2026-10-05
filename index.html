@@ -197,7 +197,7 @@
                                 <h4>30-Minute Diagnostic</h4>
                                 <p>Triage the problem, walk the options, agree on next steps.</p>
                             </div>
-                            <span class="ds-row-meta">$100 &middot; applied to repair</span>
+                            <span class="ds-row-meta">applied to repair</span>
                         </div>
                         <div class="ds-box-row ds-box-row--compact">
                             <span class="ds-row-icon"><i class="typcn typcn-cog-outline" aria-hidden="true"></i></span>
@@ -469,70 +469,6 @@
     <script src="assets/js/comet.js"></script>
     <script src="assets/js/pages.js"></script>
     <script src="assets/js/scripts.js"></script>
-    <script>
-    (function () {
-        var pricingSection = document.getElementById('pricing');
-        if (!pricingSection || pricingSection.dataset.pricingBound === 'true') return;
-
-        var addonButtons = Array.prototype.slice.call(pricingSection.querySelectorAll('[data-addon-price]'));
-        var priceDisplays = Array.prototype.slice.call(pricingSection.querySelectorAll('[data-base-price]'));
-
-        function updatePricing() {
-            var selectedTotal = addonButtons.reduce(function (total, button) {
-                return button.getAttribute('aria-pressed') === 'true' ? total + Number(button.dataset.addonPrice) : total;
-            }, 0);
-
-            priceDisplays.forEach(function (priceDisplay) {
-                var basePrice = Number(priceDisplay.dataset.basePrice);
-                var targetPrice = basePrice + selectedTotal;
-                var amount = priceDisplay.querySelector('.pricing-amount');
-                var startPrice = Number(priceDisplay.dataset.currentPrice || basePrice);
-                var startTime = performance.now();
-                var duration = 760;
-                var animate = function (timestamp) {
-                    var progress = Math.min((timestamp - startTime) / duration, 1);
-                    var eased = 1 - Math.pow(1 - progress, 3);
-                    var currentPrice = Math.round(startPrice + (targetPrice - startPrice) * eased);
-                    amount.textContent = '$' + currentPrice.toLocaleString('en-US');
-                    priceDisplay.dataset.currentPrice = String(currentPrice);
-                    if (progress < 1) priceDisplay._pricingFrame = requestAnimationFrame(animate);
-                };
-
-                cancelAnimationFrame(priceDisplay._pricingFrame || 0);
-                amount.classList.remove('is-counting-up', 'is-counting-down');
-                void amount.offsetWidth;
-                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                    amount.textContent = '$' + targetPrice.toLocaleString('en-US');
-                    priceDisplay.dataset.currentPrice = String(targetPrice);
-                } else {
-                    amount.classList.add(targetPrice >= startPrice ? 'is-counting-up' : 'is-counting-down');
-                    priceDisplay._pricingFrame = requestAnimationFrame(animate);
-                }
-                priceDisplay.setAttribute('aria-label', 'Starting price $' + targetPrice.toLocaleString('en-US'));
-                priceDisplay.querySelectorAll('span').forEach(function (span) {
-                    if (span.textContent === '+') span.hidden = selectedTotal === 0;
-                });
-            });
-        }
-
-        addonButtons.forEach(function (button) {
-            button.addEventListener('focus', function () {
-                button.classList.add('tooltip-visible');
-            });
-            button.addEventListener('blur', function () {
-                button.classList.remove('tooltip-visible');
-            });
-            button.addEventListener('pointerenter', function () {
-                button.classList.add('tooltip-visible');
-            });
-            button.addEventListener('pointerleave', function () {
-                button.classList.remove('tooltip-visible');
-            });
-        });
-
-        pricingSection.dataset.pricingBound = 'true';
-    }());
-    </script>
     <script>
     (function(){
         var fill = document.getElementById('splash-bar-fill');
