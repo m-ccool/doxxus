@@ -299,8 +299,9 @@
         var dismissing = false;
         var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-        // Every way of closing (red dot, Esc, backdrop click) takes the window's close
-        // animation first, then lets Bootstrap hide the dialog.
+        // The red dot plays the window's close animation, then lets Bootstrap hide the dialog
+        // (dismiss). Esc and a backdrop click skip the animation and just fade out; a close
+        // that is already playing is left alone.
         function dismiss() {
             dismissing = true;
             window.setTimeout(function () {
@@ -311,12 +312,8 @@
 
         modal.addEventListener('ds-window:dismiss', dismiss);
         modal.addEventListener('hide.bs.modal', function (event) {
-            if (dismissing || !win || !window.DoxxusWindow) return;
-            event.preventDefault();
-            window.DoxxusWindow.playClose(win, function () {
-                win.classList.add('is-vanished');
-                dismiss();
-            });
+            if (dismissing) return;
+            if (win && win.classList.contains('is-rebooting')) event.preventDefault();
         });
 
         modal.addEventListener('hidden.bs.modal', function () {

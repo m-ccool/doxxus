@@ -269,9 +269,9 @@ footer {
   opacity: 0;
   -webkit-backdrop-filter: blur(0px) saturate(100%);
   backdrop-filter: blur(0px) saturate(100%);
-  transition: opacity var(--ds-dur) var(--ds-ease),
-              backdrop-filter .35s ease,
-              -webkit-backdrop-filter .35s ease;
+  transition: opacity var(--ds-dur-modal) var(--ds-ease),
+              backdrop-filter var(--ds-dur-modal) ease,
+              -webkit-backdrop-filter var(--ds-dur-modal) ease;
 }
 
 .modal-backdrop.show {
@@ -335,7 +335,7 @@ footer {
   display: flex;
 }
 
-.ds-modal-notice a {
+.ds-callout a {
   color: var(--ds-accent-fg);
 }
 
@@ -409,6 +409,11 @@ footer {
 @keyframes modalSlideIn {
   from { opacity: 0; transform: translateY(28px) scale(0.94); }
   to   { opacity: 1; transform: translateY(0)     scale(1); }
+}
+
+/* The dialog fades in and out over --ds-dur-modal (Bootstrap reads this for its hide timing). */
+.modal.fade {
+  transition: opacity var(--ds-dur-modal) var(--ds-ease);
 }
 
 /* Override Bootstrap's built-in dialog transform transition */
@@ -2403,41 +2408,9 @@ dl, ol, ul {
   animation: gradient 5s ease infinite;
 }
 
-.terms ol {
-  margin: 1rem 2rem;
-  color: white;
-}
-
-.terms_and_conditions li {
-  margin: 1rem;
-  color: white;
-}
-
-.terms p {
-  margin: 2rem 0;
-  color: white;
-}
-
-.rainbow-hr {
-  /*margin: 2rem;*/
-  opacity: 1;
-  width: 100%;
-  height: 2px;
-  background: VAR(--rainbow-gradient);
-  -webkit-text-fill-color: transparent;
-  background-size: 500% 500%;
-  transition: gradient 500ms ease-in-out;
-  -webkit-text-size-adjust: 100%;
-  animation: gradient 5s ease infinite;
-}
-
 .payment_icons {
   padding-bottom: 10px;
   margin: 0 1rem;
-}
-
-.terms li {
-  margin: 1rem;
 }
 
 .navbar .navbar-nav {
@@ -3961,62 +3934,6 @@ body { cursor: none; }
   box-shadow: 0 0 0 .25rem rgba(13,110,253,0);
 }
 
-.accordion-button {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x);
-  font-size: var(--ds-text-md);
-  color: var(--ds-fg-default);
-  text-align: left;
-  background-color: var(--transparent)!important;
-  border: 0;
-  border-radius: 0;
-  overflow-anchor: none;
-  transition: var(--bs-accordion-transition);
-  font-family: var(--ds-font-ui);
-  font-weight: 600;
-}
-
-.accordion-button:not(.collapsed) {
-  color: var(--bs-light);
-  background-color: var(--bs-accordion-active-bg);
-  box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color);
-}
-
-.accordion-item {
-  color: var(--bs-light)!important;
-  background-color: var(--transparent);
-  line-height: 1.5;
-  border: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
-}
-
-.accordion {
-  margin: 0 calc(2rem + 2.5vw);
-  --bs-accordion-color: var(--bs-body-color);
-  --bs-accordion-bg: var(--bs-body-bg);
-  --bs-accordion-transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out,border-radius 0.15s ease;
-  --bs-accordion-border-color: var(--bs-border-color);
-  --bs-accordion-border-width: var(--bs-border-width);
-  --bs-accordion-border-radius: var(--bs-border-radius);
-  --bs-accordion-inner-border-radius: calc(var(--bs-border-radius) - (var(--bs-border-width)));
-  --bs-accordion-btn-padding-x: 1.25rem;
-  --bs-accordion-btn-padding-y: 1rem;
-  --bs-accordion-btn-color: var(--bs-light)!important;
-  --bs-accordion-btn-bg: #ffffff!important;
-  --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='#ffffff' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
-  --bs-accordion-btn-icon-width: 1.25rem;
-  --bs-accordion-btn-icon-transform: rotate(-180deg);
-  --bs-accordion-btn-icon-transition: transform 0.2s ease-in-out;
-  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23052c65' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
-  --bs-accordion-btn-focus-box-shadow: none!important;
-  --bs-accordion-body-padding-x: 1.25rem;
-  --bs-accordion-body-padding-y: 1rem;
-  --bs-accordion-active-color: var(--bs-light)!important;
-  --bs-accordion-active-bg: var(--bs-light)!important;
-}
-
 .accordian, li {
   margin: 1rem;
 }
@@ -4142,6 +4059,7 @@ body { cursor: none; }
   --ds-shadow-lg: 0 16px 40px rgba(var(--black-rgb),.34);
 
   --ds-dur: 200ms;
+  --ds-dur-modal: 300ms;
   --ds-ease: cubic-bezier(.2, 0, .2, 1);
 }
 
@@ -5883,4 +5801,82 @@ main:focus {
   .ct-cursor::after {
     animation: none;
   }
+}
+
+/* ── Legal text (terms page): numbered clauses and prose inside shared windows ── */
+
+.ds-legal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: clause;
+}
+
+.ds-legal > li {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: var(--ds-space-3);
+  counter-increment: clause;
+}
+
+.ds-legal > li::before {
+  content: counter(clause, decimal-leading-zero);
+  padding-top: .3em;
+  color: var(--ds-accent-fg);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  font-weight: 500;
+}
+
+.ds-legal-title,
+.ds-legal-text {
+  grid-column: 2;
+}
+
+.ds-legal-title {
+  display: block;
+  margin-bottom: var(--ds-space-1);
+  color: var(--ds-fg-default);
+  font-weight: 600;
+}
+
+.ds-legal-text {
+  display: block;
+  max-width: 72ch;
+  color: var(--ds-fg-muted);
+  font-size: var(--ds-text-md);
+  line-height: 1.65;
+}
+
+.ds-legal-note {
+  max-width: 72ch;
+  margin: 0;
+  padding-top: var(--ds-space-4);
+  border-top: 1px solid var(--ds-border-muted);
+  color: var(--ds-fg-subtle);
+  font-size: var(--ds-text-sm);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.ds-prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  max-width: 72ch;
+}
+
+.ds-prose p {
+  margin: 0;
+  color: var(--ds-fg-muted);
+  font-size: var(--ds-text-md);
+  line-height: 1.7;
+}
+
+.ds-prose strong {
+  color: var(--ds-fg-default);
+  font-weight: 600;
 }

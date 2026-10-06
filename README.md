@@ -37,6 +37,7 @@ assets/
   js/
     site-shell.js   — injects navbar, footer and contact modal on every page
     pages.js        — services terminal expander, package builder
+    glitch.js       — glitch-typing effect (home page and contact modal labels)
     bs-init.js      — Bootstrap tooltip/AOS init
     comet.js        — comet animation
     plugins.js      — vendor bundle (Swiper, WOW, Pace); loads before Bootstrap 5
