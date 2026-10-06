@@ -155,8 +155,8 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   visibility: hidden!important;
   padding: 15px 0;
   text-align: center;
-  border-left: 1px solid rgba(255,255,255,0.08);
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-left: 1px solid rgba(var(--white-rgb),0.08);
+  border-top: 1px solid rgba(var(--white-rgb),0.08);
   font-size: 11px;
 }
 
@@ -227,7 +227,7 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   border: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  color: rgba(255,255,255,0.55) !important;
+  color: rgba(var(--white-rgb),0.55) !important;
   font-size: 0.75rem;
   overflow: visible;
 }
@@ -267,7 +267,7 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
   overflow-y: hidden !important;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.3) transparent;
+  scrollbar-color: rgba(var(--white-rgb),0.3) transparent;
 }
 
 .js-calendar-graph > div:first-child::-webkit-scrollbar {
@@ -279,7 +279,7 @@ td.ContributionCalendar-label span[aria-hidden='true'] {
 }
 
 .js-calendar-graph > div:first-child::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.3);
+  background: rgba(var(--white-rgb),0.3);
   border-radius: 999px;
 }
 
@@ -306,13 +306,13 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 /* Calendar text and labels */
 .calendar-graph text,
 .js-calendar-graph text {
-  fill: rgba(255,255,255,0.4) !important;
+  fill: rgba(var(--white-rgb),0.4) !important;
 }
 
 /* "276 contributions in the last year" summary bar */
 .js-yearly-contributions h2,
 .js-yearly-contributions h3 {
-  color: rgba(255,255,255,0.65) !important;
+  color: rgba(var(--white-rgb),0.65) !important;
   font-size: 0.85rem !important;
   font-weight: 400 !important;
 }
@@ -331,7 +331,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 
 /* "Learn how we count contributions" footer row */
 .contrib-footer {
-  color: rgba(255,255,255,0.3) !important;
+  color: rgba(var(--white-rgb),0.3) !important;
 }
 
 .contrib-footer a {
@@ -356,12 +356,12 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
   align-items: center !important;
   gap: 3px !important;
   font-size: 0.7rem !important;
-  color: rgba(255,255,255,0.4) !important;
+  color: rgba(var(--white-rgb),0.4) !important;
 }
 
 /* Legend squares */
 .legend li {
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(var(--white-rgb),0.1);
 }
 
 /* ── GitHub Activity Feed – Dark Theme Overrides ── */
@@ -391,7 +391,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 
 .gha-feed::-webkit-scrollbar { width: 4px; }
 .gha-feed::-webkit-scrollbar-track { background: #111113; }
-.gha-feed::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+.gha-feed::-webkit-scrollbar-thumb { background: rgba(var(--white-rgb),0.12); border-radius: 4px; }
 
 .gha-push {
   display: none !important;
@@ -409,7 +409,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
   backdrop-filter: blur(6px) saturate(120%) !important;
   -webkit-backdrop-filter: blur(6px) saturate(120%) !important;
   filter: none !important;
-  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.07) !important;
   margin: 0 !important;
   padding: 0.75rem 1.25rem !important;
   display: flex !important;
@@ -423,7 +423,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
   font-size: 0.6rem !important;
   letter-spacing: 0.15em !important;
   text-transform: uppercase !important;
-  color: rgba(255,255,255,0.7) !important;
+  color: rgba(var(--white-rgb),0.7) !important;
   font-weight: 400 !important;
 }
 
@@ -448,7 +448,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
   width: 28px !important;
   height: 28px !important;
   border-radius: 50% !important;
-  border: 1px solid rgba(255,255,255,0.15) !important;
+  border: 1px solid rgba(var(--white-rgb),0.15) !important;
   box-shadow: none !important;
 }
 
@@ -464,7 +464,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 }
 
 .gha-github-icon .octicon {
-  color: rgba(255,255,255,0.3) !important;
+  color: rgba(var(--white-rgb),0.3) !important;
   font-size: 1rem !important;
 }
 
@@ -475,7 +475,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 
 .gha-activity,
 .gha-repo {
-  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  border-bottom: 1px solid rgba(var(--white-rgb),0.06) !important;
 }
 
 .gha-activity:last-child {
@@ -483,7 +483,7 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 }
 
 .gha-activity-icon .octicon {
-  color: rgba(255,255,255,0.25) !important;
+  color: rgba(var(--white-rgb),0.25) !important;
 }
 
 .gha-feed a {
@@ -503,16 +503,16 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 }
 
 .gha-feed small {
-  color: rgba(255,255,255,0.45) !important;
+  color: rgba(var(--white-rgb),0.45) !important;
 }
 
 .gha-time,
 span.gha-time {
-  color: rgba(255,255,255,0.3) !important;
+  color: rgba(var(--white-rgb),0.3) !important;
 }
 
 .gha-feed pre {
-  background: rgba(255,255,255,0.05) !important;
+  background: rgba(var(--white-rgb),0.05) !important;
   box-shadow: none !important;
   border-radius: 4px !important;
 }
@@ -523,13 +523,13 @@ span.gha-time {
 }
 
 .gha-info {
-  background: rgba(255,255,255,0.04) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  color: rgba(255,255,255,0.5) !important;
+  background: rgba(var(--white-rgb),0.04) !important;
+  border: 1px solid rgba(var(--white-rgb),0.08) !important;
+  color: rgba(var(--white-rgb),0.5) !important;
 }
 
 .gha-github-icon {
-  color: rgba(255,255,255,0.3) !important;
+  color: rgba(var(--white-rgb),0.3) !important;
 }
 
 
@@ -568,7 +568,7 @@ h2.f4.text-normal.mb-3 {
   font-size: 12px;
   color: #959da5;
   text-align: center;
-  background: rgba(0,0,0,.85);
+  background: rgba(var(--black-rgb),.85);
   border-radius: 3px;
   display: none;
   pointer-events: none;
@@ -592,7 +592,7 @@ h2.f4.text-normal.mb-3 {
   margin: 0 0 0 -5px;
   content: " ";
   border: 5px solid transparent;
-  border-top-color: rgba(0,0,0,.85);
+  border-top-color: rgba(var(--black-rgb),.85);
 }
 
 text.ContributionCalendar-label {

@@ -3,7 +3,7 @@
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #03061a;
+  background-color: var(--shade-canvas);
   position: relative;
   overflow: hidden;
 }
