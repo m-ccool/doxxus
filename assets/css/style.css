@@ -363,6 +363,14 @@ footer {
   text-transform: uppercase;
 }
 
+.modal-headline .glitch-line:first-child::before {
+  content: "$";
+  margin-right: .5ch;
+  color: var(--ds-accent-fg);
+  font-weight: 500;
+  opacity: .85;
+}
+
 .modal-headline {
   height: calc(2 * 1.05em);
   min-height: calc(2 * 1.05em);
@@ -3700,7 +3708,7 @@ button.swiper-pagination-bullet {
 .footer-cols {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem 3rem;
+  gap: 1.5rem clamp(1.5rem, 4vw, 3rem);
   justify-content: flex-start;
 }
 
@@ -3713,27 +3721,37 @@ button.swiper-pagination-bullet {
 
 .footer-label {
   margin-bottom: 0.25rem;
-  color: var(--ds-fg-subtle);
-  font-family: var(--ds-eyebrow-font);
-  font-size: var(--ds-eyebrow-size);
-  font-weight: var(--ds-eyebrow-weight);
-  letter-spacing: var(--ds-eyebrow-tracking);
-  text-transform: uppercase;
+  color: var(--ds-fg-muted);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: lowercase;
+}
+
+.footer-label::before {
+  content: "$";
+  margin-right: .5ch;
+  color: var(--ds-accent-fg);
+  opacity: .85;
 }
 
 .footer-col-group a {
-  font-family: var(--ds-font-ui);
-  font-size: var(--ds-text-sm);
-  font-weight: 500;
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  font-weight: 400;
   letter-spacing: 0;
   color: var(--ds-fg-muted);
   text-decoration: none;
+  text-underline-offset: 3px;
   transition: color var(--ds-dur) var(--ds-ease);
 }
 
 .footer-col-group a:hover,
 .footer-col-group a:focus-visible {
   color: var(--ds-fg-default);
+  text-decoration: underline;
+  text-decoration-color: var(--ds-accent-fg);
 }
 
 .footer-bottom {
@@ -3749,10 +3767,9 @@ button.swiper-pagination-bullet {
 .footer-copy {
   font-family: var(--ds-font-mono);
   font-size: var(--ds-text-xs);
-  font-weight: 500;
-  letter-spacing: .08em;
+  font-weight: 400;
+  letter-spacing: 0;
   color: var(--ds-fg-subtle);
-  text-transform: uppercase;
 }
 
 .footer-social {
@@ -6049,6 +6066,42 @@ main:focus {
 
 @media (prefers-reduced-motion: reduce) {
   .section-terminal-caret {
+    animation: none;
+  }
+}
+
+/* Typing: untyped characters keep their space but stay hidden (see code-titles.js). */
+.ct-rest {
+  visibility: hidden;
+}
+
+.ct-typing .section-terminal-suffix {
+  visibility: hidden;
+}
+
+/* Zero-width cursor so it never pushes the hidden text around while typing. */
+.ct-cursor {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: .9em;
+  vertical-align: -.08em;
+}
+
+.ct-cursor::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: .09em;
+  height: 100%;
+  background: var(--ds-accent-fg);
+  box-shadow: 0 0 10px var(--ds-accent-fg);
+  animation: caret-blink-glow 900ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-cursor::after {
     animation: none;
   }
 }

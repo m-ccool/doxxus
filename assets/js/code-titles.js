@@ -1,14 +1,18 @@
 /**
  * code-titles.js — gives every page and section title the same code look and the
- * same periodic typing animation: a "$" prompt in front, and a typed "..." plus a
- * blinking caret after the last word that re-types itself every few seconds while
- * the title is on screen.
+ * same typing animation: a "$" prompt in front; on first scroll into view the title
+ * text types itself out behind a cursor; then a typed "..." and a blinking caret
+ * sit after the last word, and the dots re-type every few seconds while the title
+ * is on screen.
  *
  * Titles are found by selector, so the HTML stays plain headings. The prompt, dots
- * and caret are decoration (aria-hidden); the heading's accessible name is untouched.
+ * and caret are decoration (aria-hidden) and the heading carries its full text as
+ * aria-label, so the accessible name never changes mid-animation.
+ *
+ * Layout never shifts: untyped characters stay in place, hidden, until typed.
  *
  * DoxxusTitles.init(root) / destroy(root) let the client-side router mount and tear
- * titles down as page content is swapped. Reduced motion: dots are shown static.
+ * titles down as page content is swapped. Reduced motion: titles are shown static.
  */
 (function () {
     'use strict';
@@ -22,12 +26,15 @@
         '[data-builder-confirm] h2'
     ].join(',');
 
+    var SKIP = '.ct-prompt, .section-terminal-suffix, .visually-hidden';
     var DOT_MS = 220;
-    var FIRST_DELAY_MS = 350;
+    var FIRST_DELAY_MS = 300;
+    var TEXT_TOTAL_MS = 1500;
     var REPLAY_MIN_MS = 7000;
     var REPLAY_SPREAD_MS = 7000;
 
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var canAnimate = !reduceMotion && 'IntersectionObserver' in window;
     var entries = [];
 
     function span(className, attrs) {
@@ -37,30 +44,33 @@
         return node;
     }
 
-    function lastTextNode(root) {
+    function textNodes(root) {
         var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
             acceptNode: function (node) {
-                if (!node.textContent.trim()) return NodeFilter.FILTER_REJECT;
-                return node.parentElement.closest('[aria-hidden="true"]') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+                if (!node.data.trim()) return NodeFilter.FILTER_REJECT;
+                var parent = node.parentElement;
+                return parent && parent.closest(SKIP) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
             }
         });
-        var last = null;
-        while (walker.nextNode()) last = walker.currentNode;
-        return last;
+        var list = [];
+        while (walker.nextNode()) list.push(walker.currentNode);
+        return list;
     }
 
     // Adds the prompt and wraps the last word with the dots + caret, so the suffix
     // can never wrap onto a line of its own.
     function decorate(heading) {
         if (heading.getAttribute('data-ct')) return null;
-        var node = lastTextNode(heading);
-        if (!node) return null;
+        var nodes = textNodes(heading);
+        if (!nodes.length) return null;
         heading.setAttribute('data-ct', '1');
         heading.classList.add('ct');
+        heading.setAttribute('aria-label', heading.innerText.replace(/\s+/g, ' ').trim());
 
         heading.insertBefore(span('ct-prompt', { 'aria-hidden': 'true' }), heading.firstChild).textContent = '$';
 
-        var text = node.textContent;
+        var node = nodes[nodes.length - 1];
+        var text = node.data;
         var match = /(\S+)\s*$/.exec(text);
         var holder = span('section-terminal-lastword');
         // A closing period is replaced by the typed dots; it stays for screen readers.
@@ -84,15 +94,69 @@
         parent.insertBefore(holder, node);
         parent.removeChild(node);
 
-        return { heading: heading, suffix: suffix, dots: dots };
+        return { heading: heading, suffix: suffix, dots: dots, parts: [] };
+    }
+
+    // Hides every character until it is typed. Hidden text keeps its space.
+    function splitForTyping(entry) {
+        textNodes(entry.heading).forEach(function (node) {
+            var full = node.data;
+            var rest = span('ct-rest');
+            rest.textContent = full;
+            node.data = '';
+            node.parentNode.insertBefore(rest, node.nextSibling);
+            entry.parts.push({ node: node, rest: rest, full: full });
+        });
+        entry.heading.classList.add('ct-typing');
     }
 
     function start(entry) {
         var visible = false;
         var alive = true;
+        var cursor = span('ct-cursor', { 'aria-hidden': 'true' });
 
         function later(fn, ms) {
             entry.timer = window.setTimeout(function () { if (alive) fn(); }, ms);
+        }
+
+        function render(count) {
+            var remaining = count;
+            var active = null;
+            entry.parts.forEach(function (part) {
+                var take = Math.min(remaining, part.full.length);
+                part.node.data = part.full.slice(0, take);
+                part.rest.textContent = part.full.slice(take);
+                remaining -= take;
+                if (!active && take < part.full.length) active = part;
+            });
+            active = active || entry.parts[entry.parts.length - 1];
+            active.node.parentNode.insertBefore(cursor, active.node.nextSibling);
+        }
+
+        function finishText() {
+            cursor.remove();
+            entry.parts.forEach(function (part) {
+                part.node.data = part.full;
+                part.rest.remove();
+            });
+            entry.parts = [];
+            entry.heading.classList.remove('ct-typing');
+        }
+
+        function typeText(done) {
+            var total = entry.parts.reduce(function (sum, part) { return sum + part.full.length; }, 0);
+            var base = Math.max(16, Math.min(60, TEXT_TOTAL_MS / Math.max(total, 1)));
+            var count = 0;
+            (function step() {
+                render(count);
+                if (count >= total) {
+                    finishText();
+                    if (done) done();
+                    return;
+                }
+                count += 1;
+                later(step, base * (0.7 + Math.random() * 0.6));
+            }());
         }
 
         function typeDots(done) {
@@ -118,18 +182,21 @@
             }, REPLAY_MIN_MS + Math.random() * REPLAY_SPREAD_MS);
         }
 
-        if (reduceMotion || !('IntersectionObserver' in window)) {
+        if (!canAnimate) {
             entry.dots.textContent = '...';
             entry.stop = function () { alive = false; };
             return;
         }
+
+        splitForTyping(entry);
+        render(0);
 
         var seen = false;
         entry.observer = new IntersectionObserver(function (changes) {
             visible = changes[changes.length - 1].isIntersecting;
             if (visible && !seen) {
                 seen = true;
-                later(function () { typeDots(replay); }, FIRST_DELAY_MS);
+                later(function () { typeText(function () { typeDots(replay); }); }, FIRST_DELAY_MS);
             }
         }, { threshold: 0.6 });
         entry.observer.observe(entry.heading);
@@ -138,6 +205,7 @@
             alive = false;
             window.clearTimeout(entry.timer);
             entry.observer.disconnect();
+            cursor.remove();
         };
     }
 
