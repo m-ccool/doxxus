@@ -5,7 +5,7 @@
  * Every mount is a looping gallery: it drifts, wraps seamlessly (no rewind), can be
  * dragged or scrolled sideways, and slows while a phone is hovered. Variants (classes on the mount):
  *   work-carousel--wide       — full-bleed strip (Build hero)
- *   work-carousel--contained  — card-width strip with prev/next arrows (home)
+ *   work-carousel--contained  — card-width strip (home)
  *
  * Exposes DoxxusPortfolio.init(root) / destroy(root) so the client-side router can
  * mount and tear down carousels as page content is swapped. Runs once for the
@@ -92,19 +92,6 @@
         cont.appendChild(description);
         content.appendChild(cont);
         return content;
-    }
-
-    // Prev/next arrows for the contained variant: a nudge of about one card.
-    function buildArrows() {
-        var wrap = el('div', 'gallery-arrows');
-        [['prev', 'Previous project', '<'], ['next', 'Next project', '>']].forEach(function (def) {
-            var button = el('button', 'gallery-arrow gallery-arrow--' + def[0], { type: 'button', 'aria-label': def[1], 'data-gallery-nudge': def[0] });
-            var glyph = el('span', 'simple-btn', { 'aria-hidden': 'true' });
-            glyph.textContent = def[2];
-            button.appendChild(glyph);
-            wrap.appendChild(button);
-        });
-        return wrap;
     }
 
     // Two identical halves; the track slides left by exactly one half, then repeats.
@@ -248,13 +235,6 @@
             retarget();
         }
 
-        // About one card per press; the inertia decay in frame() carries it.
-        function arrow(event) {
-            var button = event.target.closest && event.target.closest('[data-gallery-nudge]');
-            if (!button || !mount.contains(button)) return;
-            velocity = button.getAttribute('data-gallery-nudge') === 'next' ? -1120 : 1120;
-        }
-
         function leave() {
             if (dragging) return;
             hovered = false;
@@ -295,7 +275,6 @@
         mount.addEventListener('pointerup', up);
         mount.addEventListener('pointercancel', up);
         mount.addEventListener('click', click, true);
-        mount.addEventListener('click', arrow);
         mount.addEventListener('wheel', wheel, { passive: false });
         mount.addEventListener('pointerover', over);
         mount.addEventListener('pointerout', out);
@@ -323,7 +302,6 @@
                 mount.removeEventListener('pointerup', up);
                 mount.removeEventListener('pointercancel', up);
                 mount.removeEventListener('click', click, true);
-                mount.removeEventListener('click', arrow);
                 mount.removeEventListener('wheel', wheel);
                 mount.removeEventListener('pointerover', over);
                 mount.removeEventListener('pointerout', out);
@@ -494,7 +472,6 @@
             if (needed > copies && needed <= 8) { copies = needed; render(); }
         };
 
-        if (mount.classList.contains('work-carousel--contained')) mount.appendChild(buildArrows());
         render();
         fit();
 
@@ -507,7 +484,7 @@
 
         mount._dxDestroy = function () {
             teardown.forEach(function (fn) { fn(); });
-            mount.querySelectorAll('.gallery-viewport, .gallery-arrows').forEach(function (node) { node.remove(); });
+            mount.querySelectorAll('.gallery-viewport').forEach(function (node) { node.remove(); });
             mount._dxDestroy = null;
         };
     }
