@@ -12,6 +12,8 @@ Personal portfolio & service site for **B McCool** — freelance web developer.
 - **Bootstrap 5.3** — responsive layout, modals, navbar collapse
 - **JavaScript / jQuery** — AOS scroll animations, Swiper carousel, smooth scroll
 - **Third-party libs** — AOS, Swiper, FontAwesome 5, Typicons, GitHub Activity Feed
+- **Supabase** — Postgres (clients, projects, form submissions), Google sign-in, and the `contact` Edge Function
+- **Hosting** — static site on GitHub Pages; Supabase for everything that needs a server
 
 ## Structure
 
@@ -19,25 +21,35 @@ Personal portfolio & service site for **B McCool** — freelance web developer.
 index.html          — landing page (splash, software tier, IT tier, portfolio, about)
 services.html       — software spec sheet, package tiers, add-ons, consultation, IT tier
 build.html          — package builder (assemble a package and send the request)
-signin.html         — client portal placeholder (no authentication yet)
+signin.html         — client sign-in (Google, through Supabase Auth)
+account.html        — client account: profile, projects, billing link, security (signed-in only)
 terms.html          — terms of service
+privacy.html        — privacy policy
 sitemap.xml         — public URL list
-ajax-form-store.php — contact/package form endpoint (host-side, not GitHub Pages)
 docs/mvp-outline.md — ecommerce MVP and client portal plan
-server/             — Node.js commerce API foundation
+supabase/
+  migrations/       — database schema, row-level security policies and grants
+  functions/contact/ — Edge Function behind the contact modal and package builder
+server/             — Node.js commerce API foundation (unused by the site; health endpoint only)
 assets/
   css/
     style.css             — primary custom styles, CSS variables, ds-* design system
     animate.css           — custom keyframe animations (gradient, hueRotate, typing, etc.)
     bs-theme-overrides.css — Bootstrap :root overrides
     comet.compiled.css    — comet background animation
+    github-plugin.css     — GitHub activity feed styles
     globe.css             — globe icon styles
     particle.compiled.css — particle background animation
     swiper-icons.css      — swiper nav icon overrides
   js/
     site-shell.js   — injects navbar, footer and contact modal on every page
-    pages.js        — services terminal expander, package builder
+    router.js       — client-side navigation with a persistent navbar
+    pages.js        — window (traffic-light) behaviour, package builder
+    portal.js       — client portal: Google sign-in and the account page
+    portfolio-data.js, portfolio-carousel.js — portfolio gallery data and engine
+    code-titles.js  — `$` code-style titles with the typing animation
     glitch.js       — glitch-typing effect (home page and contact modal labels)
+    home.js         — home page behaviours
     bs-init.js      — Bootstrap tooltip/AOS init
     comet.js        — comet animation
     plugins.js      — vendor bundle (Swiper, WOW, Pace); loads before Bootstrap 5
@@ -55,9 +67,16 @@ assets/
 - Navbar, footer and contact modal are injected by `site-shell.js` via the
   `data-site-nav` / `data-site-footer` mount points — edit them there, not per page
 - `plugins.js` bundles Bootstrap 4, so it must load **before** Bootstrap 5
-- Contact and package forms post to `https://doxxus.us/ajax-form-store.php` and only
-  treat the literal `success` response as sent
-- Commerce backend starts in `server/`; run `cd server` then `npm start` for the health endpoint
+- Contact and package forms post to the Supabase `contact` Edge Function and only
+  treat the literal `success` response as sent. It validates, rate-limits per IP, stores the
+  message in `submissions`, then emails you and the sender from `dev@doxxus.us` over SMTP
+- Edge Function secrets (set in the Supabase dashboard, never committed): `SMTP_USER`,
+  `SMTP_PASS`, `IP_SALT`. Without them messages are still stored but no email is sent
+- Client sign-in is Google only; a Google account sees data only when its email matches a row
+  in `clients`. Add clients and projects in the Supabase table editor
+- The publishable Supabase key in `portal.js` is public by design; secret keys never go in the repo
+- Billing is Stripe's hosted customer portal; set `BILLING_PORTAL_URL` in `portal.js` once it exists
+- `server/` is an unused Node.js stub (`cd server`, `npm start` for the health endpoint)
 - Serve locally with `python -m http.server 8777`
 
 ## Style References for Agents
