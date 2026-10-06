@@ -1225,64 +1225,71 @@ h1 {
   /*width: 100%;*/
 }
 
-/* Rainbow edge is a blurred gradient behind a dark glass face, so the glow can
-   intensify on interaction without the border itself changing size. */
+/* Button family: pill, glass fill, thin rainbow ring, soft glow on interaction.
+   Shared by .neon-btn (View projects, Send) and .ds-btn--primary (Build your package). */
 .neon-btn {
   position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 1.7rem;
-  border: 1px solid var(--ds-border-default);
-  border-radius: var(--ds-radius-md);
-  background: var(--ds-canvas-overlay);
+  gap: var(--ds-space-2);
+  min-height: var(--ds-control-lg);
+  padding: 0 var(--ds-space-5);
   color: var(--ds-fg-default);
-  font-family: 'Lexend Giga', sans-serif;
-  font-size: clamp(0.58rem, 0.45rem + 0.42vw, 0.8rem);
-  letter-spacing: 0.22em;
+  background: rgba(255, 255, 255, 0.07);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-pill);
+  box-shadow: 0 0 0 0 rgba(189, 138, 255, 0);
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-text-md);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-transform: none;
   text-decoration: none;
   white-space: nowrap;
+  cursor: pointer;
   transition: transform var(--ds-dur) var(--ds-ease),
-              border-color var(--ds-dur) var(--ds-ease),
-              color var(--ds-dur) var(--ds-ease);
+              background var(--ds-dur) var(--ds-ease),
+              box-shadow 300ms var(--ds-ease);
 }
 
 .neon-btn::before {
   content: '';
   position: absolute;
-  inset: -2px;
+  inset: 0;
   z-index: -1;
+  padding: 1px;
   border-radius: inherit;
   background: var(--rainbow-gradient);
   background-size: 300% 300%;
-  filter: blur(7px);
-  opacity: 0.34;
   animation: gradient 9s ease infinite;
-  transition: opacity var(--ds-dur) var(--ds-ease), filter var(--ds-dur) var(--ds-ease);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity var(--ds-dur) var(--ds-ease);
 }
 
 .neon-btn:hover,
 .neon-btn:focus-visible {
-  transform: translateY(-1px);
-  border-color: var(--ds-border-emphasis);
   color: #ffffff;
+  background: rgba(255, 255, 255, 0.13);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px -8px rgba(189, 138, 255, 0.55), 0 0 0 4px rgba(189, 138, 255, 0.08);
 }
 
-.neon-btn:hover::before,
-.neon-btn:focus-visible::before {
-  opacity: 0.92;
-  filter: blur(11px);
-  animation-duration: 4s;
+.neon-btn:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: 3px;
 }
 
 .neon-btn:active {
   transform: translateY(1px) scale(0.985);
   transition-duration: 90ms;
-}
-
-.neon-btn:active::before {
-  opacity: 1;
-  filter: blur(8px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4388,7 +4395,7 @@ summary:focus-visible,
   color: var(--ds-fg-default);
   background: var(--ds-canvas-raised);
   border: 1px solid var(--ds-border-default);
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-pill);
   font-family: var(--ds-font-ui);
   font-size: var(--ds-text-sm);
   font-weight: 600;
@@ -4401,6 +4408,7 @@ summary:focus-visible,
   transition: background var(--ds-dur) var(--ds-ease),
               border-color var(--ds-dur) var(--ds-ease),
               color var(--ds-dur) var(--ds-ease),
+              box-shadow 300ms var(--ds-ease),
               transform var(--ds-dur) var(--ds-ease);
 }
 
@@ -4458,6 +4466,8 @@ summary:focus-visible,
 .ds-btn--primary:hover {
   background: rgba(255,255,255,.13);
   border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px -8px rgba(189, 138, 255, .55), 0 0 0 4px rgba(189, 138, 255, .08);
 }
 
 .ds-btn--invisible {

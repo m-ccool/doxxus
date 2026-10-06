@@ -124,7 +124,7 @@
         '            <textarea class="form-control" id="websummary" name="websummary" placeholder="Explain your idea here! &#10024;" rows="3" style="overflow-y:hidden;resize:none;" required minlength="10" maxlength="500" spellcheck="true"></textarea>',
         '          </div>',
         '          <div class="cf-submit">',
-        '            <button class="neon-btn cf-btn" type="submit" name="submit" value="submit">SEND</button>',
+        '            <button class="neon-btn cf-btn" type="submit" name="submit" value="submit">Send</button>',
         '          </div>',
         '        </form>',
         '      </div>',
