@@ -38,10 +38,12 @@ html {
        canvas.default -> canvas.subtle step (#0D1117 -> #151B23)
      --glass-density scales every tier at once (1 = default, higher = darker). */
   --glass-rgb: 22, 22, 22;
+  /* Navbar and div panels sit a touch deeper than buttons and tooltips. */
+  --glass-surface-rgb: 17, 17, 17;
   --glass-density: 1;
-  --glass-bg: rgba(var(--glass-rgb), calc(.35 * var(--glass-density)));
-  --glass-nav-bg: rgba(var(--glass-rgb), calc(.66 * var(--glass-density)));
-  --glass-header-bg: rgba(var(--glass-rgb), calc(.86 * var(--glass-density)));
+  --glass-bg: rgba(var(--glass-surface-rgb), calc(.35 * var(--glass-density)));
+  --glass-nav-bg: rgba(var(--glass-surface-rgb), calc(.66 * var(--glass-density)));
+  --glass-header-bg: rgba(var(--glass-surface-rgb), calc(.86 * var(--glass-density)));
   --glass-dark: rgba(var(--glass-rgb), calc(.6 * var(--glass-density)));
   --glass-dark-hover: rgba(var(--glass-rgb), calc(.45 * var(--glass-density)));
   --glass-solid: rgba(var(--glass-rgb), calc(.92 * var(--glass-density)));
