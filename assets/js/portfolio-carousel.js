@@ -2,9 +2,10 @@
  * portfolio-carousel.js — renders every [data-portfolio-carousel] mount from
  * window.DOXXUS_PORTFOLIO (portfolio-data.js).
  *
- * Variants (set on the mount):
- *   default                — Swiper, 2 slides centered (home)
- *   work-carousel--wide    — full-bleed CSS marquee that drifts and pauses on hover (Build hero)
+ * Every mount is a looping gallery: it drifts, wraps seamlessly (no rewind), can be
+ * dragged or scrolled sideways, and slows while a phone is hovered. Variants (classes on the mount):
+ *   work-carousel--wide       — full-bleed strip (Build hero)
+ *   work-carousel--contained  — card-width strip with prev/next arrows (home)
  *
  * Exposes DoxxusPortfolio.init(root) / destroy(root) so the client-side router can
  * mount and tear down carousels as page content is swapped. Runs once for the
@@ -93,34 +94,17 @@
         return content;
     }
 
-    function buildSwiper(cards) {
-        var container = el('div', 'container-fluid');
-        var row = el('div', 'row');
-        var col = el('div', 'col-lg-12 no-padding');
-        var swiperEl = el('div', 'swiper-container');
-        var wrapper = el('div', 'swiper-wrapper');
-        cards.forEach(function (card) {
-            var slide = el('div', 'swiper-slide');
-            slide.appendChild(buildContent(card));
-            wrapper.appendChild(slide);
+    // Prev/next arrows for the contained variant: a nudge of about one card.
+    function buildArrows() {
+        var wrap = el('div', 'gallery-arrows');
+        [['prev', 'Previous project', '<'], ['next', 'Next project', '>']].forEach(function (def) {
+            var button = el('button', 'gallery-arrow gallery-arrow--' + def[0], { type: 'button', 'aria-label': def[1], 'data-gallery-nudge': def[0] });
+            var glyph = el('span', 'simple-btn', { 'aria-hidden': 'true' });
+            glyph.textContent = def[2];
+            button.appendChild(glyph);
+            wrap.appendChild(button);
         });
-        swiperEl.appendChild(wrapper);
-
-        var next = el('div', 'swiper-button-next swiper-nav-ctrl simp-next cursor-pointer', { role: 'button', 'aria-label': 'Next project' });
-        var nextBtn = el('span', 'simple-btn right', { 'aria-hidden': 'true' });
-        nextBtn.textContent = '>';
-        next.appendChild(nextBtn);
-        var prev = el('div', 'swiper-button-prev swiper-nav-ctrl simp-prev cursor-pointer', { role: 'button', 'aria-label': 'Previous project' });
-        var prevBtn = el('span', 'simple-btn', { 'aria-hidden': 'true' });
-        prevBtn.textContent = '<';
-        prev.appendChild(prevBtn);
-        swiperEl.appendChild(next);
-        swiperEl.appendChild(prev);
-
-        col.appendChild(swiperEl);
-        row.appendChild(col);
-        container.appendChild(row);
-        return container;
+        return wrap;
     }
 
     // Two identical halves; the track slides left by exactly one half, then repeats.
@@ -264,6 +248,13 @@
             retarget();
         }
 
+        // About one card per press; the inertia decay in frame() carries it.
+        function arrow(event) {
+            var button = event.target.closest && event.target.closest('[data-gallery-nudge]');
+            if (!button || !mount.contains(button)) return;
+            velocity = button.getAttribute('data-gallery-nudge') === 'next' ? -1120 : 1120;
+        }
+
         function leave() {
             if (dragging) return;
             hovered = false;
@@ -304,6 +295,7 @@
         mount.addEventListener('pointerup', up);
         mount.addEventListener('pointercancel', up);
         mount.addEventListener('click', click, true);
+        mount.addEventListener('click', arrow);
         mount.addEventListener('wheel', wheel, { passive: false });
         mount.addEventListener('pointerover', over);
         mount.addEventListener('pointerout', out);
@@ -331,6 +323,7 @@
                 mount.removeEventListener('pointerup', up);
                 mount.removeEventListener('pointercancel', up);
                 mount.removeEventListener('click', click, true);
+                mount.removeEventListener('click', arrow);
                 mount.removeEventListener('wheel', wheel);
                 mount.removeEventListener('pointerover', over);
                 mount.removeEventListener('pointerout', out);
@@ -341,36 +334,11 @@
         };
     }
 
-    /* ── Swiper (home) ───────────────────────────────────────────── */
-
-    function swiperOptions(mount) {
-        return {
-            slidesPerView: 2,
-            spaceBetween: 0,
-            speed: 1400,
-            loop: true,
-            centeredSlides: true,
-            autoplay: { delay: 5000, disableOnInteraction: false },
-            navigation: {
-                nextEl: mount.querySelector('.swiper-button-next'),
-                prevEl: mount.querySelector('.swiper-button-prev')
-            },
-            breakpoints: {
-                320: { slidesPerView: 1, spaceBetween: 0 },
-                640: { slidesPerView: 1, spaceBetween: 0 },
-                767: { slidesPerView: 1, spaceBetween: 0, centeredSlides: false },
-                991: { slidesPerView: 2 }
-            }
-        };
-    }
-
     /* ── card focus state: screen on / off ───────────────────────── */
 
-    // A card is "focused" while it is in view AND (the active slide, hovered, or
-    // holding keyboard focus). In the marquee there is no active slide, so every
-    // card in view is focused. Focused cards power on; unfocused cards go dark.
-    // Returns a function that tears everything down.
-    function trackCards(mount, marquee) {
+    // A card is "focused" while it is in view: focused cards power on, cards out of
+    // view go dark. Returns a function that tears everything down.
+    function trackCards(mount) {
         var observer = null;
         var mutations = null;
         var pending = false;
@@ -380,12 +348,6 @@
         function state(content) {
             if (!content._dx) content._dx = { inView: false, hover: false, focus: false, timer: null, index: 0 };
             return content._dx;
-        }
-
-        function isActive(content) {
-            if (marquee) return true;
-            var slide = content.closest('.swiper-slide');
-            return !!slide && slide.classList.contains('swiper-slide-active');
         }
 
         function frames(content) {
@@ -416,7 +378,7 @@
 
         function apply(content) {
             var s = state(content);
-            var on = always || (s.inView && (isActive(content) || s.hover || s.focus));
+            var on = always || s.inView;
             content.classList.toggle('is-on', on);
             if (!on) stopCycle(content);
         }
@@ -488,17 +450,9 @@
         mount.addEventListener('focusin', onFocusIn);
         mount.addEventListener('focusout', onFocusOut);
 
-        // Swiper flips .swiper-slide-active and rebuilds loop clones: re-sync on both.
-        mutations = new MutationObserver(function (list) {
-            for (var i = 0; i < list.length; i++) {
-                var m = list[i];
-                if (m.type === 'childList' || (m.target.classList && m.target.classList.contains('swiper-slide'))) {
-                    schedule();
-                    return;
-                }
-            }
-        });
-        mutations.observe(mount, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+        // Cards are rebuilt when the gallery grows to fit a wider window: re-sync.
+        mutations = new MutationObserver(schedule);
+        mutations.observe(mount, { subtree: true, childList: true });
 
         refreshAll();
 
@@ -520,61 +474,40 @@
 
     function mountOne(mount, cards) {
         if (mount._dxDestroy) return;
-        var marquee = mount.classList.contains('work-carousel--wide');
         var teardown = [];
+        var copies = 1;
+        var engine = marqueeEngine(mount);
 
-        if (marquee) {
-            var copies = 1;
-            var engine = marqueeEngine(mount);
-            var render = function () {
-                mount.querySelectorAll('.gallery-viewport').forEach(function (node) { node.remove(); });
-                mount.appendChild(buildMarquee(cards, copies));
-                engine.refresh();
-            };
-            // Grow (never shrink) until one half is wider than the mount.
-            var fit = function () {
-                var half = mount.querySelector('.gallery-half');
-                var needed = copies;
-                if (half && half.offsetWidth && mount.clientWidth) {
-                    var per = half.offsetWidth / copies;
-                    needed = Math.max(copies, Math.ceil(mount.clientWidth / per));
-                }
-                if (needed > copies && needed <= 8) { copies = needed; render(); }
-            };
-            render();
-            fit();
-            var resizeTimer = 0;
-            var onResize = function () { window.clearTimeout(resizeTimer); resizeTimer = window.setTimeout(function () { fit(); engine.refresh(); }, 150); };
-            window.addEventListener('resize', onResize);
-            teardown.push(function () { window.clearTimeout(resizeTimer); window.removeEventListener('resize', onResize); });
-            teardown.push(engine.destroy);
-        } else {
-            mount.appendChild(buildSwiper(cards));
-            if (typeof Swiper !== 'undefined') {
-                var swiper = new Swiper(mount.querySelector('.swiper-container'), swiperOptions(mount));
-                mount._swiper = swiper;
-
-                // Swiper 5 has no pauseOnMouseEnter: pause so a hovered title card can be read.
-                var pause = function () { if (swiper.autoplay) swiper.autoplay.stop(); };
-                var resume = function () { if (swiper.autoplay) swiper.autoplay.start(); };
-                mount.addEventListener('pointerenter', pause);
-                mount.addEventListener('pointerleave', resume);
-                teardown.push(function () {
-                    mount.removeEventListener('pointerenter', pause);
-                    mount.removeEventListener('pointerleave', resume);
-                    swiper.destroy(true, true);
-                    mount._swiper = null;
-                });
-            } else {
-                console.warn('[portfolio] Swiper missing; cards render without sliding');
+        var render = function () {
+            mount.querySelectorAll('.gallery-viewport').forEach(function (node) { node.remove(); });
+            mount.insertBefore(buildMarquee(cards, copies), mount.firstChild);
+            engine.refresh();
+        };
+        // Grow (never shrink) until one half is wider than the mount.
+        var fit = function () {
+            var half = mount.querySelector('.gallery-half');
+            var needed = copies;
+            if (half && half.offsetWidth && mount.clientWidth) {
+                var per = half.offsetWidth / copies;
+                needed = Math.max(copies, Math.ceil(mount.clientWidth / per));
             }
-        }
+            if (needed > copies && needed <= 8) { copies = needed; render(); }
+        };
 
-        teardown.push(trackCards(mount, marquee));
+        if (mount.classList.contains('work-carousel--contained')) mount.appendChild(buildArrows());
+        render();
+        fit();
+
+        var resizeTimer = 0;
+        var onResize = function () { window.clearTimeout(resizeTimer); resizeTimer = window.setTimeout(function () { fit(); engine.refresh(); }, 150); };
+        window.addEventListener('resize', onResize);
+        teardown.push(function () { window.clearTimeout(resizeTimer); window.removeEventListener('resize', onResize); });
+        teardown.push(engine.destroy);
+        teardown.push(trackCards(mount));
 
         mount._dxDestroy = function () {
             teardown.forEach(function (fn) { fn(); });
-            mount.querySelectorAll('.gallery-viewport, .container-fluid').forEach(function (node) { node.remove(); });
+            mount.querySelectorAll('.gallery-viewport, .gallery-arrows').forEach(function (node) { node.remove(); });
             mount._dxDestroy = null;
         };
     }

@@ -1758,12 +1758,12 @@ h1 {
   transform: none;
 }
 
-/* Wide gallery (Build hero): full-bleed marquee that drifts and pauses on hover */
-.work-carousel--wide {
+/* Gallery: a looping strip that drifts, drags and wraps seamlessly (see marqueeEngine) */
+.work-carousel {
   padding: 0;
 }
 
-.work-carousel--wide .gallery-viewport {
+.work-carousel .gallery-viewport {
   overflow: hidden;
   width: 100%;
   cursor: grab;
@@ -1774,31 +1774,64 @@ h1 {
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 
-.work-carousel--wide.is-dragging .gallery-viewport {
+.work-carousel.is-dragging .gallery-viewport {
   cursor: grabbing;
 }
 
-.work-carousel--wide .gallery-viewport img {
+.work-carousel .gallery-viewport img {
   -webkit-user-drag: none;
   user-drag: none;
 }
 
 /* Position, drift and drag are driven by marqueeEngine in portfolio-carousel.js */
-.work-carousel--wide .gallery-track {
+.work-carousel .gallery-track {
   display: flex;
   width: max-content;
   will-change: transform;
 }
 
-.work-carousel--wide .gallery-half {
+.work-carousel .gallery-half {
   display: flex;
   flex: none;
 }
 
-.work-carousel--wide .gallery-item {
+.work-carousel .gallery-item {
   flex: none;
   width: 270px;
   padding: 40px 14px;
+}
+
+/* Contained variant (home): card-width strip with arrows */
+.work-carousel--contained {
+  position: relative;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.work-carousel--contained .gallery-item {
+  width: 330px;
+}
+
+.work-carousel .gallery-arrows {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 30px;
+  margin-top: -0.5rem;
+}
+
+.work-carousel .gallery-arrow {
+  padding: 0.25rem 0.75rem;
+  color: #fff;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.work-carousel .gallery-arrow:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: 2px;
+  border-radius: var(--ds-radius-sm);
 }
 
 @media (prefers-reduced-motion: reduce) {
