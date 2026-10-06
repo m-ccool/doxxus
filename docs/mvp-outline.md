@@ -372,7 +372,7 @@ Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 
 ### Stack
 
-- **Static site** on GitHub Pages. **Supabase** project `doxxus_db`: Postgres (`clients`, `projects`, `submissions`), Auth (Google), Edge Function `contact`. **Resend** for email. **Stripe** with no code (Payment Links, Invoicing, customer portal).
+- **Static site** on GitHub Pages. **Supabase** project `doxxus_db`: Postgres (`clients`, `projects`, `submissions`), Auth (Google), Edge Function `contact`. Email is sent from the existing `dev@doxxus.us` Namecheap Private Email mailbox over SMTP (no extra vendor). **Stripe** with no code (Payment Links, Invoicing, customer portal).
 - Schema and function source are in `supabase/`. Admin work is done in the Supabase table editor until an admin screen is worth building.
 
 ### Task list
@@ -384,8 +384,8 @@ Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 
 **B. Supabase**
 - [x] Project, schema, RLS and grants, Google provider, Email provider off, URL configuration **[Built]**
-- [x] `contact` Edge Function: server validation, honeypot, per-IP rate limit, stores to `submissions`, emails via Resend when configured **[Built]**
-- [ ] Resend domain verified (DNS records) and secrets set: `RESEND_API_KEY`, `MAIL_FROM`, `NOTIFY_TO`, `IP_SALT`
+- [x] `contact` Edge Function: server validation, honeypot, per-IP rate limit, stores to `submissions`, emails you and the sender from `dev@doxxus.us` over SMTP when the secrets are set **[Built]**
+- [ ] Function secrets set in Supabase: `SMTP_USER` (`dev@doxxus.us`), `SMTP_PASS` (the mailbox password), `IP_SALT`
 - [ ] Google OAuth app published (Branding with privacy policy and terms links) so clients outside the test list can sign in
 - [ ] Keep-alive or Pro plan, because free projects pause after a week idle
 
@@ -553,7 +553,7 @@ Accounts are created by the admin (decision J1): a `clients` row in the Supabase
 4. Verify the signed webhook and preparation-email flow in an isolated test environment.
 5. Add package checkout only after the consultation flow is reliable.
 6. Create a real test client row (your own Google email) and verify the sign-in and account pages on the live site, desktop and mobile.
-7. Publish the Google OAuth app, verify Resend, then add the Stripe Payment Links and the customer portal link.
+7. Publish the Google OAuth app, set the SMTP secrets, then add the Stripe Payment Links and the customer portal link.
 8. Add the client utilities and the billing window once real payment references exist.
 
 Until step 3 ships, the **interim manual path** (form request by email, handled by hand) is the supported path (decision J5). See "Client Journey and Portal UX".

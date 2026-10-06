@@ -1,9 +1,13 @@
 // Receives the contact form and the package builder, stores the submission in Postgres,
-// then emails you a notification and the visitor a receipt through Resend.
+// then emails you a notification and the visitor a receipt from your own mailbox
+// (Namecheap Private Email over SMTP, port 465; Edge Functions only block ports 25 and 587).
 //
-// Secrets (Edge Function secrets, never committed): RESEND_API_KEY, MAIL_FROM, NOTIFY_TO, IP_SALT.
+// Secrets (Edge Function secrets, never committed): SMTP_USER, SMTP_PASS, IP_SALT.
+// Optional: SMTP_HOST, SMTP_PORT, MAIL_FROM (defaults to SMTP_USER), NOTIFY_TO (defaults to dev@doxxus.us).
 // Supabase injects SUPABASE_URL and the service key itself.
 // Same contract as the old PHP endpoint: urlencoded fields in, the literal text "success" out.
+
+import { SMTPClient } from 'https://deno.land/x/denomailer@1.6.0/mod.ts';
 
 const ALLOWED_ORIGINS = ['https://doxxus.us', 'https://www.doxxus.us', 'http://localhost:8777'];
 const TYPES = ['website', 'software', 'repair', 'other'];
@@ -12,8 +16,11 @@ const RATE_LIMIT_PER_IP = 5;
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SERVICE_KEY = Deno.env.get('SUPABASE_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
-const MAIL_FROM = Deno.env.get('MAIL_FROM') ?? '';
+const SMTP_HOST = Deno.env.get('SMTP_HOST') ?? 'smtp.privateemail.com';
+const SMTP_PORT = Number(Deno.env.get('SMTP_PORT') ?? 465);
+const SMTP_USER = Deno.env.get('SMTP_USER') ?? '';
+const SMTP_PASS = Deno.env.get('SMTP_PASS') ?? '';
+const MAIL_FROM = Deno.env.get('MAIL_FROM') ?? SMTP_USER;
 const NOTIFY_TO = Deno.env.get('NOTIFY_TO') ?? 'dev@doxxus.us';
 const IP_SALT = Deno.env.get('IP_SALT') ?? '';
 
@@ -58,13 +65,18 @@ function db(path: string, init: RequestInit = {}): Promise<Response> {
   });
 }
 
-async function sendMail(payload: Record<string, unknown>): Promise<boolean> {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+async function sendMail(message: { to: string; replyTo: string; subject: string; html: string }): Promise<boolean> {
+  const smtp = new SMTPClient({
+    connection: { hostname: SMTP_HOST, port: SMTP_PORT, tls: true, auth: { username: SMTP_USER, password: SMTP_PASS } },
   });
-  return response.ok;
+  try {
+    await smtp.send({ from: `doxxus.us <${MAIL_FROM}>`, to: message.to, replyTo: message.replyTo, subject: message.subject, content: 'auto', html: message.html });
+    return true;
+  } catch {
+    return false;
+  } finally {
+    try { await smtp.close(); } catch { /* already closed */ }
+  }
 }
 
 Deno.serve(async (req) => {
@@ -119,30 +131,24 @@ Deno.serve(async (req) => {
 
   // The message is safely stored from here on, so a mail problem never loses it.
   let status = 'stored';
-  if (RESEND_API_KEY && MAIL_FROM) {
+  if (SMTP_USER && SMTP_PASS) {
     const label = kind === 'package' ? 'Package request' : 'Contact message';
+    const subjectName = name.replace(/[\r\n]+/g, ' ');
     const safe = { name: escapeHtml(name), email: escapeHtml(email), phone: escapeHtml(phone), message: escapeHtml(message).replace(/\n/g, '<br>') };
-    try {
-      const [notified, receipted] = await Promise.all([
-        sendMail({
-          from: MAIL_FROM,
-          to: [NOTIFY_TO],
-          reply_to: email,
-          subject: `[doxxus.us] ${label} from ${name}`,
-          html: `<p><strong>${label}</strong> (${escapeHtml(type)})</p><p>${safe.name}<br>${safe.email}<br>${safe.phone}</p><p>${safe.message}</p>`,
-        }),
-        sendMail({
-          from: MAIL_FROM,
-          to: [email],
-          reply_to: NOTIFY_TO,
-          subject: 'I received your message',
-          html: `<p>Hi ${safe.name},</p><p>Thanks for reaching out. I received your ${kind === 'package' ? 'package request' : 'message'} and will reply to this email address.</p><p>Here is what you sent:</p><blockquote>${safe.message}</blockquote><p>B McCool<br>doxxus.us</p>`,
-        }),
-      ]);
-      status = notified && receipted ? 'notified' : 'email_failed';
-    } catch {
-      status = 'email_failed';
-    }
+    const notified = await sendMail({
+      to: NOTIFY_TO,
+      replyTo: email,
+      subject: `[doxxus.us] ${label} from ${subjectName}`,
+      html: `<p><strong>${label}</strong> (${escapeHtml(type)})</p><p>${safe.name}<br>${safe.email}<br>${safe.phone}</p><p>${safe.message}</p>`,
+    });
+    // The receipt never repeats the visitor's text, so the form cannot be used to send arbitrary content to someone else.
+    const receipted = await sendMail({
+      to: email,
+      replyTo: NOTIFY_TO,
+      subject: 'I received your message',
+      html: `<p>Hi ${safe.name},</p><p>Thanks for reaching out. I received your ${kind === 'package' ? 'package request' : 'message'} and will reply to this email address.</p><p>B McCool<br>doxxus.us</p>`,
+    });
+    status = notified && receipted ? 'notified' : 'email_failed';
   }
   await db(`submissions?id=eq.${row.id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
 
