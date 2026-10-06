@@ -30,7 +30,6 @@ docs/mvp-outline.md — ecommerce MVP and client portal plan
 supabase/
   migrations/       — database schema, row-level security policies and grants
   functions/contact/ — Edge Function behind the contact modal and package builder
-server/             — Node.js commerce API foundation (unused by the site; health endpoint only)
 assets/
   css/
     style.css             — primary custom styles, CSS variables, ds-* design system
@@ -76,7 +75,6 @@ assets/
   in `clients`. Add clients and projects in the Supabase table editor
 - The publishable Supabase key in `portal.js` is public by design; secret keys never go in the repo
 - Billing is Stripe's hosted customer portal; set `BILLING_PORTAL_URL` in `portal.js` once it exists
-- `server/` is an unused Node.js stub (`cd server`, `npm start` for the health endpoint)
 - Serve locally with `python -m http.server 8777`
 
 ## Style References for Agents

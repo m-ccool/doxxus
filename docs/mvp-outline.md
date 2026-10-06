@@ -459,7 +459,7 @@ The current static site can remain the public frontend, but GitHub Pages alone c
 Recommended low-complexity architecture:
 
 - Frontend: existing HTML, CSS, and JavaScript
-- Backend: Node.js with Express or a comparable small server runtime
+- Backend: Supabase (Postgres, Auth, Edge Functions); no separate server
 - Database: PostgreSQL for production; SQLite is acceptable for an isolated early prototype
 - Payments: Stripe Checkout and Stripe Billing
 - Email: transactional email provider
