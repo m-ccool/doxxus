@@ -4578,24 +4578,32 @@ summary:focus-visible,
 .ds-dot--min   { --on: var(--ds-dot-min);   --glow: var(--ds-dot-min-glow); }
 .ds-dot--zoom  { --on: var(--ds-dot-zoom);  --glow: var(--ds-dot-zoom-glow); }
 
-/* Glyph (x, minus, plus): hidden until the cluster is hovered, like macOS. */
+/* Glyphs, drawn as masks so they stay crisp at any size: a thin cross (close), a line
+   (minimize) and the two diagonal arrows (zoom). Hidden until the cluster is hovered,
+   like macOS. */
+.ds-dot--close {
+  --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1.2 1.2l5.6 5.6M6.8 1.2L1.2 6.8' fill='none' stroke='%23000' stroke-width='1.25' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.ds-dot--min {
+  --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 4h6' fill='none' stroke='%23000' stroke-width='1.25' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.ds-dot--zoom {
+  --glyph: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M7 1v4.2L2.8 1zM1 7V2.8L5.2 7z' fill='%23000' stroke='%23000' stroke-width='.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
 .ds-dot::before {
   content: "";
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ds-dot-glyph);
-  font: 700 9px/1 var(--ds-font-ui);
+  inset: 2px;
+  background: var(--ds-dot-glyph);
+  -webkit-mask: var(--glyph) center / contain no-repeat;
+  mask: var(--glyph) center / contain no-repeat;
   opacity: 0;
   transition: opacity var(--ds-dur) var(--ds-ease);
   pointer-events: none;
 }
-
-.ds-dot--close::before { content: "\00d7"; }
-.ds-dot--min::before   { content: "\2212"; }
-.ds-dot--zoom::before  { content: "+"; }
 
 /* Collapsed window: inactive grey. */
 .ds-window.is-minimized .ds-terminal-dots:not(:hover):not(:focus-within) .ds-dot,
@@ -4629,7 +4637,12 @@ summary:focus-visible,
   transform: scale(.9);
 }
 
-/* A control that does nothing (for example the dialog's zoom) stays grey and still. */
+/* A dot with no action (the dialog's zoom) is lit and reacts like the others; it just does nothing. */
+.ds-dot[data-dot-inert] {
+  cursor: default;
+}
+
+/* A genuinely disabled dot goes grey and still. */
 .ds-dot:disabled {
   background: var(--ds-dot-idle);
   cursor: default;

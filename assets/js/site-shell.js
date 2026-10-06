@@ -87,7 +87,7 @@
         '        <span class="ds-terminal-dots">',
         '          <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Close the contact form"></button>',
         '          <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Collapse the contact form"></button>',
-        '          <button type="button" class="ds-dot ds-dot--zoom" disabled tabindex="-1" aria-hidden="true"></button>',
+        '          <button type="button" class="ds-dot ds-dot--zoom" data-dot-inert tabindex="-1" aria-hidden="true"></button>',
         '        </span>',
         '        <button type="button" class="ds-window-title" aria-expanded="true">doxxus@contact &mdash; ~/message</button>',
         '        <span class="ds-window-hint">new message</span>',
