@@ -31,19 +31,24 @@ html {
   --line: rgba(var(--white-rgb), .12);
   --line-strong: rgba(var(--white-rgb), .28);
 
-  /* Glass: neutral dark grey (the elevated surface), like iOS/macOS materials.
-     Only the opacity changes between tiers. */
-  --glass-rgb: var(--shade-1-rgb);
-  --glass-bg: rgba(var(--glass-rgb), .34);
-  --glass-nav-bg: rgba(var(--glass-rgb), .6);
-  --glass-header-bg: rgba(var(--glass-rgb), .78);
-  --glass-dark: rgba(var(--glass-rgb), .55);
-  --glass-dark-hover: rgba(var(--glass-rgb), .4);
-  --glass-solid: rgba(var(--glass-rgb), .88);
+  /* Glass, sourced from Apple and GitHub:
+     - base colour is Apple's dark material #161617 (apple.com global nav), de-blued to a neutral grey
+     - filter is Apple's own saturate(180%) blur(20px); the expanded-menu opacity is Apple's .92
+     - on our near-black page each tier lifts the surface only ~2-6 levels, like GitHub's
+       canvas.default -> canvas.subtle step (#0D1117 -> #151B23)
+     --glass-density scales every tier at once (1 = default, higher = darker). */
+  --glass-rgb: 22, 22, 22;
+  --glass-density: 1;
+  --glass-bg: rgba(var(--glass-rgb), calc(.35 * var(--glass-density)));
+  --glass-nav-bg: rgba(var(--glass-rgb), calc(.66 * var(--glass-density)));
+  --glass-header-bg: rgba(var(--glass-rgb), calc(.86 * var(--glass-density)));
+  --glass-dark: rgba(var(--glass-rgb), calc(.6 * var(--glass-density)));
+  --glass-dark-hover: rgba(var(--glass-rgb), calc(.45 * var(--glass-density)));
+  --glass-solid: rgba(var(--glass-rgb), calc(.92 * var(--glass-density)));
 
   --glass-blur: blur(14px) saturate(130%);
   --glass-border: 1px solid rgba(var(--white-rgb), .1);
-  --glass-dark-filter: saturate(160%) blur(22px);
+  --glass-dark-filter: saturate(180%) blur(20px);
   --glass-dark-edge: inset 0 1px 0 rgba(var(--white-rgb), .12), inset 0 0 0 1px rgba(var(--white-rgb), .04);
   --glass-shadow:
     0 8px 48px rgba(var(--black-rgb), .55),
