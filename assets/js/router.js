@@ -108,6 +108,7 @@
 
     function leave(main) {
         if (window.DoxxusHome) window.DoxxusHome.stop();
+        if (window.DoxxusTitles) window.DoxxusTitles.destroy(main);
         if (window.DoxxusPortfolio) window.DoxxusPortfolio.destroy(main);
         if (window.bootstrap && window.bootstrap.Tooltip) {
             main.querySelectorAll('[data-bs-toggle="tooltip"], [data-bss-tooltip]').forEach(function (node) {
@@ -124,6 +125,7 @@
             window.SiteShell.observeSections();
         }
         if (window.DoxxusPortfolio) window.DoxxusPortfolio.init(main);
+        if (window.DoxxusTitles) window.DoxxusTitles.init(main);
         if (window.DoxxusPages) window.DoxxusPages.init();
         if (page === 'home' && window.DoxxusHome) window.DoxxusHome.start();
 

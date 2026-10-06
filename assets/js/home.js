@@ -287,57 +287,12 @@
             cleanups.push(function(){ contactModal.removeEventListener('shown.bs.modal', onShown); });
         }
 
-        function startTerminalTitleTyping(reduceMotion) {
-            var titles = Array.from(document.querySelectorAll('[data-terminal-title]'));
-            if (!titles.length || reduceMotion) return;
-
-            titles.forEach(function(title, index) {
-                var text = title.querySelector('.section-terminal-text');
-                if (!text) return;
-
-                function isVisible() {
-                    var rect = title.getBoundingClientRect();
-                    return rect.top < window.innerHeight * 0.9 && rect.bottom > window.innerHeight * 0.1;
-                }
-
-                function replay() {
-                    var delay = 7000 + Math.random() * 7000;
-                    later(function(){
-                        if (!isVisible()) {
-                            replay();
-                            return;
-                        }
-
-                        title.classList.add('is-typing');
-                        text.textContent = '';
-                        var dots = 0;
-
-                        function typeDot() {
-                            if (dots < 3) {
-                                text.textContent += '.';
-                                dots++;
-                                later(typeDot, 220);
-                                return;
-                            }
-                            title.classList.remove('is-typing');
-                            replay();
-                        }
-
-                        later(typeDot, 180);
-                    }, delay);
-                }
-
-                later(replay, 1200 + index * 900);
-            });
-        }
-
         function startTyping() {
             if (typingStarted) return;
             typingStarted = true;
             var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             startGlitchTargets(reduceMotion);
             startContactGlitch(reduceMotion);
-            startTerminalTitleTyping(reduceMotion);
             document.querySelectorAll('.typed-out').forEach(function(el) {
                 var textEl = el.querySelector('.brand-type-text');
                 var caretEl = el.querySelector('.brand-caret');

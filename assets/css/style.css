@@ -686,8 +686,8 @@ footer {
   font-family: var(--ds-title-font);
   font-size: var(--ds-title-xl);
   font-weight: var(--ds-title-weight);
-  letter-spacing: -.045em;
-  line-height: 1.04;
+  letter-spacing: -.03em;
+  line-height: 1.08;
   text-transform: none;
 }
 
@@ -4294,16 +4294,16 @@ body { cursor: none; }
   --ds-text-md: 1rem;
   --ds-text-lg: 1.125rem;
   --ds-text-xl: 1.375rem;
-  --ds-title-sm: clamp(1.1rem, 2vw, 1.35rem);
-  --ds-title-md: clamp(1.35rem, 2.6vw, 1.8rem);
-  --ds-title-lg: clamp(1.65rem, 3.5vw, 2.6rem);
-  --ds-title-section: clamp(1.9rem, 1rem + 2.6vw, 3.25rem);
-  --ds-title-xl: clamp(2.3rem, 1rem + 4.2vw, 4.5rem);
+  --ds-title-sm: clamp(1.05rem, 1.8vw, 1.25rem);
+  --ds-title-md: clamp(1.25rem, 2.2vw, 1.65rem);
+  --ds-title-lg: clamp(1.5rem, 1rem + 2.2vw, 2.4rem);
+  --ds-title-section: clamp(1.7rem, 1rem + 2.4vw, 3rem);
+  --ds-title-xl: clamp(2rem, .8rem + 3.6vw, 4rem);
 
-  /* One title voice for the whole site: system sans, bold, tight tracking, sentence case. */
-  --ds-title-font: var(--ds-font-ui);
+  /* One title voice for the whole site: monospace, like code, with a "$" prompt (see code-titles.js). */
+  --ds-title-font: var(--ds-font-mono);
   --ds-title-weight: 700;
-  --ds-title-tracking: -.035em;
+  --ds-title-tracking: -.02em;
   --ds-title-leading: 1.1;
 
   /* Eyebrows and section labels: small mono caps, like a terminal prompt. */
@@ -5589,7 +5589,7 @@ textarea.ds-input {
 
 .ds-page-hero h1 {
   margin: 0;
-  max-width: 18ch;
+  max-width: 24ch;
   color: var(--ds-fg-default);
   font-family: var(--ds-title-font);
   font-size: var(--ds-title-lg);
@@ -5674,7 +5674,7 @@ textarea.ds-input {
 .svc-consult-copy h3 {
   margin: var(--ds-space-2) 0 var(--ds-space-2);
   color: var(--ds-fg-default);
-  font-family: var(--ds-font-ui);
+  font-family: var(--ds-title-font);
   font-size: var(--ds-title-sm);
   font-weight: var(--ds-title-weight);
   letter-spacing: var(--ds-title-tracking);
@@ -5820,10 +5820,10 @@ textarea.ds-input {
 .builder-confirm h2 {
   margin: 0;
   color: var(--ds-fg-default);
-  font-family: var(--ds-font-ui);
+  font-family: var(--ds-title-font);
   font-size: var(--ds-title-md);
-  font-weight: 650;
-  letter-spacing: -.03em;
+  font-weight: var(--ds-title-weight);
+  letter-spacing: var(--ds-title-tracking);
   text-transform: none;
 }
 
@@ -5860,10 +5860,10 @@ textarea.ds-input {
 .signin-body h1 {
   margin: 0;
   color: var(--ds-fg-default);
-  font-family: var(--ds-font-ui);
+  font-family: var(--ds-title-font);
   font-size: var(--ds-title-md);
-  font-weight: 650;
-  letter-spacing: -.03em;
+  font-weight: var(--ds-title-weight);
+  letter-spacing: var(--ds-title-tracking);
 }
 
 .signin-body p {
@@ -6035,4 +6035,20 @@ main:focus {
   backdrop-filter: var(--glass-dark-filter);
   border: var(--glass-border);
   box-shadow: var(--glass-dark-edge), 0 10px 28px -10px rgba(var(--black-rgb), 0.75);
+}
+
+/* ── Code-styled titles (see code-titles.js) ── */
+
+.ct-prompt {
+  margin-right: .5ch;
+  color: var(--ds-accent-fg);
+  font-weight: 500;
+  opacity: .85;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-terminal-caret {
+    animation: none;
+  }
 }
