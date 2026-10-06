@@ -49,7 +49,7 @@ The positioning is a technical liaison and launch manager: one person accountabl
 - Consultation preparation document emailed after successful payment
 - Stripe-hosted one-time checkout
 - Optional recurring maintenance subscription
-- Client email/password login
+- Client Google sign-in (Supabase Auth)
 - Client profile and contact information
 - Active project cards with status indicators
 - Invoice and payment reference panel
@@ -102,7 +102,7 @@ The current visual shell should remain recognizable. The copy should shift from 
 `build.html` is a five-step builder: base package, add-ons, project details, contact details, review.
 
 - A running estimate is shown while selecting, labelled as an estimate and never as a quote.
-- Submission posts to the existing `ajax-form-store.php` contact endpoint using its field contract
+- Submission posts to the Supabase `contact` Edge Function (same field contract as the old PHP endpoint)
   (`type`, `user`, `email`, `phone`, `websummary`); the package summary is packed into `websummary`
   and truncated on a line boundary to respect the 500-character limit.
 - **Fail closed:** the confirmation state is shown only when the endpoint returns the literal
@@ -337,16 +337,13 @@ The portal should remain a status and billing surface, not a full project-manage
 
 ### Authentication requirements
 
-- Passwords hashed with Argon2id or bcrypt
-- Secure, HTTP-only session cookies
-- Rate limiting and login-attempt protection
-- Password reset flow
-- Email verification
-- CSRF protection where applicable
-- No plaintext password storage
+- Google sign-in only, through Supabase Auth. No passwords are created or stored, so there is no reset, verification or hashing to build.
+- A Google account only reaches data when its email matches a row in `clients`; Row Level Security enforces this in the database, not in the page.
+- The Email auth provider stays disabled. Every table in an exposed schema has RLS enabled.
+- Only the publishable key is used in the browser. Secret keys live in Edge Function secrets.
 - No payment-card data storage
 
-Google login is a later convenience feature, not an MVP dependency.
+Email magic-link can be enabled later for clients without a Google account.
 
 ## Admin Panel MVP
 
@@ -369,42 +366,40 @@ Keep the panel private and operational. Do not build a broad CRM or task-managem
 
 ## Client Journey and Portal UX
 
-Tags: **[Built]** live in the repo, **[Interim]** done by hand by the admin until automation lands, **[Planned]** needs backend work (`server/` serves only `GET /health`).
+Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 
-**Path:** visitor sends a message or package request (emailed through `ajax-form-store.php`) **[Interim]**, pays for a consultation **[Planned]**, becomes a client when a project starts, signs in, sees their projects, billing and utilities. The public site never depends on the API being up.
+**Path:** visitor sends a message or package request (stored in Supabase, emailed to you, with an automatic receipt to them), pays for a consultation with a Stripe Payment Link, becomes a client when you add a `clients` row, signs in with Google, sees their projects and the Stripe billing portal link, and uses the utilities.
+
+### Stack
+
+- **Static site** on GitHub Pages. **Supabase** project `doxxus_db`: Postgres (`clients`, `projects`, `submissions`), Auth (Google), Edge Function `contact`. **Resend** for email. **Stripe** with no code (Payment Links, Invoicing, customer portal).
+- Schema and function source are in `supabase/`. Admin work is done in the Supabase table editor until an admin screen is worth building.
 
 ### Task list
 
-**A. Client pages (front end)**
-- [x] `signin.html`: sign in, forgot password, reset, first-time "Welcome" (invite) views, driven by `?view=`; all error states; no self-signup **[Built]**
-- [x] `account.html`: Profile, Projects, Billing, IT support (flagged clients only), Security windows; loading, empty, per-window error and 401 states **[Built]**
-- [x] Utilities: Schedule a call, Contact panel, Request a change, Report an issue, Request IT support, Change password, Sign out. The contact dialog prefills from the profile **[Built]**
-- [x] Honest closed state: while `API_BASE` in `assets/js/portal.js` is empty the form is disabled, no request is made, and `account.html` redirects to sign-in **[Built]**
+**A. Client pages**
+- [x] `signin.html` (Google button, honest closed state) and `account.html` (Profile, Projects, Billing link, IT support for flagged clients, Security) **[Built]**
+- [x] Utilities: Schedule a call, Contact panel, Request a change, Report an issue, Request IT support, Sign out; the contact dialog prefills from the profile **[Built]**
+- [x] "Not linked" state for a Google account with no client row **[Built]**
 
-**B. API (`server/`)** **[Planned]**
-- [ ] Auth endpoints: login, logout, forgot, reset, invite lookup, accept-invite, resend-verification, csrf
-- [ ] Argon2id hashing, per-account and per-IP rate limits, HTTP-only `Secure` `SameSite=Lax` cookie, CSRF token, constant-time wrong-email/wrong-password response
-- [ ] `GET /me`, `/me/projects`, `/me/billing` (client-facing statuses only; no "not started")
-- [ ] Database (SQLite for the prototype, Postgres for production) and transactional email (invite, reset, verify)
-- [ ] Host the API same-site (for example `api.doxxus.us`), then set `API_BASE` in `portal.js`
+**B. Supabase**
+- [x] Project, schema, RLS and grants, Google provider, Email provider off, URL configuration **[Built]**
+- [x] `contact` Edge Function: server validation, honeypot, per-IP rate limit, stores to `submissions`, emails via Resend when configured **[Built]**
+- [ ] Resend domain verified (DNS records) and secrets set: `RESEND_API_KEY`, `MAIL_FROM`, `NOTIFY_TO`, `IP_SALT`
+- [ ] Google OAuth app published (Branding with privacy policy and terms links) so clients outside the test list can sign in
+- [ ] Keep-alive or Pro plan, because free projects pause after a week idle
 
-**C. Admin** **[Planned]**
-- [ ] Admin sign-in (same login, admin role) and a clients list
-- [ ] Create client and send invite; resend invite; disable or enable access (ends sessions)
-- [ ] Project editor: name, short description, status, live URL, meeting URL
-- [ ] Billing references; IT-support flag; activity log entries
+**C. Payments (no code)**
+- [ ] Stripe account, Payment Links for the $150 consult and $100 IT diagnostic, `thanks.html` with the prep checklist, customer portal link set as `BILLING_PORTAL_URL` in `portal.js`
 
-**D. Payments** **[Planned]**
-- [ ] Stripe test-mode consultation Checkout, signed webhook, preparation email, store references only
-
-**E. Ship**
-- [ ] Tests, accessibility pass, live verification on `doxxus.us` (desktop and mobile) with a real invited test client
+**D. Later**
+- [ ] Admin screen, email magic-link, Stripe webhook sync, activity log
 
 ### Decisions
 
 | # | Decision | Default |
 | --- | --- | --- |
-| J1 | Account creation | Manual: admin presses "Create client and send invite" |
+| J1 | Account creation | Manual: admin adds a `clients` row; the client signs in with that Google email |
 | J2 | When an account exists | At project start, not when a consultation is paid |
 | J3 | Status-change emails | Off in the MVP |
 | J4 | IT-support entry in the portal | Flag on the client record; only eligible clients see it |
@@ -416,13 +411,12 @@ Open: **O1** business phone and hours (the Contact panel shows the email only un
 
 ### Acceptance checks
 
-- An admin can create a client and project, and the client receives a working invite.
-- A client who sets a password lands on a page showing only their own data.
+- Adding a `clients` row lets that Google account sign in and see only its own data.
 - A status change made by the admin is visible to that client on the next load.
-- A disabled client cannot sign in, sees the disabled message, and open sessions end.
+- A client with `disabled = true` sees the "not linked" message and no data.
 - A client never sees "Not started" projects.
 - No screen shows a value outside the Data Boundary.
-- The public site stays usable while the API is down.
+- The public site stays usable while Supabase is down.
 
 ### Known drift
 
@@ -503,18 +497,16 @@ Keep the public site and private API deployment separate so the showcase can rem
 
 ### Phase 3: Client portal
 
-Accounts are created by the admin (decision J1), so the admin invite flow in Phase 4 ships before or together with the first client sign-in.
+Accounts are created by the admin (decision J1): a `clients` row in the Supabase table editor is the whole invite, so the table editor serves as the admin tool until a screen is worth building.
 
-- [ ] Create client account at project start by admin invite (decisions J1, J2)
-- [ ] Add invite email and the first-time set-password screen
-- [ ] Implement secure email/password login
-- [ ] Add profile view
-- [ ] Add project cards and status indicators
-- [ ] Add invoice and payment panel
-- [ ] Add schedule-call and contact actions
-- [ ] Add password reset and email verification
-- [ ] Add client utilities: request a change, report an issue, IT-support entry for eligible clients (decision J4)
-- [ ] Add honest empty, loading and error states to every portal window
+- [x] Create client account at project start by adding a `clients` row (decisions J1, J2)
+- [x] Google sign-in through Supabase Auth
+- [x] Add profile view
+- [x] Add project cards and status indicators
+- [ ] Add invoice and payment panel (links to the Stripe customer portal once its URL is set)
+- [x] Add schedule-call and contact actions
+- [x] Add client utilities: request a change, report an issue, IT-support entry for eligible clients (decision J4)
+- [x] Add honest empty, loading and error states to every portal window
 
 ### Phase 4: Admin panel
 
@@ -525,7 +517,7 @@ Accounts are created by the admin (decision J1), so the admin invite flow in Pha
 - [ ] Add invoice references
 - [ ] Add consultation tracking
 - [ ] Add payment visibility
-- [ ] Add create-client-and-send-invite, resend invite, and disable or enable access (with the IT-support flag)
+- [ ] Add an admin screen for clients and projects (until then: the Supabase table editor, including the IT-support flag and the disabled switch)
 - [ ] Add the activity (audit) list
 
 ### Phase 5: Payment expansion
@@ -546,7 +538,7 @@ Accounts are created by the admin (decision J1), so the admin invite flow in Pha
 - **Package builder:** Implemented against the existing contact endpoint; fail-closed on submission
 - **Commerce:** Stripe selected for MVP investigation and implementation
 - **Bitcoin:** Deferred pending operational decision
-- **Authentication:** Email/password required; Google login deferred. `signin.html` has the sign-in, reset and invite views, disabled until the API is live (`assets/js/portal.js`)
+- **Authentication:** Google sign-in through Supabase Auth; no passwords. Built and tested end to end (`signin.html`, `account.html`, `assets/js/portal.js`)
 - **Client portal:** Minimal profile, project, status, invoice, and scheduling scope defined; `account.html` built against the planned API; admin tools outlined in "Client Journey and Portal UX"
 - **Admin panel:** Required for MVP operations; scope intentionally small
 - **Journey:** The interim manual path (form to email) is built; the automated path is planned. Journey decisions J1-J6 have defaults; open items O1-O5 remain
@@ -560,8 +552,8 @@ Accounts are created by the admin (decision J1), so the admin invite flow in Pha
 3. Add one Stripe test-mode consultation Checkout flow behind a small backend endpoint.
 4. Verify the signed webhook and preparation-email flow in an isolated test environment.
 5. Add package checkout only after the consultation flow is reliable.
-6. Build admin client creation and invite first: the admin creates a client and project and sends an invite, because the portal only reads what the admin writes.
-7. Ship the sign-in and account pages against a real API and verify them on the live site, desktop and mobile, with a real invited test client.
+6. Create a real test client row (your own Google email) and verify the sign-in and account pages on the live site, desktop and mobile.
+7. Publish the Google OAuth app, verify Resend, then add the Stripe Payment Links and the customer portal link.
 8. Add the client utilities and the billing window once real payment references exist.
 
 Until step 3 ships, the **interim manual path** (form request by email, handled by hand) is the supported path (decision J5). See "Client Journey and Portal UX".
@@ -592,4 +584,4 @@ The MVP is ready when:
 - **Full hosting platform:** Hosting provisioning is outside the first sale and requires more infrastructure than the current service model needs.
 - **In-portal chat and files:** Email and external meeting tools cover the initial communication workflow with less stored personal data.
 - **Bitcoin subscriptions:** Confirmation and recurring-payment operations are not worth the initial complexity.
-- **Google login:** Useful later, but email/password is sufficient for the first client account workflow.
+- **Password login:** Not built. Google sign-in avoids storing passwords; email magic-link can be added if a client has no Google account.

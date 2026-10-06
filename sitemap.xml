@@ -16,4 +16,8 @@
         <loc>https://doxxus.us/terms.html</loc>
         <priority>0.3</priority>
     </url>
+    <url>
+        <loc>https://doxxus.us/privacy.html</loc>
+        <priority>0.3</priority>
+    </url>
 </urlset>

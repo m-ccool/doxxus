@@ -6,7 +6,7 @@
 (function () {
     'use strict';
 
-    var CONTACT_ENDPOINT = 'https://doxxus.us/ajax-form-store.php';
+    var CONTACT_ENDPOINT = 'https://rnvsrhzxmpanabwmkiaj.supabase.co/functions/v1/contact';
 
     var NAV_HTML = [
         '<nav class="navbar navbar-expand-md">',
@@ -54,6 +54,7 @@
         '      <div class="footer-col-group">',
         '        <span class="footer-label" data-glitch-word>Legal</span>',
         '        <a href="terms.html">Terms &amp; Conditions</a>',
+        '        <a href="privacy.html">Privacy Policy</a>',
         '      </div>',
         '      <div class="footer-col-group">',
         '        <span class="footer-label" data-glitch-word>Contact</span>',
@@ -105,6 +106,7 @@
         '              <label for="type-trigger" data-glitch-modal>Type</label>',
         '              <div class="contact-select" data-contact-select>',
         '                <input type="hidden" id="type" name="type" value="software">',
+        '                <input class="ds-hp" type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">',
         '                <button class="contact-select-trigger ds-input" id="type-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="type-options">',
         '                  <span>Software Development</span><i class="typcn typcn-chevron-down" aria-hidden="true"></i>',
         '                </button>',

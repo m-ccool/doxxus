@@ -6,7 +6,7 @@
 (function () {
     'use strict';
 
-    var CONTACT_ENDPOINT = 'https://doxxus.us/ajax-form-store.php';
+    var CONTACT_ENDPOINT = 'https://rnvsrhzxmpanabwmkiaj.supabase.co/functions/v1/contact';
     var NOTE_LIMIT = 500;
 
     /* ────────────────────────────────────────────────────────────────
@@ -365,6 +365,7 @@
 
             var payload = new URLSearchParams();
             payload.set('type', 'website');
+            payload.set('kind', 'package');
             payload.set('user', builder.querySelector('#client-name').value.trim());
             payload.set('email', builder.querySelector('#client-email').value.trim());
             payload.set('phone', builder.querySelector('#client-phone').value.trim());

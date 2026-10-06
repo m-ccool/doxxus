@@ -1,3 +1,5 @@
 
 *.zip
 server/.env
+supabase/functions/.env
+supabase/.temp

@@ -88,6 +88,21 @@
             </div>
         </section>
 
+        <section class="ds-section ds-section--tight" data-account-unlinked hidden>
+            <div class="ds-shell">
+                <div class="ds-callout ds-callout--attention" role="alert">
+                    <i class="typcn typcn-warning-outline" aria-hidden="true"></i>
+                    <span class="portal-notice-body">
+                        <span>This Google account (<strong data-account-unlinked-email></strong>) is not linked to an active client account. Sign in with the Google account for the email address you gave me, or contact me.</span>
+                        <span class="portal-row portal-row--start">
+                            <button type="button" class="ds-btn ds-btn--sm" data-bs-toggle="modal" data-bs-target="#contact" data-contact-type="other">Contact the dev</button>
+                            <button type="button" class="ds-btn ds-btn--sm" data-account-signout>Sign out</button>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </section>
+
         <section class="ds-section ds-section--tight" data-account-content hidden>
             <div class="ds-shell ds-stack">
                 <div class="ds-window" id="profile" data-window data-window-start="expanded" data-account-window="profile">
@@ -147,9 +162,11 @@
                     </div>
                     <div class="ds-window-body ds-window-body--plain">
                         <div class="ds-window-pad">
-                            <p class="portal-row portal-row--start"><span class="portal-muted">Subscription</span> <span class="ds-label" data-account-subscription>&mdash;</span></p>
-                            <div data-account-billing aria-live="polite"></div>
-                            <p class="portal-note">Receipts open the provider-hosted page. No amounts or card data are stored here.</p>
+                            <p class="portal-note">Invoices, receipts and payment methods are on Stripe's secure billing portal. No card details are stored here.</p>
+                            <div class="portal-row portal-row--start">
+                                <a class="ds-btn" data-account-billing-link role="link" aria-disabled="true" target="_blank" rel="noopener noreferrer">Open billing portal &#8599;</a>
+                            </div>
+                            <p class="portal-hint" data-account-billing-hint>The billing portal is not set up yet. Contact the dev for an invoice.</p>
                         </div>
                     </div>
                 </div>
@@ -182,19 +199,16 @@
                             <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand this panel"></button>
                         </span>
                         <button type="button" class="ds-window-title">doxxus@portal &mdash; ~/security</button>
-                        <span class="ds-window-hint">this session</span>
+                        <span class="ds-window-hint">your login</span>
                     </div>
                     <div class="ds-window-body ds-window-body--plain">
                         <div class="ds-window-pad">
                             <div class="portal-row">
-                                <span><strong class="portal-strong">Password</strong> <span class="portal-muted" data-account-password-age></span></span>
-                                <button type="button" class="ds-btn ds-btn--sm" data-account-change-password>Change password</button>
-                            </div>
-                            <div class="portal-row">
-                                <span><strong class="portal-strong">This device</strong> <span class="portal-muted">Signing out ends this session only.</span></span>
+                                <span><strong class="portal-strong">Signed in with Google</strong> <span class="portal-muted" data-account-security-email></span></span>
                                 <button type="button" class="ds-btn ds-btn--sm" data-account-signout>Sign out</button>
                             </div>
-                            <div class="ds-callout ds-callout--note" data-account-security-note role="status" hidden>
+                            <p class="portal-note">Signing out ends this session only. There is no password to manage.</p>
+                            <div class="ds-callout ds-callout--attention" data-account-security-note role="alert" hidden>
                                 <i class="typcn typcn-info-large" aria-hidden="true"></i>
                                 <span data-account-security-text></span>
                             </div>
@@ -217,6 +231,7 @@
     <script src="assets/js/portfolio-data.js"></script>
     <script src="assets/js/portfolio-carousel.js"></script>
     <script src="assets/js/pages.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
     <script src="assets/js/portal.js"></script>
     <script src="assets/js/scripts.js"></script>
     <script src="assets/js/glitch.js"></script>
