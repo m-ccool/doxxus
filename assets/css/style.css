@@ -221,9 +221,9 @@ footer {
   border-top: var(--glass-border);
   border-radius: var(--small-radius) var(--small-radius) 0 0;
   box-shadow: var(--glass-shadow);
-  font-family: Dongle, sans-serif;
+  font-family: var(--ds-font-ui);
   font-size: .75rem;
-  color: white;
+  color: var(--ds-fg-muted);
   min-height: 1em;
   vertical-align: middle;
   cursor: initial;
@@ -267,18 +267,18 @@ footer {
 .modal-form-label {
   text-align: center!important;
   color: rgba(var(--white-rgb),0.75);
-  font-size: .75rem;
-  letter-spacing: 2px;
-  /*font-family: 'Lexend Giga';*/
-  text-transform: capitalize;
+  font-size: var(--ds-text-xs);
+  letter-spacing: 0;
+  /*font-family: var(--ds-font-ui);*/
+  text-transform: none;
 }
 
 .modal-title-h {
   font-size: calc(1em + .05vw)!IMPORTANT;
   color: rgba(var(--white-rgb),0.85);
-  text-transform: capitalize;
-  letter-spacing: 5px;
-  font-family: 'Lexend Giga';
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--ds-font-ui);
 }
 
 .modal-body {
@@ -298,11 +298,12 @@ footer {
   margin: 0;
   padding: 0.6rem 1rem;
   border-radius: 10px;
-  font-family: 'Lexend Giga', sans-serif;
-  font-size: 0.55rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-text-xs);
+  letter-spacing: .01em;
+  text-transform: none;
   transition: background var(--ds-dur) var(--ds-ease);
+  font-weight: 600;
 }
 
 .p-form-notice.is-visible {
@@ -454,13 +455,14 @@ footer {
 }
 
 .cf-label {
-  font-family: 'Lexend Giga', sans-serif;
-  font-size: 0.52rem;
-  letter-spacing: 0.14em;
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-eyebrow-size);
+  letter-spacing: var(--ds-eyebrow-tracking);
   text-transform: uppercase;
-  color: rgba(var(--white-rgb),0.35);
+  color: var(--ds-fg-subtle);
   text-align: right;
   line-height: 1.4;
+  font-weight: var(--ds-eyebrow-weight);
 }
 
 .cf-label-top {
@@ -491,9 +493,9 @@ footer {
   border: 1px solid rgba(var(--white-rgb),0.1) !important;
   border-radius: 12px !important;
   color: rgba(var(--white-rgb),0.8) !important;
-  font-family: Dongle, sans-serif !important;
-  font-size: 1rem !important;
-  letter-spacing: 0.03em;
+  font-family: var(--ds-font-ui) !important;
+  font-size: var(--ds-text-md) !important;
+  letter-spacing: 0;
   transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
@@ -505,9 +507,9 @@ footer {
 .contact-select-trigger,
 .contact-select-options button {
   width: 100%;
-  font-family: Dongle, sans-serif;
-  font-size: 1rem;
-  letter-spacing: 0.03em;
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-text-md);
+  letter-spacing: 0;
 }
 
 .contact-select-trigger {
@@ -695,11 +697,11 @@ footer {
 }
 
 .begin-sub {
-  font-size: clamp(0.85rem, 0.8rem + 0.25vw, 1rem);
-  font-family: Dongle, sans-serif;
-  color: rgba(var(--white-rgb),0.5);
+  font-size: var(--ds-text-md);
+  font-family: var(--ds-font-ui);
+  color: var(--ds-fg-muted);
   letter-spacing: 0;
-  line-height: 1.35;
+  line-height: 1.5;
   text-shadow: none;
   margin: 0;
 }
@@ -1944,6 +1946,7 @@ section {
 }
 
 body {
+  font-family: var(--ds-font-ui);
   overflow-x: hidden!important;
   background: var(--bs-body-color);
   -webkit-backface-visibility: hidden;
@@ -2237,15 +2240,25 @@ body {
 }
 
 #splash-p-5 {
+  background-size: 150%;
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  line-height: 1.5rem;
+  letter-spacing: .45rem;
+  text-transform: uppercase;
   width: 100%;
   padding: 0 1rem;
-  margin: 2rem .25rem 0;
-  font-family: var(--ds-eyebrow-font);
-  font-size: clamp(.8rem, .6rem + 1vw, 1.15rem);
-  font-weight: var(--ds-eyebrow-weight);
-  letter-spacing: .28em;
-  text-transform: uppercase;
-  color: var(--ds-accent-fg);
+  margin-top: 2rem;
+  margin-left: .25rem;
+  margin-right: .25rem;
+}
+
+#last-online-splash {
+  font-family: 'Lexend Giga', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: rgb(255,255,255);
 }
 
 .nav-link-icon {
@@ -2362,7 +2375,7 @@ body {
 
 p {
   margin-bottom: 0;
-  color: var(--bs-light);
+  color: var(--ds-fg-default);
 }
 
 .gallery-div a {
@@ -2586,6 +2599,12 @@ dl, ol, ul {
   transition: smooth 1s;
   background-color: var(--bs-body-color);
   border-color: var(--bs-btn-active-border-color);
+}
+
+.skill-card span {
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-text-xs);
+  font-weight: 600;
 }
 
 .li_skill {
@@ -3616,11 +3635,11 @@ button.swiper-pagination-bullet {
 }
 
 .about-cred-item {
-  font-family: Dongle, sans-serif;
-  font-size: clamp(0.85rem, 0.75rem + 0.6vw, 1.1rem);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: rgba(var(--white-rgb),0.55);
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-text-sm);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ds-fg-muted);
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -3703,10 +3722,10 @@ button.swiper-pagination-bullet {
 }
 
 .footer-col-group a {
-  font-family: Dongle, sans-serif;
-  font-size: clamp(0.9rem, 0.8rem + 0.4vw, 1.05rem);
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-text-sm);
+  font-weight: 500;
+  letter-spacing: 0;
   color: var(--ds-fg-muted);
   text-decoration: none;
   transition: color var(--ds-dur) var(--ds-ease);
@@ -3728,10 +3747,10 @@ button.swiper-pagination-bullet {
 }
 
 .footer-copy {
-  font-family: Dongle, sans-serif;
-  font-size: clamp(0.85rem, 0.8rem + 0.3vw, 1rem);
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  font-weight: 500;
+  letter-spacing: .08em;
   color: var(--ds-fg-subtle);
   text-transform: uppercase;
 }
@@ -3767,11 +3786,11 @@ button.swiper-pagination-bullet {
 }
 
 .last-online {
-  font-family: 'Lexend Giga', sans-serif;
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  letter-spacing: .08em;
   text-transform: uppercase;
-  color: rgba(var(--white-rgb),1);
+  color: var(--ds-fg-subtle);
   white-space: nowrap;
   animation: last-online-pulse 5s ease-in-out infinite;
 }
@@ -4166,14 +4185,16 @@ body { cursor: none; }
   align-items: center;
   width: 100%;
   padding: var(--bs-accordion-btn-padding-y) var(--bs-accordion-btn-padding-x);
-  font-size: 1rem;
-  color: var(--bs-light);
+  font-size: var(--ds-text-md);
+  color: var(--ds-fg-default);
   text-align: left;
   background-color: var(--transparent)!important;
   border: 0;
   border-radius: 0;
   overflow-anchor: none;
   transition: var(--bs-accordion-transition);
+  font-family: var(--ds-font-ui);
+  font-weight: 600;
 }
 
 .accordion-button:not(.collapsed) {
@@ -4268,11 +4289,11 @@ body { cursor: none; }
   --ds-font-display: "Lexend Giga", sans-serif;
   --ds-font-numeric: Dongle, sans-serif;
 
-  --ds-text-xs: .68rem;
-  --ds-text-sm: .8rem;
-  --ds-text-md: .9rem;
-  --ds-text-lg: 1.05rem;
-  --ds-text-xl: 1.3rem;
+  --ds-text-xs: .75rem;
+  --ds-text-sm: .875rem;
+  --ds-text-md: 1rem;
+  --ds-text-lg: 1.125rem;
+  --ds-text-xl: 1.375rem;
   --ds-title-sm: clamp(1.1rem, 2vw, 1.35rem);
   --ds-title-md: clamp(1.35rem, 2.6vw, 1.8rem);
   --ds-title-lg: clamp(1.65rem, 3.5vw, 2.6rem);
@@ -4287,7 +4308,7 @@ body { cursor: none; }
 
   /* Eyebrows and section labels: small mono caps, like a terminal prompt. */
   --ds-eyebrow-font: var(--ds-font-mono);
-  --ds-eyebrow-size: .68rem;
+  --ds-eyebrow-size: var(--ds-text-xs);
   --ds-eyebrow-weight: 500;
   --ds-eyebrow-tracking: .1em;
 
@@ -5377,7 +5398,7 @@ textarea.ds-input {
   border: 1px solid var(--ds-border-muted);
   border-radius: 50%;
   font-family: var(--ds-font-mono);
-  font-size: .6rem;
+  font-size: var(--ds-text-xs);
   font-weight: 700;
 }
 
@@ -5498,12 +5519,6 @@ textarea.ds-input {
   gap: var(--ds-space-2);
 }
 
-.capability-strip .ds-label {
-  font-family: var(--ds-font-mono);
-  font-weight: 500;
-  letter-spacing: .01em;
-}
-
 .tier-actions {
   display: flex;
   flex-wrap: wrap;
@@ -5526,7 +5541,6 @@ textarea.ds-input {
 
 .services-support .ds-section-sub {
   max-width: 62ch;
-  font-size: var(--ds-text-sm);
 }
 
 .services-support .ds-section-head--left {
@@ -5662,8 +5676,8 @@ textarea.ds-input {
   color: var(--ds-fg-default);
   font-family: var(--ds-font-ui);
   font-size: var(--ds-title-sm);
-  font-weight: 650;
-  letter-spacing: -.02em;
+  font-weight: var(--ds-title-weight);
+  letter-spacing: var(--ds-title-tracking);
   text-transform: none;
 }
 
@@ -6008,7 +6022,7 @@ main:focus {
   --bs-tooltip-border-radius: 10px;
   --bs-tooltip-padding-x: 0.75rem;
   --bs-tooltip-padding-y: 0.4rem;
-  --bs-tooltip-font-size: 0.78rem;
+  --bs-tooltip-font-size: var(--ds-text-xs);
   font-family: var(--ds-font-ui);
 }
 
