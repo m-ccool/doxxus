@@ -49,7 +49,7 @@ The positioning is a technical liaison and launch manager: one person accountabl
 - Consultation preparation document emailed after successful payment
 - Stripe-hosted one-time checkout
 - Optional recurring maintenance subscription
-- Client Google sign-in (Supabase Auth)
+- Client sign-in with Google or an emailed one-time code (Supabase Auth)
 - Client profile and contact information
 - Active project cards with status indicators
 - Invoice and payment reference panel
@@ -337,13 +337,12 @@ The portal should remain a status and billing surface, not a full project-manage
 
 ### Authentication requirements
 
-- Google sign-in only, through Supabase Auth. No passwords are created or stored, so there is no reset, verification or hashing to build.
-- A Google account only reaches data when its email matches a row in `clients`; Row Level Security enforces this in the database, not in the page.
-- The Email auth provider stays disabled. Every table in an exposed schema has RLS enabled.
+- Google sign-in or an emailed one-time code, through Supabase Auth. No passwords are created or stored, so there is no reset or hashing to build. Auth emails go out from `dev@doxxus.us` through the same mailbox (custom SMTP in Supabase Auth).
+- An account only reaches data when its (verified) email matches a row in `clients`; Row Level Security enforces this in the database, not in the page. Anyone can request a code, but an unmatched email sees nothing.
+- The Email provider is on in passwordless mode (a code, no password). Every table in an exposed schema has RLS enabled.
 - Only the publishable key is used in the browser. Secret keys live in Edge Function secrets.
 - No payment-card data storage
 
-Email magic-link can be enabled later for clients without a Google account.
 
 ## Admin Panel MVP
 
@@ -368,22 +367,22 @@ Keep the panel private and operational. Do not build a broad CRM or task-managem
 
 Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 
-**Path:** visitor sends a message or package request (stored in Supabase, emailed to you, with an automatic receipt to them), pays for a consultation with a Stripe Payment Link, becomes a client when you add a `clients` row, signs in with Google, sees their projects and the Stripe billing portal link, and uses the utilities.
+**Path:** visitor sends a message or package request (stored in Supabase, emailed to you, with an automatic receipt to them), pays for a consultation with a Stripe Payment Link, becomes a client when you add a `clients` row, signs in (Google or an emailed code), sees their projects and the Stripe billing portal link, and uses the utilities.
 
 ### Stack
 
-- **Static site** on GitHub Pages. **Supabase** project `doxxus_db`: Postgres (`clients`, `projects`, `submissions`), Auth (Google), Edge Function `contact`. Email is sent from the existing `dev@doxxus.us` Namecheap Private Email mailbox over SMTP (no extra vendor). **Stripe** with no code (Payment Links, Invoicing, customer portal).
+- **Static site** on GitHub Pages. **Supabase** project `doxxus_db`: Postgres (`clients`, `projects`, `submissions`), Auth (Google and email code), Edge Function `contact`. Email is sent from the existing `dev@doxxus.us` Namecheap Private Email mailbox over SMTP (no extra vendor). **Stripe** with no code (Payment Links, Invoicing, customer portal).
 - Schema and function source are in `supabase/`. Admin work is done in the Supabase table editor until an admin screen is worth building.
 
 ### Task list
 
 **A. Client pages**
-- [x] `signin.html` (Google button, honest closed state) and `account.html` (Profile, Projects, Billing link, IT support for flagged clients, Security) **[Built]**
+- [x] `signin.html` (Google button, email-code sign-in, honest closed state) and `account.html` (Profile, Projects, Billing link, IT support for flagged clients, Security) **[Built]**
 - [x] Utilities: Schedule a call, Contact panel, Request a change, Report an issue, Request IT support, Sign out; the contact dialog prefills from the profile **[Built]**
-- [x] "Not linked" state for a Google account with no client row **[Built]**
+- [x] "Not linked" state for an account with no client row **[Built]**
 
 **B. Supabase**
-- [x] Project, schema, RLS and grants, Google provider, Email provider off, URL configuration **[Built]**
+- [x] Project, schema, RLS and grants, Google provider, Email provider on (code only), custom SMTP and templates, URL configuration **[Built]**
 - [x] `contact` Edge Function: server validation, honeypot, per-IP rate limit, stores to `submissions`, emails you and the sender from `dev@doxxus.us` over SMTP when the secrets are set **[Built]**
 - [ ] Function secrets set in Supabase: `SMTP_USER` (`dev@doxxus.us`), `SMTP_PASS` (the mailbox password), `IP_SALT`
 - [ ] Google OAuth app published (Branding with privacy policy and terms links) so clients outside the test list can sign in
@@ -393,13 +392,13 @@ Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 - [ ] Stripe account, Payment Links for the $150 consult and $100 IT diagnostic, `thanks.html` with the prep checklist, customer portal link set as `BILLING_PORTAL_URL` in `portal.js`
 
 **D. Later**
-- [ ] Admin screen, email magic-link, Stripe webhook sync, activity log
+- [ ] Admin screen, Stripe webhook sync, activity log
 
 ### Decisions
 
 | # | Decision | Default |
 | --- | --- | --- |
-| J1 | Account creation | Manual: admin adds a `clients` row; the client signs in with that Google email |
+| J1 | Account creation | Manual: admin adds a `clients` row; the client signs in with that email (Google or code) |
 | J2 | When an account exists | At project start, not when a consultation is paid |
 | J3 | Status-change emails | Off in the MVP |
 | J4 | IT-support entry in the portal | Flag on the client record; only eligible clients see it |
@@ -411,7 +410,7 @@ Open: **O1** business phone and hours (the Contact panel shows the email only un
 
 ### Acceptance checks
 
-- Adding a `clients` row lets that Google account sign in and see only its own data.
+- Adding a `clients` row lets that email sign in and see only its own data.
 - A status change made by the admin is visible to that client on the next load.
 - A client with `disabled = true` sees the "not linked" message and no data.
 - A client never sees "Not started" projects.
@@ -500,7 +499,7 @@ Keep the public site and private API deployment separate so the showcase can rem
 Accounts are created by the admin (decision J1): a `clients` row in the Supabase table editor is the whole invite, so the table editor serves as the admin tool until a screen is worth building.
 
 - [x] Create client account at project start by adding a `clients` row (decisions J1, J2)
-- [x] Google sign-in through Supabase Auth
+- [x] Google and email-code sign-in through Supabase Auth
 - [x] Add profile view
 - [x] Add project cards and status indicators
 - [ ] Add invoice and payment panel (links to the Stripe customer portal once its URL is set)
@@ -538,7 +537,7 @@ Accounts are created by the admin (decision J1): a `clients` row in the Supabase
 - **Package builder:** Implemented against the existing contact endpoint; fail-closed on submission
 - **Commerce:** Stripe selected for MVP investigation and implementation
 - **Bitcoin:** Deferred pending operational decision
-- **Authentication:** Google sign-in through Supabase Auth; no passwords. Built and tested end to end (`signin.html`, `account.html`, `assets/js/portal.js`)
+- **Authentication:** Google or emailed one-time code through Supabase Auth; no passwords. Built and tested end to end (`signin.html`, `account.html`, `assets/js/portal.js`)
 - **Client portal:** Minimal profile, project, status, invoice, and scheduling scope defined; `account.html` built against the planned API; admin tools outlined in "Client Journey and Portal UX"
 - **Admin panel:** Required for MVP operations; scope intentionally small
 - **Journey:** The interim manual path (form to email) is built; the automated path is planned. Journey decisions J1-J6 have defaults; open items O1-O5 remain
@@ -584,4 +583,4 @@ The MVP is ready when:
 - **Full hosting platform:** Hosting provisioning is outside the first sale and requires more infrastructure than the current service model needs.
 - **In-portal chat and files:** Email and external meeting tools cover the initial communication workflow with less stored personal data.
 - **Bitcoin subscriptions:** Confirmation and recurring-payment operations are not worth the initial complexity.
-- **Password login:** Not built. Google sign-in avoids storing passwords; email magic-link can be added if a client has no Google account.
+- **Password login:** Not built. Google sign-in and emailed codes avoid storing passwords.

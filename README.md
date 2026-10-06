@@ -12,7 +12,7 @@ Personal portfolio & service site for **B McCool** — freelance web developer.
 - **Bootstrap 5.3** — responsive layout, modals, navbar collapse
 - **JavaScript / jQuery** — AOS scroll animations, Swiper carousel, smooth scroll
 - **Third-party libs** — AOS, Swiper, FontAwesome 5, Typicons, GitHub Activity Feed
-- **Supabase** — Postgres (clients, projects, form submissions), Google sign-in, and the `contact` Edge Function
+- **Supabase** — Postgres (clients, projects, form submissions), Google and email-code sign-in, and the `contact` Edge Function
 - **Hosting** — static site on GitHub Pages; Supabase for everything that needs a server
 
 ## Structure
@@ -21,7 +21,7 @@ Personal portfolio & service site for **B McCool** — freelance web developer.
 index.html          — landing page (splash, software tier, IT tier, portfolio, about)
 services.html       — software spec sheet, package tiers, add-ons, consultation, IT tier
 build.html          — package builder (assemble a package and send the request)
-signin.html         — client sign-in (Google, through Supabase Auth)
+signin.html         — client sign-in (Google or an emailed one-time code, through Supabase Auth)
 account.html        — client account: profile, projects, billing link, security (signed-in only)
 terms.html          — terms of service
 privacy.html        — privacy policy
@@ -44,7 +44,7 @@ assets/
     site-shell.js   — injects navbar, footer and contact modal on every page
     router.js       — client-side navigation with a persistent navbar
     pages.js        — window (traffic-light) behaviour, package builder
-    portal.js       — client portal: Google sign-in and the account page
+    portal.js       — client portal: sign-in (Google or email code) and the account page
     portfolio-data.js, portfolio-carousel.js — portfolio gallery data and engine
     code-titles.js  — `$` code-style titles with the typing animation
     glitch.js       — glitch-typing effect (home page and contact modal labels)
@@ -71,7 +71,7 @@ assets/
   message in `submissions`, then emails you and the sender from `dev@doxxus.us` over SMTP
 - Edge Function secrets (set in the Supabase dashboard, never committed): `SMTP_USER`,
   `SMTP_PASS`, `IP_SALT`. Without them messages are still stored but no email is sent
-- Client sign-in is Google only; a Google account sees data only when its email matches a row
+- Client sign-in is Google or an emailed one-time code; an account sees data only when its email matches a row
   in `clients`. Add clients and projects in the Supabase table editor
 - The publishable Supabase key in `portal.js` is public by design; secret keys never go in the repo
 - Billing is Stripe's hosted customer portal; set `BILLING_PORTAL_URL` in `portal.js` once it exists
