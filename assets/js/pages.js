@@ -121,10 +121,6 @@
        Build page — package builder
        ──────────────────────────────────────────────────────────────── */
 
-    function currency(value) {
-        return '$' + Number(value).toLocaleString('en-US');
-    }
-
     function initPackageBuilder() {
         var builder = document.querySelector('[data-package-builder]');
         if (!builder) return;
@@ -134,7 +130,6 @@
         var packageInputs = Array.prototype.slice.call(builder.querySelectorAll('input[name="package"]'));
         var addonInputs = Array.prototype.slice.call(builder.querySelectorAll('input[name="addon"]'));
         var summaryList = builder.querySelector('[data-summary-list]');
-        var summaryTotal = builder.querySelector('[data-summary-total]');
         var reviewOutput = builder.querySelector('[data-review-output]');
         var budgetOutput = builder.querySelector('[data-review-budget]');
         var statusBox = builder.querySelector('[data-builder-status]');
@@ -151,30 +146,22 @@
             return addonInputs.filter(function (input) { return input.checked; });
         }
 
-        function estimate() {
-            var base = selectedPackage() ? Number(selectedPackage().dataset.price) : 0;
-            return selectedAddons().reduce(function (total, input) {
-                return total + Number(input.dataset.price);
-            }, base);
-        }
-
         function renderSummary() {
             var pkg = selectedPackage();
             var addons = selectedAddons();
             var rows = [];
 
             if (pkg) {
-                rows.push('<li><span>' + pkg.dataset.label + '</span><b>' + currency(pkg.dataset.price) + '</b></li>');
+                rows.push('<li><span>' + pkg.dataset.label + '</span></li>');
             }
             addons.forEach(function (input) {
-                rows.push('<li><span>' + input.dataset.label + '</span><b>+' + currency(input.dataset.price) + '</b></li>');
+                rows.push('<li><span>' + input.dataset.label + '</span></li>');
             });
             if (!rows.length) {
                 rows.push('<li class="ds-summary-empty">Nothing selected yet.</li>');
             }
 
             summaryList.innerHTML = rows.join('');
-            summaryTotal.textContent = currency(estimate());
         }
 
         // The exact text sent to the endpoint. Nothing is added or removed on submit,
@@ -185,11 +172,10 @@
             var lines = [];
 
             lines.push('PACKAGE REQUEST');
-            lines.push('Base: ' + (pkg ? pkg.dataset.label + ' ' + currency(pkg.dataset.price) : 'not selected'));
+            lines.push('Base: ' + (pkg ? pkg.dataset.label : 'not selected'));
             lines.push('Add-ons: ' + (addons.length
-                ? addons.map(function (input) { return input.dataset.short + ' ' + currency(input.dataset.price); }).join(', ')
+                ? addons.map(function (input) { return input.dataset.short; }).join(', ')
                 : 'none'));
-            lines.push('Estimate: ' + currency(estimate()) + ' (estimate only)');
 
             var project = builder.querySelector('#project-name');
             var goal = builder.querySelector('#project-goal');

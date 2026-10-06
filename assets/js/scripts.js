@@ -19,71 +19,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 /* smooth scroll -end */
 
-/* iphone-bezel hover-cycle -start */
-
-document.querySelectorAll('.iphone-bezel').forEach(bezel => {
-    const frames = bezel.querySelectorAll('.iphone-bezel-screen');
-    if (frames.length < 2) return; // nothing to cycle
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let index = 0;
-    let timer = null;
-
-    function show(i) {
-        frames.forEach((frame, fi) => frame.classList.toggle('is-active', fi === i));
-    }
-
-    function start() {
-        if (reduceMotion || timer) return;
-        timer = setInterval(() => {
-            index = (index + 1) % frames.length;
-            show(index);
-        }, 1600);
-    }
-
-    function stop() {
-        clearInterval(timer);
-        timer = null;
-        index = 0;
-        show(0);
-    }
-
-    bezel.addEventListener('mouseenter', start);
-    bezel.addEventListener('mouseleave', stop);
-    bezel.addEventListener('focusin', start);
-    bezel.addEventListener('focusout', stop);
-});
-
-/* iphone-bezel hover-cycle -end */
-
-/* create blurred background layer behind phone preview */
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.work-carousel .noraidus .item-img').forEach(itemImg => {
-        const bgUrl = itemImg.getAttribute('data-background');
-        if (bgUrl) {
-            // Create a div for the blurred background
-            const blurLayer = document.createElement('div');
-            blurLayer.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-image: url('${bgUrl}');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                filter: blur(4px);
-                z-index: 1;
-                pointer-events: none;
-            `;
-            
-            // Insert at the start of item-img so it's behind everything
-            itemImg.insertAdjacentElement('afterbegin', blurLayer);
-        }
-    });
-});
-
 document.addEventListener('pointerup', function (event) {
     if (event.pointerType !== 'touch') return;
 
@@ -247,54 +182,6 @@ $(function () {
         el.offsetHeight; // force reflow
         el.style.animation = '';
     });
-
-    /* ===============================  Swiper slider  =============================== */
-
-    if (typeof Swiper !== 'undefined') {
-
-    var swiperWorkMetro = new Swiper('.metro .swiper-container', {
-        slidesPerView: 2,
-        spaceBetween: 0,
-        speed: 2000,
-        loop: true,
-        centeredSlides: true,
-        autoplay: {
-            delay: 7000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true
-        },
-
-        breakpoints: {
-            320: {
-                slidesPerView: 1,
-                spaceBetween: 0
-            },
-            640: {
-                slidesPerView: 1,
-                spaceBetween: 0
-            },
-            767: {
-                slidesPerView: 1,
-                spaceBetween: 0,
-                centeredSlides: false,
-            },
-            991: {
-                slidesPerView: 2,
-            }
-        },
-
-        pagination: {
-            el: '.metro .swiper-pagination',
-            type: 'progressbar',
-        },
-
-        navigation: {
-            nextEl: '.metro .swiper-button-next',
-            prevEl: '.metro .swiper-button-prev'
-        },
-    });
-    } // end Swiper guard
-
 
     /* ===============================  Var Background image  =============================== */
 
