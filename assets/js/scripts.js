@@ -1,20 +1,21 @@
 /* smooth scroll -start */
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent default instant jump
+// Delegated so it also covers anchors in content the router swaps in.
+document.addEventListener('click', function (e) {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (!anchor || anchor.hasAttribute('data-bs-toggle')) return;
+    e.preventDefault(); // Prevent default instant jump
 
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
+    const targetId = anchor.getAttribute('href');
+    const targetElement = targetId.length > 1 ? document.querySelector(targetId) : null;
 
-        if (targetElement) {
-            setTimeout(() => {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }, 500); // 500ms delay
-        }
-    });
+    if (targetElement) {
+        setTimeout(() => {
+            targetElement.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }, 500); // 500ms delay
+    }
 });
 
 /* smooth scroll -end */

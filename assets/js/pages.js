@@ -359,6 +359,9 @@
         initPackageBuilder();
     }
 
+    // The client-side router calls this after swapping page content in.
+    window.DoxxusPages = { init: init };
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {

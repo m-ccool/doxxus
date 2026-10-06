@@ -1393,12 +1393,9 @@ h1 {
   padding: 40px 30px;
 }
 
-.work-carousel .swiper-slide-active .noraidus .cont {
-  opacity: 1;
-  visibility: visible;
-  -webkit-transition-delay: .5s;
-  -o-transition-delay: .5s;
-  transition-delay: .5s;
+/* Softer, unhurried slide easing (Swiper only sets the duration) */
+.work-carousel .swiper-wrapper {
+  transition-timing-function: cubic-bezier(.22, .61, .36, 1);
 }
 
 .work-carousel .next-ctrl, .work-carousel .prev-ctrl {
@@ -1596,60 +1593,51 @@ h1 {
   /*border-radius: 2rem!important;*/
 }
 
-/* Backdrop: the blurred project image behind the phone, hidden until hover */
-.work-carousel .noraidus .item-img {
-  border-radius: 22px !important;
+/* Gallery card: just the phone. The title card appears on hover / focus. */
+.work-carousel .noraidus {
+  position: relative;
+  height: 450px;
 }
 
-.work-carousel .noraidus .item-img::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--backdrop) center / cover no-repeat;
-  filter: blur(4px);
-  opacity: 0;
-  transition: opacity 600ms ease;
-  pointer-events: none;
-}
-
-.work-carousel .content:hover .item-img::before,
-.work-carousel .content:focus-within .item-img::before,
-.work-carousel .content[data-card-type="image"] .item-img::before {
-  opacity: 1;
-}
-
-/* No hover on touch: show the backdrop on the focused (active) slide instead */
-@media (hover: none) {
-  .work-carousel .swiper-slide-active .item-img::before {
-    opacity: 1;
-  }
-}
-
-/* Card title + description, iOS hierarchy: headline over subheadline */
 .work-carousel .noraidus .cont {
   z-index: 1000;
   position: absolute;
-  bottom: 0;
+  bottom: 12px;
   left: 50%;
   width: calc(100% - 1.5rem);
   padding: 0.85rem 1.1rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 0;
-  border-radius: 18px 18px 0 0 !important;
+  border-radius: 18px !important;
   background: rgba(28, 28, 30, 0.72) !important;
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
-  transform: translateX(-50%);
+  transform: translate(-50%, 8px);
   text-align: center;
   font-family: var(--ds-font-ui);
-  opacity: 0.55;
-  visibility: visible;
-  transition: opacity 400ms ease;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 400ms ease, transform 400ms ease, visibility 0s linear 400ms;
 }
 
 .work-carousel .noraidus:hover .cont,
 .work-carousel .noraidus:focus-within .cont {
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+}
+
+/* No hover on touch: show the title card on the focused (active) slide */
+@media (hover: none) {
+  .work-carousel .swiper-slide-active .noraidus .cont {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+    transition-delay: 0s;
+  }
 }
 
 .work-carousel .noraidus .cont .card-title {
@@ -1763,56 +1751,57 @@ h1 {
   transform: none;
 }
 
-/* Demo card: a Mac-style window holding a code snippet */
-.work-carousel .portfolio-window {
-  position: absolute;
-  top: calc(50% - 25px);
-  left: 50%;
-  z-index: 3;
-  width: min(92%, 420px);
-  transform: translate(-50%, -50%);
-  text-align: left;
-  background: #14151a;
-  transition: opacity 700ms ease, filter 700ms ease;
+/* Wide gallery (Build hero): full-bleed marquee that drifts and pauses on hover */
+.work-carousel--wide {
+  padding: 0;
 }
 
-.work-carousel .content:not(.is-on) .portfolio-window {
-  opacity: 0.35;
-  filter: brightness(0.5);
+.work-carousel--wide .gallery-viewport {
+  overflow: hidden;
+  width: 100%;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 
-.portfolio-window .code-snippet-display {
-  max-height: 200px;
-  margin: 0;
-  padding: 1rem 1.1rem;
-  overflow: auto;
-  font-family: var(--ds-font-mono);
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: #d7dae0;
-  background: none;
-  white-space: pre;
-  user-select: text;
+.work-carousel--wide.is-dragging .gallery-viewport {
+  cursor: grabbing;
 }
 
-.portfolio-window.is-zoomed .code-snippet-display {
-  max-height: 300px;
+.work-carousel--wide .gallery-viewport img {
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
-.code-snippet-display .cs-comment { color: #6a737d; }
-.code-snippet-display .cs-keyword { color: #ff7ab6; }
-.code-snippet-display .cs-func { color: #7ad0ff; }
-.code-snippet-display .cs-param { color: #d7dae0; }
-.code-snippet-display .cs-number { color: #f2c078; }
+/* Position, drift and drag are driven by marqueeEngine in portfolio-carousel.js */
+.work-carousel--wide .gallery-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.work-carousel--wide .gallery-half {
+  display: flex;
+  flex: none;
+}
+
+.work-carousel--wide .gallery-item {
+  flex: none;
+  width: 270px;
+  padding: 40px 14px;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .iphone-bezel-screen,
   .iphone-bezel-aura,
-  .work-carousel .portfolio-window,
-  .work-carousel .noraidus .item-img::before {
+  .work-carousel .noraidus .cont {
     transition: none;
     animation: none;
   }
+
 }
 
 /* ====================== [ End Responsive ] ====================== */
@@ -5554,12 +5543,12 @@ textarea.ds-input {
   line-height: 1.6;
 }
 
-/* Services hero: copy left, shared portfolio carousel right */
+/* Build hero: title and copy on top, full-bleed gallery across the hero */
 .ds-page-hero .ds-shell.ds-hero-split {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: var(--ds-space-4);
-  align-items: center;
+  align-items: flex-start;
 }
 
 .ds-hero-copy {
@@ -5570,16 +5559,10 @@ textarea.ds-input {
   min-width: 0;
 }
 
-.ds-hero-split .work-carousel {
+.ds-hero-split .work-carousel--wide {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
   min-width: 0;
-  padding: 0;
-}
-
-@media (min-width: 992px) {
-  .ds-page-hero .ds-shell.ds-hero-split {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(1rem, 3vw, 3rem);
-  }
 }
 
 .ds-section--tight {
@@ -5906,3 +5889,63 @@ textarea.ds-input {
   letter-spacing: .02em;
   text-align: center;
 }
+
+/* ── Route skeleton: shown in place of <main> while the router loads a page ── */
+
+.route-skeleton {
+  min-height: 100vh;
+}
+
+.sk-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: clamp(5rem, 11vw, 7.5rem) clamp(1rem, 5vw, 4rem) 3rem;
+}
+
+.sk-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sk {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sk::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+  animation: sk-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes sk-shimmer {
+  to { transform: translateX(100%); }
+}
+
+.sk-title { height: 2.2rem; width: min(26ch, 70%); }
+.sk-title.sk-w60 { width: min(18ch, 45%); }
+.sk-line { height: 1rem; width: min(62ch, 90%); }
+.sk-line.sk-w80 { width: min(48ch, 60%); }
+.sk-actions { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+.sk-btn { height: 2.6rem; width: 10rem; }
+.sk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.sk-card { height: 220px; border-radius: 16px; }
+
+main h1:focus,
+main:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk::after {
+    display: none;
+  }
+}
+

@@ -26,9 +26,9 @@
         '      <span class="last-online d-flex d-md-none justify-content-center w-100 py-1" id="last-online-mobile">last online &mdash;</span>',
         '      <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center gap-1">',
         '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#splash" title="Home" data-nav="home"><i class="typcn typcn-home-outline nav-link-icon" style="font-size: 1.2rem;"></i></a></li>',
-        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="services.html" title="Services" data-nav="services"><i class="typcn typcn-spanner nav-link-icon"></i></a></li>',
         '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#projects" title="Projects" data-nav="projects"><i class="typcn typcn-folder-open nav-link-icon"></i></a></li>',
         '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#about" title="About" data-nav="about"><i class="typcn typcn-business-card nav-link-icon"></i></a></li>',
+        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="services.html" title="Build" data-nav="build"><i class="typcn typcn-spanner nav-link-icon"></i></a></li>',
         '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contact" href="#contact" title="Contact" data-nav="contact"><i class="typcn typcn-mail nav-link-icon"></i></a></li>',
         '      </ul>',
         '    </div>',
@@ -42,7 +42,7 @@
         '    <div class="footer-cols">',
         '      <div class="footer-col-group">',
         '        <span class="footer-label" data-glitch-word>Services</span>',
-        '        <a href="services.html">Software Services</a>',
+        '        <a href="services.html">Build</a>',
         '        <a href="build.html">Build a Package</a>',
         '        <a href="services.html#it-support">IT Consultation</a>',
         '      </div>',
@@ -158,6 +158,8 @@
        on pages that host them, the #splash / #projects / #about sections. */
     var SECTION_NAV = { splash: 'home', projects: 'projects', about: 'about' };
 
+    var navApi = null;
+
     function setupNavIndicator() {
         var list = document.querySelector('.navbar .navbar-nav');
         if (!list) return;
@@ -176,13 +178,14 @@
             list.style.setProperty('--nav-ind-x', (item.offsetLeft + item.offsetWidth / 2) + 'px');
         }
 
+        // A page with no navbar item (sign in, terms) clears the marker instead of keeping the last one.
         function setCurrent(navKey) {
             var next = list.querySelector('[data-nav="' + navKey + '"]');
-            if (!next || next.classList.contains('is-current')) return;
+            if (next && next.classList.contains('is-current')) return;
             Array.prototype.forEach.call(list.querySelectorAll('.nav-link.is-current'), function (el) {
                 el.classList.remove('is-current');
             });
-            next.classList.add('is-current');
+            if (next) next.classList.add('is-current');
             moveIndicator();
         }
 
@@ -197,23 +200,34 @@
             collapse.addEventListener('transitionend', moveIndicator);
         }
 
-        var sections = Object.keys(SECTION_NAV)
-            .map(function (id) { return document.getElementById(id); })
-            .filter(Boolean);
-        if (!sections.length || !('IntersectionObserver' in window)) return;
+        var observer = null;
 
-        var covered = {};
-        var observer = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                covered[entry.target.id] = entry.isIntersecting ? entry.intersectionRect.height : 0;
-            });
-            var best = Object.keys(covered).reduce(function (winner, id) {
-                return covered[id] > 0 && (!winner || covered[id] > covered[winner]) ? id : winner;
-            }, null);
-            if (best) setCurrent(SECTION_NAV[best]);
-        }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1], rootMargin: '-20% 0px -45% 0px' });
+        // Re-binds to whichever #splash / #projects / #about sections the current page has.
+        function observeSections() {
+            if (observer) observer.disconnect();
+            observer = null;
 
-        sections.forEach(function (section) { observer.observe(section); });
+            var sections = Object.keys(SECTION_NAV)
+                .map(function (id) { return document.getElementById(id); })
+                .filter(Boolean);
+            if (!sections.length || !('IntersectionObserver' in window)) return;
+
+            var covered = {};
+            observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    covered[entry.target.id] = entry.isIntersecting ? entry.intersectionRect.height : 0;
+                });
+                var best = Object.keys(covered).reduce(function (winner, id) {
+                    return covered[id] > 0 && (!winner || covered[id] > covered[winner]) ? id : winner;
+                }, null);
+                if (best) setCurrent(SECTION_NAV[best]);
+            }, { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1], rootMargin: '-20% 0px -45% 0px' });
+
+            sections.forEach(function (section) { observer.observe(section); });
+        }
+
+        observeSections();
+        navApi = { setCurrent: setCurrent, observeSections: observeSections };
     }
 
     function resetContactForm() {
@@ -323,6 +337,13 @@
         if (!modal || !window.bootstrap) return;
         window.bootstrap.Modal.getOrCreateInstance(modal).show();
     }
+
+    // Used by the client-side router: the navbar stays mounted, only the marker moves.
+    window.SiteShell = {
+        setPage: function (key) { if (navApi) navApi.setCurrent(key); },
+        observeSections: function () { if (navApi) navApi.observeSections(); },
+        openLinkedContact: wireDeepLinkedContact
+    };
 
     function init() {
         mountChrome();
