@@ -47,22 +47,144 @@
         </div><!-- End: particle -->
 
         <div class="signin-wrap">
-            <div class="ds-box signin-card">
-                <div class="ds-box-header">
-                    <span>Client portal</span>
-                    <span class="ds-label ds-label--attention">In development</span>
+            <div class="ds-window signin-window" data-window data-window-start="expanded" data-portal="signin">
+                <div class="ds-window-bar">
+                    <span class="ds-terminal-dots">
+                        <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the sign-in panel"></button>
+                        <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Show or hide the sign-in panel"></button>
+                        <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand this panel"></button>
+                    </span>
+                    <button type="button" class="ds-window-title" data-portal-title>doxxus@portal &mdash; ~/sign-in</button>
+                    <span class="ds-window-hint">client area</span>
                 </div>
-                <div class="signin-body">
-                    <span class="ds-eyebrow">Doxxus</span>
-                    <h1>Sign in is not open yet.</h1>
-                    <p>The client portal &mdash; project status, invoice references, and scheduling &mdash; is still being built. There is no account to sign into today.</p>
-                    <div class="ds-callout ds-callout--note">
-                        <i class="typcn typcn-info-large" aria-hidden="true"></i>
-                        <span>Portal access is issued directly by me once a project starts, using the email address on your request. Nothing to set up on your end.</span>
-                    </div>
-                    <div class="signin-actions">
-                        <a class="ds-btn ds-btn--primary" href="#contact" data-bs-toggle="modal">Contact the dev</a>
-                        <a class="ds-btn" href="index.html">Back to site</a>
+                <div class="ds-window-body ds-window-body--plain">
+                    <div class="ds-window-pad signin-body">
+
+                        <div class="ds-callout ds-callout--note" data-portal-notice role="status" hidden>
+                            <i class="typcn typcn-info-large" aria-hidden="true"></i>
+                            <span class="portal-notice-body">
+                                <span data-portal-notice-text></span>
+                                <button type="button" class="portal-link" data-portal-notice-action hidden></button>
+                            </span>
+                        </div>
+
+                        <section class="signin-view" data-view="signin">
+                            <div class="signin-head">
+                                <span class="ds-eyebrow">Client portal</span>
+                                <h1>Sign in</h1>
+                                <p>Project status and billing for active clients.</p>
+                            </div>
+                            <form class="signin-form" method="post" data-portal-form="login" novalidate>
+                                <fieldset class="portal-fields" data-portal-fields>
+                                    <div class="ds-field">
+                                        <label for="portal-email">Email <span class="portal-req" aria-hidden="true">*</span></label>
+                                        <input class="ds-input" type="email" id="portal-email" name="email" autocomplete="username" inputmode="email" maxlength="254" required placeholder="you@example.com" data-portal-focus>
+                                    </div>
+                                    <div class="ds-field">
+                                        <span class="portal-label-row">
+                                            <label for="portal-password">Password <span class="portal-req" aria-hidden="true">*</span></label>
+                                            <button type="button" class="portal-link" data-portal-reveal aria-controls="portal-password" aria-pressed="false">Show</button>
+                                        </span>
+                                        <input class="ds-input" type="password" id="portal-password" name="password" autocomplete="current-password" maxlength="256" required>
+                                    </div>
+                                    <div class="portal-row portal-row--end">
+                                        <button type="button" class="portal-link" data-portal-go="forgot">Forgot password?</button>
+                                    </div>
+                                    <button class="ds-btn ds-btn--primary ds-btn--lg portal-submit" type="submit">Sign in</button>
+                                </fieldset>
+                            </form>
+                            <hr class="ds-divider">
+                            <div class="signin-foot">
+                                <p>No account yet? Accounts are created when a project starts.</p>
+                                <a class="ds-btn" href="#contact" data-bs-toggle="modal" data-contact-type="other">Contact the dev</a>
+                            </div>
+                        </section>
+
+                        <section class="signin-view" data-view="forgot" hidden>
+                            <div class="signin-head">
+                                <span class="ds-eyebrow">Client portal</span>
+                                <h1>Reset password</h1>
+                                <p>Enter the email on your account. We&rsquo;ll send a one-time link that works for 30 minutes.</p>
+                            </div>
+                            <form class="signin-form" method="post" data-portal-form="forgot" novalidate>
+                                <fieldset class="portal-fields" data-portal-fields>
+                                    <div class="ds-field">
+                                        <label for="portal-forgot-email">Email <span class="portal-req" aria-hidden="true">*</span></label>
+                                        <input class="ds-input" type="email" id="portal-forgot-email" name="email" autocomplete="username" inputmode="email" maxlength="254" required placeholder="you@example.com" data-portal-focus>
+                                    </div>
+                                    <button class="ds-btn ds-btn--primary ds-btn--lg portal-submit" type="submit">Send reset link</button>
+                                </fieldset>
+                            </form>
+                            <button type="button" class="portal-link portal-back" data-portal-go="signin">&lsaquo; Back to sign in</button>
+                        </section>
+
+                        <section class="signin-view" data-view="forgot-sent" hidden>
+                            <div class="signin-head">
+                                <span class="ds-eyebrow">Client portal</span>
+                                <h1>Check your email</h1>
+                            </div>
+                            <div class="ds-callout ds-callout--note">
+                                <i class="typcn typcn-info-large" aria-hidden="true"></i>
+                                <span>If an account exists for that email, a reset link is on its way. It expires in 30 minutes.</span>
+                            </div>
+                            <p>Nothing arrived? Check spam, then try again.</p>
+                            <div class="signin-actions">
+                                <button type="button" class="ds-btn" data-portal-go="forgot">Send again</button>
+                                <button type="button" class="portal-link portal-back" data-portal-go="signin">&lsaquo; Back to sign in</button>
+                            </div>
+                        </section>
+
+                        <section class="signin-view" data-view="reset" hidden>
+                            <div class="signin-head">
+                                <span class="ds-eyebrow">Client portal</span>
+                                <h1>New password</h1>
+                                <p>Choose a password you do not use anywhere else.</p>
+                            </div>
+                            <form class="signin-form" method="post" data-portal-form="reset" novalidate>
+                                <fieldset class="portal-fields" data-portal-fields>
+                                    <div class="ds-field">
+                                        <span class="portal-label-row">
+                                            <label for="portal-new">New password <span class="portal-req" aria-hidden="true">*</span></label>
+                                            <button type="button" class="portal-link" data-portal-reveal aria-controls="portal-new" aria-pressed="false">Show</button>
+                                        </span>
+                                        <input class="ds-input" type="password" id="portal-new" name="password" autocomplete="new-password" maxlength="256" minlength="12" required data-portal-focus>
+                                        <span class="portal-strength" data-portal-strength aria-live="polite"><i></i><i></i><i></i><i></i><span class="portal-strength-text">Minimum 12 characters</span></span>
+                                    </div>
+                                    <div class="ds-field">
+                                        <label for="portal-confirm">Confirm password <span class="portal-req" aria-hidden="true">*</span></label>
+                                        <input class="ds-input" type="password" id="portal-confirm" name="confirm" autocomplete="new-password" maxlength="256" required>
+                                    </div>
+                                    <button class="ds-btn ds-btn--primary ds-btn--lg portal-submit" type="submit">Save password</button>
+                                </fieldset>
+                            </form>
+                        </section>
+
+                        <section class="signin-view" data-view="welcome" hidden>
+                            <div class="signin-head">
+                                <span class="ds-eyebrow">Client portal</span>
+                                <h1>Welcome</h1>
+                                <p data-portal-welcome-copy>Your account is ready. Set a password to continue.</p>
+                            </div>
+                            <p class="portal-identity" data-portal-identity hidden>Signing in as <strong data-portal-identity-email></strong> <span class="portal-identity-note">(verified by this link)</span></p>
+                            <form class="signin-form" method="post" data-portal-form="welcome" novalidate>
+                                <fieldset class="portal-fields" data-portal-fields>
+                                    <div class="ds-field">
+                                        <span class="portal-label-row">
+                                            <label for="portal-welcome">Password <span class="portal-req" aria-hidden="true">*</span></label>
+                                            <button type="button" class="portal-link" data-portal-reveal aria-controls="portal-welcome" aria-pressed="false">Show</button>
+                                        </span>
+                                        <input class="ds-input" type="password" id="portal-welcome" name="password" autocomplete="new-password" maxlength="256" minlength="12" required data-portal-focus>
+                                        <span class="portal-strength" data-portal-strength aria-live="polite"><i></i><i></i><i></i><i></i><span class="portal-strength-text">Minimum 12 characters</span></span>
+                                    </div>
+                                    <div class="ds-field">
+                                        <label for="portal-welcome-confirm">Confirm password <span class="portal-req" aria-hidden="true">*</span></label>
+                                        <input class="ds-input" type="password" id="portal-welcome-confirm" name="confirm" autocomplete="new-password" maxlength="256" required>
+                                    </div>
+                                    <button class="ds-btn ds-btn--primary ds-btn--lg portal-submit" type="submit">Create password</button>
+                                </fieldset>
+                            </form>
+                        </section>
+
                     </div>
                 </div>
             </div>
@@ -81,6 +203,7 @@
     <script src="assets/js/portfolio-data.js"></script>
     <script src="assets/js/portfolio-carousel.js"></script>
     <script src="assets/js/pages.js"></script>
+    <script src="assets/js/portal.js"></script>
     <script src="assets/js/scripts.js"></script>
     <script src="assets/js/glitch.js"></script>
     <script src="assets/js/code-titles.js"></script>

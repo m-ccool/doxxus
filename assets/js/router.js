@@ -110,6 +110,7 @@
         if (window.DoxxusHome) window.DoxxusHome.stop();
         if (window.DoxxusTitles) window.DoxxusTitles.destroy(main);
         if (window.DoxxusPortfolio) window.DoxxusPortfolio.destroy(main);
+        if (window.DoxxusPortal) window.DoxxusPortal.destroy();
         if (window.bootstrap && window.bootstrap.Tooltip) {
             main.querySelectorAll('[data-bs-toggle="tooltip"], [data-bss-tooltip]').forEach(function (node) {
                 var tip = window.bootstrap.Tooltip.getInstance(node);
@@ -127,6 +128,7 @@
         if (window.DoxxusPortfolio) window.DoxxusPortfolio.init(main);
         if (window.DoxxusTitles) window.DoxxusTitles.init(main);
         if (window.DoxxusPages) window.DoxxusPages.init();
+        if (window.DoxxusPortal) window.DoxxusPortal.init(main);
         if (page === 'home' && window.DoxxusHome) window.DoxxusHome.start();
 
         if (window.bootstrap && window.bootstrap.Tooltip) {

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark" class="scrollbar-hidden" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Your account — B McCool</title>
+    <link rel="canonical" href="https://doxxus.us/account.html">
+    <meta property="og:url" content="https://doxxus.us/account.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Your account — B McCool">
+    <meta property="og:image" content="https://doxxus.us/assets/img/doxxus-icon.png">
+    <meta name="description" content="Project status and billing for B McCool clients.">
+    <meta name="robots" content="noindex">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Giga:wght@100..900&display=block">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&display=swap">
+    <link rel="icon" type="image/svg+xml" href="assets/img/favicon-globe.svg">
+    <link rel="alternate icon" type="image/png" sizes="32x32" href="assets/img/doxxus-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/doxxus-icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.min.css">
+    <link rel="stylesheet" href="assets/css/bs-theme-overrides.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <link rel="stylesheet" href="assets/css/globe.css">
+    <link rel="stylesheet" href="assets/css/particle.compiled.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="scrollbar-hidden ds-page" data-page="account">
+
+    <div class="cursor-outer"></div>
+    <div class="cursor-inner"></div>
+    <div data-site-nav></div>
+
+    <main data-portal="account">
+        <!-- Start: particle -->
+        <div id="particle" class="particle-animation-bg particle-div">
+            <div id="particle-animation-wrapper-1" class="particle-animation-wrapper">
+                <div id="particle-5" class="particle particle-1"></div>
+                <div id="particle-6" class="particle particle-2"></div>
+                <div id="particle-7" class="particle particle-4"></div>
+                <div id="particle-8" class="particle particle-3"></div>
+            </div>
+        </div><!-- End: particle -->
+
+        <header class="ds-page-hero">
+            <div class="ds-shell">
+                <span class="ds-eyebrow">Client portal</span>
+                <h1>Your account</h1>
+                <p data-account-lede>Status and billing for your projects.</p>
+                <div class="tier-actions">
+                    <a class="ds-btn ds-btn--primary ds-btn--lg" data-account-schedule role="link" aria-disabled="true" target="_blank" rel="noopener noreferrer">Schedule a call</a>
+                    <button type="button" class="ds-btn ds-btn--lg" data-account-contact-toggle aria-expanded="false" aria-controls="account-contact">Contact</button>
+                </div>
+                <p class="portal-hint" data-account-schedule-hint>No call scheduled yet. Contact the dev.</p>
+                <div class="ds-box portal-contact" id="account-contact" data-account-contact hidden>
+                    <div class="ds-box-header"><span>Contact the dev</span></div>
+                    <div class="ds-box-row">
+                        <span class="portal-muted">Email</span>
+                        <span class="portal-grow">dev@doxxus.us</span>
+                        <a class="ds-btn ds-btn--sm" href="mailto:dev@doxxus.us">Open email</a>
+                    </div>
+                    <div class="ds-box-row">
+                        <span class="portal-muted">Message</span>
+                        <span class="portal-grow">Send a note from here</span>
+                        <button type="button" class="ds-btn ds-btn--sm" data-bs-toggle="modal" data-bs-target="#contact" data-contact-type="other" data-contact-prefill>Leave a message</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="ds-section ds-section--tight" data-account-loading aria-busy="true" aria-label="Loading your account">
+            <div class="ds-shell ds-stack">
+                <div class="sk sk-card portal-sk"></div>
+                <div class="sk sk-card portal-sk"></div>
+            </div>
+        </section>
+
+        <section class="ds-section ds-section--tight" data-account-error hidden>
+            <div class="ds-shell">
+                <div class="ds-callout ds-callout--attention" role="alert">
+                    <i class="typcn typcn-warning-outline" aria-hidden="true"></i>
+                    <span>Could not load your account. <button type="button" class="portal-link" data-account-retry>Try again</button></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="ds-section ds-section--tight" data-account-content hidden>
+            <div class="ds-shell ds-stack">
+                <div class="ds-window" id="profile" data-window data-window-start="expanded" data-account-window="profile">
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the profile panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Show or hide profile"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand this panel"></button>
+                        </span>
+                        <button type="button" class="ds-window-title">doxxus@portal &mdash; ~/profile</button>
+                        <span class="ds-window-hint">your details</span>
+                    </div>
+                    <div class="ds-window-body ds-window-body--plain">
+                        <div class="ds-window-pad">
+                            <dl class="portal-kv">
+                                <div><dt>Name</dt><dd data-account-field="name"></dd></div>
+                                <div><dt>Email</dt><dd><span data-account-field="email"></span> <span class="ds-label ds-label--success" data-account-verified hidden>&check; verified</span></dd></div>
+                                <div><dt>Phone</dt><dd data-account-field="phone"></dd></div>
+                                <div><dt>Business / project</dt><dd data-account-field="business"></dd></div>
+                            </dl>
+                            <hr class="ds-divider">
+                            <div class="portal-row">
+                                <span class="portal-muted">To change any of this:</span>
+                                <button type="button" class="ds-btn ds-btn--sm" data-bs-toggle="modal" data-bs-target="#contact" data-contact-type="other" data-contact-prefill data-contact-note="I would like to change my profile: ">Request a change</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ds-window" id="projects" data-window data-window-start="expanded" data-account-window="projects">
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the projects panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Show or hide projects"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand this panel"></button>
+                        </span>
+                        <button type="button" class="ds-window-title">doxxus@portal &mdash; ~/projects</button>
+                        <span class="ds-window-hint" data-account-hint="projects"></span>
+                    </div>
+                    <div class="ds-window-body ds-window-body--plain">
+                        <div class="ds-window-pad">
+                            <p class="portal-legend" aria-hidden="true"><span class="portal-dot portal-dot--live">&#9679;</span> Live <span class="portal-dot portal-dot--progress">&#9680;</span> In progress <span class="portal-dot portal-dot--issue">&#10005;</span> Issue</p>
+                            <div data-account-projects aria-live="polite"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ds-window" id="billing" data-window data-window-start="collapsed" data-account-window="billing">
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the billing panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="false" aria-label="Show or hide billing"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand this panel"></button>
+                        </span>
+                        <button type="button" class="ds-window-title">doxxus@portal &mdash; ~/billing</button>
+                        <span class="ds-window-hint">payments</span>
+                    </div>
+                    <div class="ds-window-body ds-window-body--plain">
+                        <div class="ds-window-pad">
+                            <p class="portal-row portal-row--start"><span class="portal-muted">Subscription</span> <span class="ds-label" data-account-subscription>&mdash;</span></p>
+                            <div data-account-billing aria-live="polite"></div>
+                            <p class="portal-note">Receipts open the provider-hosted page. No amounts or card data are stored here.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ds-window" id="it-support" data-window data-window-start="expanded" data-account-window="it-support" hidden data-account-it>
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the IT support panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Show or hide IT support"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand this panel"></button>
+                        </span>
+                        <button type="button" class="ds-window-title">doxxus@portal &mdash; ~/it-support</button>
+                        <span class="ds-window-hint">clients only</span>
+                    </div>
+                    <div class="ds-window-body ds-window-body--plain">
+                        <div class="ds-window-pad">
+                            <p>Need a machine looked at? Request a diagnostic. Every IT job is quoted individually.</p>
+                            <div class="portal-row portal-row--end">
+                                <button type="button" class="ds-btn" data-bs-toggle="modal" data-bs-target="#contact" data-contact-type="repair" data-contact-prefill data-contact-note="I would like to request IT support: ">Request IT support</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ds-window" id="security" data-window data-window-start="collapsed" data-account-window="security">
+                    <div class="ds-window-bar">
+                        <span class="ds-terminal-dots">
+                            <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Reset the security panel"></button>
+                            <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="false" aria-label="Show or hide security"></button>
+                            <button type="button" class="ds-dot ds-dot--zoom" data-terminal-action="zoom" aria-label="Expand this panel"></button>
+                        </span>
+                        <button type="button" class="ds-window-title">doxxus@portal &mdash; ~/security</button>
+                        <span class="ds-window-hint">this session</span>
+                    </div>
+                    <div class="ds-window-body ds-window-body--plain">
+                        <div class="ds-window-pad">
+                            <div class="portal-row">
+                                <span><strong class="portal-strong">Password</strong> <span class="portal-muted" data-account-password-age></span></span>
+                                <button type="button" class="ds-btn ds-btn--sm" data-account-change-password>Change password</button>
+                            </div>
+                            <div class="portal-row">
+                                <span><strong class="portal-strong">This device</strong> <span class="portal-muted">Signing out ends this session only.</span></span>
+                                <button type="button" class="ds-btn ds-btn--sm" data-account-signout>Sign out</button>
+                            </div>
+                            <div class="ds-callout ds-callout--note" data-account-security-note role="status" hidden>
+                                <i class="typcn typcn-info-large" aria-hidden="true"></i>
+                                <span data-account-security-text></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div data-site-footer></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!-- plugins.js bundles Bootstrap 4 and Swiper; it must load before Bootstrap 5. -->
+    <script src="assets/js/plugins.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="assets/js/site-shell.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/portfolio-data.js"></script>
+    <script src="assets/js/portfolio-carousel.js"></script>
+    <script src="assets/js/pages.js"></script>
+    <script src="assets/js/portal.js"></script>
+    <script src="assets/js/scripts.js"></script>
+    <script src="assets/js/glitch.js"></script>
+    <script src="assets/js/code-titles.js"></script>
+    <script src="assets/js/home.js"></script>
+    <script src="assets/js/router.js"></script>
+</body>
+
+</html>

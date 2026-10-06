@@ -286,6 +286,22 @@
             note.style.height = 'auto';
             note.style.height = note.scrollHeight + 'px';
         }
+
+        // Portal buttons: a ready-made note, and the signed-in client's details (still editable).
+        var starter = trigger.dataset.contactNote;
+        if (starter && note && !note.value.trim()) {
+            note.value = starter;
+            note.style.height = 'auto';
+            note.style.height = note.scrollHeight + 'px';
+        }
+
+        var client = trigger.hasAttribute('data-contact-prefill') && window.DoxxusPortal ? window.DoxxusPortal.profile() : null;
+        if (client) {
+            [['user-1', client.name], ['email', client.email], ['phone', client.phone]].forEach(function (pair) {
+                var field = document.getElementById(pair[0]);
+                if (field && pair[1] && !field.value) field.value = pair[1].slice(0, Number(field.maxLength) > 0 ? field.maxLength : undefined);
+            });
+        }
     }
 
     function wireContactForm() {
