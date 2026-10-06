@@ -1,7 +1,7 @@
 /*
  * Client portal: the sign-in page (signin.html) and the account page (account.html).
  *
- * Sign-in is Google only, through Supabase Auth (no passwords). The page talks to Supabase
+ * Sign-in is Google or an emailed one-time code, through Supabase Auth (no passwords). The page talks to Supabase
  * directly with the public publishable key; Row Level Security in the database
  * (supabase/migrations) is what limits a signed-in client to their own rows.
  *
@@ -132,6 +132,7 @@
 
         if (!configured()) {
             button.disabled = true;
+            root.querySelectorAll('[data-portal-email-form] input, [data-portal-email-form] button').forEach(function (node) { node.disabled = true; });
             setNotice('note', CLOSED_NOTICE);
             return;
         }
@@ -145,6 +146,77 @@
             setNotice('success', 'You are signed out.');
         } else if (reason === 'expired') {
             setNotice('note', 'You were signed out for security. Sign in again to continue.');
+        }
+
+        function bindEmailCode() {
+            var sendForm = root.querySelector('[data-portal-email-form]');
+            var codeForm = root.querySelector('[data-portal-code-form]');
+            var emailInput = sendForm.elements.email;
+            var codeInput = codeForm.elements.code;
+            var sendButton = sendForm.querySelector('[data-portal-email-send]');
+            var verifyButton = codeForm.querySelector('[data-portal-code-verify]');
+            var sentTo = '';
+
+            function failure(error, fallback) {
+                var limited = error && (error.status === 429 || /rate|seconds|too many/i.test(error.message || ''));
+                setNotice('attention', limited ? 'Please wait a minute before asking for another code.' : fallback);
+            }
+
+            on(sendForm, 'submit', function (event) {
+                event.preventDefault();
+                if (sendButton.disabled) return;
+                var address = emailInput.value.trim().toLowerCase();
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address) || address.length > 254) {
+                    setNotice('attention', 'Enter the email address you gave me.');
+                    emailInput.focus();
+                    return;
+                }
+                sendButton.disabled = true;
+                notice.hidden = true;
+                getClient().auth.signInWithOtp({ email: address, options: { shouldCreateUser: true } }).then(function (result) {
+                    if (gone) return;
+                    if (result.error) return failure(result.error, 'Could not send a code. Check the address and try again.');
+                    sentTo = address;
+                    root.querySelector('[data-portal-code-email]').textContent = address;
+                    sendForm.hidden = true;
+                    codeForm.hidden = false;
+                    codeInput.value = '';
+                    codeInput.focus();
+                }).catch(function () {
+                    if (!gone) setNotice('attention', FAILED_NOTICE);
+                }).then(function () { sendButton.disabled = false; });
+            });
+
+            on(codeForm, 'submit', function (event) {
+                event.preventDefault();
+                if (verifyButton.disabled) return;
+                var token = codeInput.value.replace(/\s+/g, '');
+                if (!/^[0-9]{6,10}$/.test(token)) {
+                    setNotice('attention', 'Enter the numeric code from the email.');
+                    codeInput.focus();
+                    return;
+                }
+                verifyButton.disabled = true;
+                notice.hidden = true;
+                getClient().auth.verifyOtp({ email: sentTo, token: token, type: 'email' }).then(function (result) {
+                    if (gone) return;
+                    if (result.error || !result.data || !result.data.session) {
+                        codeInput.value = '';
+                        codeInput.focus();
+                        return setNotice('attention', 'That code is wrong or has expired. Check it, or ask for a new one.');
+                    }
+                    goTo(ACCOUNT_PAGE);
+                }).catch(function () {
+                    if (!gone) setNotice('attention', FAILED_NOTICE);
+                }).then(function () { verifyButton.disabled = false; });
+            });
+
+            on(root.querySelector('[data-portal-code-back]'), 'click', function () {
+                codeForm.hidden = true;
+                sendForm.hidden = false;
+                notice.hidden = true;
+                emailInput.focus();
+            });
         }
 
         on(button, 'click', function () {
@@ -169,6 +241,8 @@
                 }
             });
         });
+
+        bindEmailCode();
 
         // Already signed in: go straight to the account.
         getClient().auth.getSession().then(function (result) {

@@ -5731,6 +5731,43 @@ textarea.ds-input {
   justify-content: flex-start;
 }
 
+.portal-or {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  color: var(--ds-fg-subtle);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+}
+
+.portal-or::before,
+.portal-or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--ds-border-muted);
+}
+
+.portal-email {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.portal-email[hidden] {
+  display: none !important;
+}
+
+.portal-wide {
+  width: 100%;
+}
+
+.portal-code {
+  font-family: var(--ds-font-mono);
+  letter-spacing: .3em;
+  text-align: center;
+}
+
 .portal-google {
   width: 100%;
   gap: var(--ds-space-3);
