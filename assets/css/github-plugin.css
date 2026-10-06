@@ -4,18 +4,7 @@
   --color-calendar-graph-day-L2-bg: #45a045;
   --color-calendar-graph-day-L3-bg: #047526;
   --color-calendar-graph-day-L4-bg: #0a4208;
-
-  /* Glass system — must match style.css */
-  --glass-bg:     rgba(255,255,255,0.01);
-  --glass-blur:   blur(6px) saturate(120%);
-  --glass-border: 1px solid rgba(255,255,255,0.10);
-  --glass-shadow:
-    0 8px 48px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.05),
-    inset 0 -1px 0 rgba(0,0,0,0.05);
-  /* Neutral dark header — no color filters to avoid blue tint */
-  --glass-header-bg: rgba(6,6,8,0.7);
-  --glass-nav-bg: rgba(6,6,8,0.45);
+  /* Glass variables come from style.css (single source). */
 }
 
 .contrib-column {
@@ -330,10 +319,13 @@ rect.ContributionCalendar-day[data-level="4"] { fill: var(--color-calendar-graph
 
 /* Hover tooltip */
 .day-tooltip {
-  background: #1e1e22 !important;
-  color: #dddddd !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  border-radius: 6px !important;
+  background: var(--glass-dark) !important;
+  -webkit-backdrop-filter: var(--glass-dark-filter);
+  backdrop-filter: var(--glass-dark-filter);
+  color: #f2f4f8 !important;
+  border: var(--glass-border) !important;
+  box-shadow: var(--glass-dark-edge);
+  border-radius: 10px !important;
   font-size: 0.75rem !important;
 }
 
@@ -583,7 +575,7 @@ h2.f4.text-normal.mb-3 {
 }
 
 .day-tooltip strong {
-  color: #dfe2e5;
+  color: #ffffff;
 }
 
 .day-tooltip.is-visible {

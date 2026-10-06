@@ -6,16 +6,18 @@ html {
 
 /* ── Glass system variables ── */
 :root {
-  /* Near-transparent fill — dark bg shows fully through */
-  --glass-bg:     rgba(255,255,255,0.01);
+  /* Dark glass fill: panels read as smoked glass over the starfield */
+  --glass-bg:     rgba(8,8,12,0.5);
 
-  /* Moderate blur + saturation — color pop without brightness wash */
-  --glass-blur:   blur(6px) saturate(120%);
+  /* Stronger blur + saturation so the darker fill still shows depth */
+  --glass-blur:   blur(14px) saturate(130%);
 
   /* Very subtle edge line */
   --glass-border: 1px solid rgba(255,255,255,0.10);
-  --glass-dark: rgba(10, 10, 14, 0.58);
-  --glass-dark-hover: rgba(10, 10, 14, 0.42);
+
+  /* Buttons, hover cards and tooltips: the densest glass tier */
+  --glass-dark: rgba(8, 8, 12, 0.66);
+  --glass-dark-hover: rgba(8, 8, 12, 0.5);
   --glass-dark-filter: saturate(160%) blur(22px);
   --glass-dark-edge: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 
@@ -26,10 +28,10 @@ html {
     inset 0 -1px 0 rgba(0,0,0,0.05);
 
   /* Navbar/sticky-header — matches footer glass treatment */
-  --glass-nav-bg: rgba(6,6,8,0.45);
+  --glass-nav-bg: rgba(6,6,8,0.72);
 
   /* Dense header for scrolling-content panels */
-  --glass-header-bg: rgba(6,6,8,0.7);
+  --glass-header-bg: rgba(6,6,8,0.88);
 }
 
 /* root -end */
@@ -4293,8 +4295,8 @@ body { cursor: none; }
   --ds-fg-on-emphasis: #08090b;
 
   --ds-canvas-default: #0f0f10;
-  --ds-canvas-subtle: rgba(255,255,255,.035);
-  --ds-canvas-raised: rgba(255,255,255,.055);
+  --ds-canvas-subtle: rgba(255,255,255,.02);
+  --ds-canvas-raised: rgba(255,255,255,.04);
   --ds-canvas-inset: rgba(0,0,0,.26);
   --ds-canvas-overlay: rgba(14,15,18,.92);
 
@@ -4422,7 +4424,10 @@ summary:focus-visible,
   min-height: var(--ds-control-md);
   padding: 0 var(--ds-space-4);
   color: var(--ds-fg-default);
-  background: var(--ds-canvas-raised);
+  background: var(--glass-dark);
+  -webkit-backdrop-filter: var(--glass-dark-filter);
+  backdrop-filter: var(--glass-dark-filter);
+  box-shadow: var(--glass-dark-edge);
   border: 1px solid var(--ds-border-default);
   border-radius: var(--ds-radius-pill);
   font-family: var(--ds-font-ui);
@@ -4443,7 +4448,7 @@ summary:focus-visible,
 
 .ds-btn:hover {
   color: var(--ds-fg-default);
-  background: rgba(255,255,255,.1);
+  background: var(--glass-dark-hover);
   border-color: var(--ds-border-emphasis);
 }
 
@@ -5991,3 +5996,26 @@ main:focus {
   }
 }
 
+/* ── Tooltips: dark glass, light text (navbar icons, skill cards, contribution days) ── */
+
+.tooltip {
+  --bs-tooltip-bg: rgba(8, 8, 12, 0.92);
+  --bs-tooltip-color: #f2f4f8;
+  --bs-tooltip-opacity: 1;
+  --bs-tooltip-border-radius: 10px;
+  --bs-tooltip-padding-x: 0.75rem;
+  --bs-tooltip-padding-y: 0.4rem;
+  --bs-tooltip-font-size: 0.78rem;
+  font-family: var(--ds-font-ui);
+}
+
+.tooltip .tooltip-inner {
+  color: #f2f4f8;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background: var(--glass-dark);
+  -webkit-backdrop-filter: var(--glass-dark-filter);
+  backdrop-filter: var(--glass-dark-filter);
+  border: var(--glass-border);
+  box-shadow: var(--glass-dark-edge), 0 10px 28px -10px rgba(0, 0, 0, 0.75);
+}
