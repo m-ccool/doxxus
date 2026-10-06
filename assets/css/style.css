@@ -4060,6 +4060,17 @@ body { cursor: none; }
 
   --ds-dur: 200ms;
   --ds-dur-modal: 300ms;
+
+  /* macOS traffic lights: window dots are coloured while a window is open */
+  --ds-dot-size: 11px;
+  --ds-dot-close: #ff5f57;
+  --ds-dot-min: #febc2e;
+  --ds-dot-zoom: #28c840;
+  --ds-dot-close-glow: rgba(255,95,87,.75);
+  --ds-dot-min-glow: rgba(254,188,46,.75);
+  --ds-dot-zoom-glow: rgba(40,200,64,.75);
+  --ds-dot-idle: var(--ds-border-emphasis);
+  --ds-dot-glyph: rgba(var(--black-rgb),.62);
   --ds-ease: cubic-bezier(.2, 0, .2, 1);
 }
 
@@ -4541,46 +4552,88 @@ summary:focus-visible,
   line-height: 1;
 }
 
+/* macOS traffic lights.
+   Coloured while the window is open; grey once it is collapsed (until the cluster is
+   hovered, which previews the colours). Hovering the cluster fades in the glyphs and a
+   soft glow; hovering one dot lifts and brightens it; pressing it dims it. */
 .ds-dot {
-  width: 11px;
-  height: 11px;
+  --on: var(--ds-dot-idle);
+  --glow: transparent;
+  position: relative;
+  width: var(--ds-dot-size);
+  height: var(--ds-dot-size);
   padding: 0;
-  background: var(--ds-border-emphasis);
+  background: var(--on);
   border: 0;
   border-radius: 50%;
+  box-shadow: inset 0 0 0 .5px rgba(var(--black-rgb),.28), 0 0 0 0 transparent;
   cursor: pointer;
   transition: background var(--ds-dur) var(--ds-ease),
               box-shadow var(--ds-dur) var(--ds-ease),
-              transform var(--ds-dur) var(--ds-ease);
+              transform var(--ds-dur) var(--ds-ease),
+              filter var(--ds-dur) var(--ds-ease);
 }
 
-/* macOS traffic lights — each lights up on its own. */
-.ds-dot--close:hover,
-.ds-dot--close:focus-visible {
-  background: #ff5f57;
-  box-shadow: 0 0 7px rgba(255,95,87,.6);
+.ds-dot--close { --on: var(--ds-dot-close); --glow: var(--ds-dot-close-glow); }
+.ds-dot--min   { --on: var(--ds-dot-min);   --glow: var(--ds-dot-min-glow); }
+.ds-dot--zoom  { --on: var(--ds-dot-zoom);  --glow: var(--ds-dot-zoom-glow); }
+
+/* Glyph (x, minus, plus): hidden until the cluster is hovered, like macOS. */
+.ds-dot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ds-dot-glyph);
+  font: 700 9px/1 var(--ds-font-ui);
+  opacity: 0;
+  transition: opacity var(--ds-dur) var(--ds-ease);
+  pointer-events: none;
 }
 
-.ds-dot--min:hover,
-.ds-dot--min:focus-visible {
-  background: #febc2e;
-  box-shadow: 0 0 7px rgba(254,188,46,.6);
+.ds-dot--close::before { content: "\00d7"; }
+.ds-dot--min::before   { content: "\2212"; }
+.ds-dot--zoom::before  { content: "+"; }
+
+/* Collapsed window: inactive grey. */
+.ds-window.is-minimized .ds-terminal-dots:not(:hover):not(:focus-within) .ds-dot,
+.ds-terminal.is-minimized .ds-terminal-dots:not(:hover):not(:focus-within) .ds-dot {
+  background: var(--ds-dot-idle);
 }
 
-.ds-dot--zoom:hover,
-.ds-dot--zoom:focus-visible {
-  background: #28c840;
-  box-shadow: 0 0 7px rgba(40,200,64,.6);
+/* Cluster hover: glyphs and a soft glow on all three. */
+.ds-terminal-dots:hover .ds-dot:not(:disabled),
+.ds-terminal-dots:focus-within .ds-dot:not(:disabled) {
+  background: var(--on);
+  box-shadow: inset 0 0 0 .5px rgba(var(--black-rgb),.28), 0 0 6px 0 var(--glow);
 }
 
-.ds-dot:active {
-  transform: scale(.88);
+.ds-terminal-dots:hover .ds-dot:not(:disabled)::before,
+.ds-terminal-dots:focus-within .ds-dot:not(:disabled)::before {
+  opacity: 1;
 }
 
-/* Hovering anywhere in the cluster previews all three, like macOS. */
-.ds-terminal-dots:hover .ds-dot--close { background: #ff5f57; }
-.ds-terminal-dots:hover .ds-dot--min { background: #febc2e; }
-.ds-terminal-dots:hover .ds-dot--zoom { background: #28c840; }
+/* One dot: stronger glow, brighter, slightly larger. */
+.ds-dot:not(:disabled):hover,
+.ds-dot:not(:disabled):focus-visible {
+  background: var(--on);
+  box-shadow: inset 0 0 0 .5px rgba(var(--black-rgb),.28), 0 0 10px 2px var(--glow);
+  filter: brightness(1.12);
+  transform: scale(1.14);
+}
+
+.ds-dot:not(:disabled):active {
+  filter: brightness(.82);
+  transform: scale(.9);
+}
+
+/* A control that does nothing (for example the dialog's zoom) stays grey and still. */
+.ds-dot:disabled {
+  background: var(--ds-dot-idle);
+  cursor: default;
+}
 
 /* Close: wobble, vanish, fade back in. */
 .ds-window.is-rebooting,
@@ -5191,6 +5244,7 @@ textarea.ds-input {
   .ds-input,
   .ds-stepper button,
   .ds-dot,
+  .ds-dot::before,
   .ds-window-body,
   .ds-window-title,
   .ds-terminal-body {
