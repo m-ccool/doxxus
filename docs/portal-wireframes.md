@@ -1,7 +1,7 @@
 # Client portal wireframes: sign-in flow and account page
 
 **Status:** Draft for review. Low-fidelity wireframes only; nothing here is built.
-**Implements:** `docs/mvp-outline.md` -> "Client Portal MVP", "Authentication requirements", "Data Boundary", "Delivery Phases / Phase 3".
+**Implements:** `docs/mvp-outline.md` -> "Client Portal MVP", "Authentication requirements", "Admin Panel MVP", "Client Journey and Portal UX", "Data Boundary", "Delivery Phases / Phase 3".
 **Visual language:** the existing site theme: macOS-style `.ds-window` panels, `$` code titles with the typed dots, shared `ds-field` / `ds-input` / `ds-btn` / `ds-callout` styles and the dark glass tokens. No new components are invented; the one new piece is the status chip (section 5c).
 **Last reviewed:** 2026-10-06
 
@@ -510,13 +510,15 @@ Aligned to the Node API foundation in `server/` (today it only serves `GET /heal
 | D6 | Session length and "remember me" | One fixed length (suggest 12 hours idle, 7 days absolute); no remember-me. |
 | D7 | Password rules | Minimum 12 characters, no composition rules, breached-password check if feasible. |
 
+Journey-level decisions **J1-J6** and open items **O4-O6** (account creation, when an account exists, status emails, the IT-support gate, the interim manual path, prep checklist storage, interim payment method, admin sign-in) are defined in `docs/mvp-outline.md` -> "Client Journey and Portal UX" -> "Decisions for the journey".
+
 **Open items (need input, not guesses):** O1 business phone and hours for the Contact panel; O2 the scheduling mechanism (a Meet link per client vs a booking page); O3 sender address and wording for the invite, reset and verify emails.
 
 ---
 
 ## 9. Out of scope here (deliberately)
 
-The admin panel (client creation, status editing, disabling access, sending invites) gets its own wireframe set. Also out: Google login, two-factor authentication, file uploads, chat or tickets, project timelines, card forms, and multiple users per client.
+A full admin wireframe set (the admin has an inventory and three core screens in section 12). Also out: Google login, two-factor authentication, file uploads, chat or tickets, project timelines, card forms, and multiple users per client.
 
 ## 10. Build order (maps to Phase 3)
 
@@ -526,3 +528,233 @@ The admin panel (client creation, status editing, disabling access, sending invi
 4. Forgot/reset, invite and verification emails and screens.
 5. Billing window once payment references exist (needs the Phase 2 Stripe webhooks to record real data).
 6. Security window (change password), status chip polish, empty and error states.
+
+---
+
+## 11. Utility screens (client)
+
+These are the actions behind the account page (see `docs/mvp-outline.md` -> "Client Journey and Portal UX" -> "Client utilities"). They reuse the existing contact modal wherever a message is the right tool, so no new messaging system is built.
+
+### 11a. Schedule a call
+
+```text
+Enabled     [ Schedule a call ]   opens {meeting url} in a new tab
+Disabled    [ Schedule a call ]   dimmed; hint: "No call scheduled yet.
+                                  Contact the dev."
+```
+
+The meeting URL is set per client by the admin (project editor, section 12c). The button never builds a link itself.
+
+### 11b. Request a change (profile)
+
+The contact modal opens with the type preselected and the note prefilled. **When signed in, Name, Email and Phone are prefilled from the profile (still editable)**, so the request is two clicks.
+```text
+┌──────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@contact — ~/message      new message │
+├──────────────────────────────────────────────────────┤
+│ you found me.                                        │
+│ $ Leave a message ...|                               │
+│                                                      │
+│ Type                                                 │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │ Other (please specify)                           │ │
+│ └──────────────────────────────────────────────────┘ │
+│ Name                                                 │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │ {name}                                           │ │
+│ └──────────────────────────────────────────────────┘ │
+│ Email                                                │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │ {email}                                          │ │
+│ └──────────────────────────────────────────────────┘ │
+│ Phone                                                │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │ {phone}                                          │ │
+│ └──────────────────────────────────────────────────┘ │
+│ Note                                                 │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │ I would like to change my profile:               │ │
+│ └──────────────────────────────────────────────────┘ │
+│                                                      │
+│                                             [ Send ] │
+└──────────────────────────────────────────────────────┘
+```
+### 11c. Report an issue (from a project card)
+
+Same modal; only the note differs, and the project name comes from the card the client clicked.
+```text
+┌──────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@contact — ~/message      new message │
+├──────────────────────────────────────────────────────┤
+│ Type: Other   (name, email, phone prefilled)         │
+│                                                      │
+│ Note                                                 │
+│ ┌──────────────────────────────────────────────────┐ │
+│ │ Issue with {project name}:                       │ │
+│ └──────────────────────────────────────────────────┘ │
+│                                                      │
+│                                             [ Send ] │
+└──────────────────────────────────────────────────────┘
+```
+### 11d. Receipt
+
+A billing row's "View" opens the provider-hosted receipt in a new tab. Nothing is stored here beyond the reference and status.
+
+```text
+{date}        {invoice ref}    Paid      [ View ] ↗     -> provider receipt (new tab)
+```
+
+### 11e. IT support entry (eligible clients only, decision J4)
+
+Shown only when the client record carries the IT-support flag. Not shown to anyone else, so the outline's client-only rule is enforced by the page.
+```text
+┌──────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@portal — ~/it-support   clients only │
+├──────────────────────────────────────────────────────┤
+│ Need a machine looked at? Request a diagnostic.      │
+│ Every IT job is quoted individually.                 │
+│                                                      │
+│                               [ Request IT support ] │
+└──────────────────────────────────────────────────────┘
+```
+The button opens the contact modal with type "IT support" and the note prefilled.
+
+---
+
+## 12. Admin screens (low fidelity)
+
+Private and operational, not a CRM. Same window theme as the client side. This is the inventory and three core screens; a full set follows once the client page ships. Fields shown are inside the Data Boundary except the IT-support flag and the Activity list, which are additions pending approval (open item O6 in the outline).
+
+### 12a. Clients list
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@admin — ~/clients                            3 clients │
+├────────────────────────────────────────────────────────────────────────┤
+│ CLIENTS                                                 [ New client ] │
+│                                                                        │
+│ Search                                                                 │
+│ ┌────────────────────────────────┐                                     │
+│ │ name, email or business        │                                     │
+│ └────────────────────────────────┘                                     │
+│ Access: ( ) All   ( ) Active   ( ) Invited   ( ) Disabled              │
+│                                                                        │
+│ Name             Business / project       Access     Projects  Updated │
+│ ────────────────────────────────────────────────────────────────────── │
+│ {name}           {business}               Active     2         {date}  │
+│ {name}           {business}               Invited    1         {date}  │
+│ {name}           {business}               Disabled   1         {date}  │
+└────────────────────────────────────────────────────────────────────────┘
+```
+### 12b. Client detail
+
+One page, stacked windows (the same collapsible pattern as the client page): Profile, Projects, Billing, Access.
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@admin — ~/clients/{id}/profile                         │
+├────────────────────────────────────────────────────────────────────────┤
+│ Name               {name}                          [ Edit ]            │
+│ Email              {email}                                             │
+│ Phone              {phone}                                             │
+│ Business / project  {business name}                                    │
+└────────────────────────────────────────────────────────────────────────┘
+```
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@admin — ~/clients/{id}/projects                      2 │
+├────────────────────────────────────────────────────────────────────────┤
+│ Projects                                               [ Add project ] │
+│ ────────────────────────────────────────────────────────────────────── │
+│ ● Live          {project name}      updated {date}   [ Edit ]          │
+│ ◐ In progress   {project name}      updated {date}   [ Edit ]          │
+└────────────────────────────────────────────────────────────────────────┘
+```
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@admin — ~/clients/{id}/billing                         │
+├────────────────────────────────────────────────────────────────────────┤
+│ Subscription  {state}   (set by Stripe webhook, read only)             │
+│                                                                        │
+│ Date        Reference        Status    Source                          │
+│ ────────────────────────────────────────────────────────────────────── │
+│ {date}      {invoice ref}    Paid      webhook                         │
+│ {date}      {payment ref}    Pending   manual entry                    │
+│                                                                        │
+│                                                      [ Add reference ] │
+└────────────────────────────────────────────────────────────────────────┘
+```
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@admin — ~/clients/{id}/access                          │
+├────────────────────────────────────────────────────────────────────────┤
+│ Access  Active                       IT support  [x] eligible          │
+│                                                                        │
+│ [ Resend invite ]   [ Disable access ]                                 │
+│                                                                        │
+│ Invite sent {date}. Last sign-in {date}.                               │
+└────────────────────────────────────────────────────────────────────────┘
+```
+### 12c. Project editor
+
+What the admin sets here is exactly what the client sees. The preview shows the client-side chip.
+```text
+┌────────────────────────────────────────────────┐
+│ ●  ●  ●  doxxus@admin — ~/projects/{id}   edit │
+├────────────────────────────────────────────────┤
+│ Project name *                                 │
+│ ┌──────────────────────────────────────┐       │
+│ │ {project name}                       │       │
+│ └──────────────────────────────────────┘       │
+│                                                │
+│ Short description                              │
+│ ┌──────────────────────────────────────┐       │
+│ │ {short description}                  │       │
+│ └──────────────────────────────────────┘       │
+│                                                │
+│ Status                                         │
+│ ( ) Not started (internal only)                │
+│ ( ) In progress                                │
+│ (•) Live                                       │
+│ ( ) Issue                                      │
+│                                                │
+│ Live URL                                       │
+│ ┌──────────────────────────────────────┐       │
+│ │ https://                             │       │
+│ └──────────────────────────────────────┘       │
+│                                                │
+│ Meeting URL (Schedule a call)                  │
+│ ┌──────────────────────────────────────┐       │
+│ │ https://                             │       │
+│ └──────────────────────────────────────┘       │
+│                                                │
+│ Client sees:  ● Live                           │
+│                                                │
+│                     [ Cancel ]  [ Save ]       │
+└────────────────────────────────────────────────┘
+```
+### 12d. Invite and access states
+
+```text
+Invite sent
+▌ ✓ Invite sent to {email}. Status: Invited. It expires in {n} days.
+▌   [ Resend invite ]
+
+Disable access (confirmation)
+┌────────────────────────────────────────────────┐
+│ Disable access for {name}?                     │
+│ Their sessions end immediately. They will see  │
+│ "This account is not active" at next sign-in.  │
+│                         [ Cancel ]  [ Disable ]│
+└────────────────────────────────────────────────┘
+```
+
+Every create, edit, invite, resend and disable writes a line to the Activity list (actor, action, target, timestamp).
+
+### 12e. Admin screen inventory
+
+| Screen | Purpose | Notes |
+| --- | --- | --- |
+| Clients list | Find a client | Search and access filter |
+| Client detail | One page per client | Profile, Projects, Billing, Access windows |
+| Project editor | Set status, URLs | Status is the only way a client sees progress |
+| Consultations | Bookings and email state | Resend prep document and meeting link |
+| Activity | Audit trail | Read-only |
