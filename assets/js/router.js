@@ -177,13 +177,20 @@
         return Promise.race([promise, sleep(ASSET_TIMEOUT_MS)]);
     }
 
-    function addStyle(href) {
+    var MAIN_STYLE = 'assets/css/style.css';
+
+    // Cascade order matters: vendor sheets such as Font Awesome must stay BEFORE the
+    // site stylesheet (as in every page's own <head>) or they override its rules.
+    // Sheets that the target page lists after style.css go after it.
+    function addStyle(href, afterMain) {
         return new Promise(function (resolve) {
             var link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = href;
             link.onload = link.onerror = resolve;
-            document.head.appendChild(link);
+            var main = document.querySelector('link[rel="stylesheet"][href*="' + MAIN_STYLE + '"]');
+            if (main && !afterMain) main.parentNode.insertBefore(link, main);
+            else document.head.appendChild(link);
         });
     }
 
@@ -205,9 +212,11 @@
         var styles = [];
         var scripts = [];
 
+        var afterMain = false;
         doc.querySelectorAll('link[rel="stylesheet"][href]').forEach(function (link) {
             var href = new URL(link.getAttribute('href'), base).href;
-            if (!haveStyles[href]) { haveStyles[href] = true; styles.push(href); }
+            if (href.indexOf(MAIN_STYLE) !== -1) { afterMain = true; return; }
+            if (!haveStyles[href]) { haveStyles[href] = true; styles.push({ href: href, after: afterMain }); }
         });
         doc.querySelectorAll('script[src]').forEach(function (script) {
             if (script.closest('main')) return;
@@ -215,7 +224,7 @@
             if (!haveScripts[src]) { haveScripts[src] = true; scripts.push(src); }
         });
 
-        var chain = withTimeout(Promise.all(styles.map(addStyle)));
+        var chain = withTimeout(Promise.all(styles.map(function (sheet) { return addStyle(sheet.href, sheet.after); })));
         scripts.forEach(function (src) {
             chain = chain.then(function () { return withTimeout(addScript(src)); });
         });

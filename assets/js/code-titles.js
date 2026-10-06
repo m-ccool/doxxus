@@ -3,7 +3,8 @@
  * same typing animation: a "$" prompt in front; on first scroll into view the title
  * text types itself out behind a cursor; then a typed "..." and a blinking caret
  * sit after the last word, and the dots re-type every few seconds while the title
- * is on screen.
+ * is on screen. Now and then the whole title also deletes itself and types again,
+ * occasionally fumbling a key first, like someone at a terminal.
  *
  * Titles are found by selector, so the HTML stays plain headings. The prompt, dots
  * and caret are decoration (aria-hidden) and the heading carries its full text as
@@ -32,6 +33,10 @@
     var TEXT_TOTAL_MS = 1500;
     var REPLAY_MIN_MS = 7000;
     var REPLAY_SPREAD_MS = 7000;
+    var RETYPE_MIN_MS = 2500;
+    var RETYPE_SPREAD_MS = 500;
+    var TYPO_CHANCE = 0.3;
+    var TYPO_GLYPHS = 'abcdefghijklmnopqrstuvwxyz';
 
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var canAnimate = !reduceMotion && 'IntersectionObserver' in window;
@@ -114,12 +119,14 @@
         var visible = false;
         var alive = true;
         var cursor = span('ct-cursor', { 'aria-hidden': 'true' });
+        var retypeTimer = 0;
 
         function later(fn, ms) {
             entry.timer = window.setTimeout(function () { if (alive) fn(); }, ms);
         }
 
-        function render(count) {
+        // wrong: a stray character shown in place of the next real one (a typo).
+        function render(count, wrong) {
             var remaining = count;
             var active = null;
             entry.parts.forEach(function (part) {
@@ -130,6 +137,10 @@
                 if (!active && take < part.full.length) active = part;
             });
             active = active || entry.parts[entry.parts.length - 1];
+            if (wrong && active.rest.textContent) {
+                active.node.data += wrong;
+                active.rest.textContent = active.rest.textContent.slice(1);
+            }
             active.node.parentNode.insertBefore(cursor, active.node.nextSibling);
         }
 
@@ -143,20 +154,57 @@
             entry.heading.classList.remove('ct-typing');
         }
 
-        function typeText(done) {
-            var total = entry.parts.reduce(function (sum, part) { return sum + part.full.length; }, 0);
-            var base = Math.max(16, Math.min(60, TEXT_TOTAL_MS / Math.max(total, 1)));
+        function total() {
+            return entry.parts.reduce(function (sum, part) { return sum + part.full.length; }, 0);
+        }
+
+        function typeText(done, withTypos) {
+            var length = total();
+            var base = Math.max(16, Math.min(60, TEXT_TOTAL_MS / Math.max(length, 1)));
             var count = 0;
             (function step() {
                 render(count);
-                if (count >= total) {
+                if (count >= length) {
                     finishText();
                     if (done) done();
+                    return;
+                }
+                var next = fullText().charAt(count);
+                if (withTypos && /[a-z]/i.test(next) && Math.random() < TYPO_CHANCE) {
+                    var wrong = TYPO_GLYPHS.charAt(Math.floor(Math.random() * TYPO_GLYPHS.length));
+                    render(count, wrong);
+                    later(function () {
+                        render(count);
+                        later(step, base * 2);
+                    }, 240);
                     return;
                 }
                 count += 1;
                 later(step, base * (0.7 + Math.random() * 0.6));
             }());
+        }
+
+        function fullText() {
+            return entry.parts.map(function (part) { return part.full; }).join('');
+        }
+
+        function deleteText(done) {
+            var count = total();
+            var base = Math.max(10, Math.min(30, 700 / Math.max(count, 1)));
+            (function step() {
+                render(count);
+                if (count <= 0) { if (done) done(); return; }
+                count -= 1;
+                later(step, base);
+            }());
+        }
+
+        // Delete the whole title, pause, then type it again (with the odd typo).
+        function retypeText(done) {
+            splitForTyping(entry);
+            deleteText(function () {
+                later(function () { typeText(done, true); }, 280);
+            });
         }
 
         function typeDots(done) {
@@ -182,6 +230,21 @@
             }, REPLAY_MIN_MS + Math.random() * REPLAY_SPREAD_MS);
         }
 
+        // The occasional full retype. The dots re-type afterwards, and their own timer resumes.
+        function scheduleRetype() {
+            retypeTimer = window.setTimeout(function () {
+                if (!alive) return;
+                if (visible && document.visibilityState === 'visible') {
+                    window.clearTimeout(entry.timer);
+                    retypeText(function () {
+                        typeDots(function () { replay(); scheduleRetype(); });
+                    });
+                } else {
+                    scheduleRetype();
+                }
+            }, RETYPE_MIN_MS + Math.random() * RETYPE_SPREAD_MS);
+        }
+
         if (!canAnimate) {
             entry.dots.textContent = '...';
             entry.stop = function () { alive = false; };
@@ -196,7 +259,7 @@
             visible = changes[changes.length - 1].isIntersecting;
             if (visible && !seen) {
                 seen = true;
-                later(function () { typeText(function () { typeDots(replay); }); }, FIRST_DELAY_MS);
+                later(function () { typeText(function () { typeDots(replay); scheduleRetype(); }); }, FIRST_DELAY_MS);
             }
         }, { threshold: 0.6 });
         entry.observer.observe(entry.heading);
@@ -204,6 +267,7 @@
         entry.stop = function () {
             alive = false;
             window.clearTimeout(entry.timer);
+            window.clearTimeout(retypeTimer);
             entry.observer.disconnect();
             cursor.remove();
         };
