@@ -33,9 +33,9 @@
     var TEXT_TOTAL_MS = 1500;
     var REPLAY_MIN_MS = 7000;
     var REPLAY_SPREAD_MS = 7000;
-    var RETYPE_MIN_MS = 2500;
-    var RETYPE_SPREAD_MS = 500;
-    var TYPO_CHANCE = 0.3;
+    var RETYPE_MIN_MS = 40000;
+    var RETYPE_SPREAD_MS = 40000;
+    var TYPO_CHANCE = 0.07;
     var TYPO_GLYPHS = 'abcdefghijklmnopqrstuvwxyz';
 
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
