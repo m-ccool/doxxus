@@ -24,6 +24,7 @@
         '.ds-section-title',
         '.section-terminal-title',
         '.svc-consult-copy h3',
+        '.ds-modal-title',
         '[data-builder-confirm] h2'
     ].join(',');
 
@@ -254,15 +255,30 @@
         splitForTyping(entry);
         render(0);
 
+        function intro() {
+            later(function () { typeText(function () { typeDots(replay); scheduleRetype(); }); }, FIRST_DELAY_MS);
+        }
+
         var seen = false;
         entry.observer = new IntersectionObserver(function (changes) {
             visible = changes[changes.length - 1].isIntersecting;
             if (visible && !seen) {
                 seen = true;
-                later(function () { typeText(function () { typeDots(replay); scheduleRetype(); }); }, FIRST_DELAY_MS);
+                intro();
             }
         }, { threshold: 0.6 });
         entry.observer.observe(entry.heading);
+
+        // Types the title again from the start (the contact dialog does this on every open).
+        entry.retypeNow = function () {
+            window.clearTimeout(entry.timer);
+            window.clearTimeout(retypeTimer);
+            cursor.remove();
+            if (!entry.parts.length) splitForTyping(entry);
+            render(0);
+            seen = true;
+            intro();
+        };
 
         entry.stop = function () {
             alive = false;
@@ -291,6 +307,12 @@
         });
     }
 
-    window.DoxxusTitles = { init: init, destroy: destroy };
+    function retype(root) {
+        entries.forEach(function (entry) {
+            if (entry.retypeNow && (!root || root.contains(entry.heading))) entry.retypeNow();
+        });
+    }
+
+    window.DoxxusTitles = { init: init, destroy: destroy, retype: retype };
     init(document);
 }());

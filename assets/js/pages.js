@@ -14,7 +14,50 @@
        Each window owns its own traffic lights and collapse state.
        ──────────────────────────────────────────────────────────────── */
 
+    var VANISH_MS = 720;
+    var CLOSE_MS = 1150;
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Plays the shared window-close animation (wobble, vanish, fade back in).
+    // onVanish runs once the window is fully invisible, about 62% through the keyframe.
+    // Under reduced motion there is no animation, so it runs straight away. Returns
+    // false when a close is already running.
+    function playClose(win, onVanish) {
+        if (win.classList.contains('is-rebooting')) return false;
+        win.classList.remove('is-zoomed');
+        if (reducedMotion.matches) {
+            if (onVanish) onVanish();
+            return true;
+        }
+
+        win.classList.add('is-rebooting');
+        var finished = false;
+        var endAt = 0;
+
+        function finish() {
+            if (finished) return;
+            finished = true;
+            window.clearTimeout(endAt);
+            win.classList.remove('is-rebooting');
+            win.removeEventListener('animationend', onEnd);
+        }
+        function onEnd(event) {
+            if (event.target === win) finish();
+        }
+
+        win.addEventListener('animationend', onEnd);
+        // The animation can be cancelled (display:none, a dialog hiding), so never rely on animationend alone.
+        endAt = window.setTimeout(finish, CLOSE_MS + 250);
+        window.setTimeout(function () { if (onVanish) onVanish(); }, VANISH_MS);
+        return true;
+    }
+
     function initWindow(win) {
+        // Safe to call again (the router re-runs init on every navigation).
+        if (win.dataset.windowBound) return;
+        win.dataset.windowBound = '1';
+
+        var isDialog = win.dataset.windowRole === 'dialog';
         var commands = Array.prototype.slice.call(win.querySelectorAll('.ds-terminal-cmd'));
         var body = win.querySelector('.ds-window-body, .ds-terminal-body');
         var startCollapsed = win.dataset.windowStart === 'collapsed';
@@ -56,24 +99,21 @@
         setMinimized(startCollapsed);
 
         var actions = {
-            // Red — wobble, vanish, fade back in, reset to the opening state.
+            // Red — wobble, vanish, then either reset to the opening state (page windows)
+            // or ask the dialog to dismiss itself (data-window-role="dialog").
             close: function () {
-                if (win.classList.contains('is-rebooting')) return;
-                win.classList.remove('is-zoomed');
-                win.classList.add('is-rebooting');
-
-                var resetAt = window.setTimeout(function () {
+                if (isDialog) {
+                    playClose(win, function () {
+                        win.classList.add('is-vanished');
+                        win.dispatchEvent(new CustomEvent('ds-window:dismiss', { bubbles: true }));
+                    });
+                    return;
+                }
+                playClose(win, function () {
                     commands.forEach(function (command, index) {
                         setOpen(command, index === 0);
                     });
                     setMinimized(startCollapsed);
-                }, 720);
-
-                win.addEventListener('animationend', function done(event) {
-                    if (event.target !== win) return;
-                    window.clearTimeout(resetAt);
-                    win.classList.remove('is-rebooting');
-                    win.removeEventListener('animationend', done);
                 });
             },
             // Yellow — collapse the body into the title bar, click again to restore.
@@ -92,6 +132,12 @@
                 });
             }
         };
+
+        // Dialog windows reset to their opening state each time they are shown again.
+        win.addEventListener('ds-window:reset', function () {
+            win.classList.remove('is-zoomed', 'is-vanished', 'is-rebooting');
+            setMinimized(startCollapsed);
+        });
 
         // Clicking the window title toggles the same as the yellow dot.
         var title = win.querySelector('.ds-window-title');
@@ -113,9 +159,12 @@
         });
     }
 
-    function initWindows() {
-        document.querySelectorAll('[data-window]').forEach(initWindow);
+    function initWindows(root) {
+        (root || document).querySelectorAll('[data-window]').forEach(initWindow);
     }
+
+    // Shared by the page windows and the contact dialog (site-shell.js).
+    window.DoxxusWindow = { attach: initWindow, playClose: playClose };
 
     /* ────────────────────────────────────────────────────────────────
        Build page — package builder

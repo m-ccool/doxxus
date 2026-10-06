@@ -77,56 +77,66 @@
         '</footer>'
     ].join('\n');
 
+    // The contact dialog: a macOS-style window (same chrome and close animation as the
+    // page windows, see pages.js) holding the form. One definition for every page.
     var MODAL_HTML = [
-        '<div class="modal fade scrollbar-hidden" role="dialog" tabindex="-1" id="contact">',
+        '<div class="modal fade scrollbar-hidden" role="dialog" tabindex="-1" id="contact" aria-labelledby="contact-title" aria-modal="true">',
         '  <div class="modal-dialog modal-dialog-centered" role="document">',
-        '    <div class="modal-content">',
-        '      <div class="modal-header d-flex justify-content-between align-items-start">',
-        '        <div class="d-flex flex-column align-items-start">',
-        '          <span class="modal-eyebrow" data-glitch-modal>you found me.</span>',
-        '          <h2 class="modal-headline" data-glitch-modal><span class="glitch-line">Leave a</span><span class="glitch-line">Message.</span></h2>',
-        '        </div>',
-        '        <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>',
+        '    <div class="modal-content ds-window ds-modal" data-window data-window-role="dialog" data-window-start="expanded">',
+        '      <div class="ds-window-bar">',
+        '        <span class="ds-terminal-dots">',
+        '          <button type="button" class="ds-dot ds-dot--close" data-terminal-action="close" aria-label="Close the contact form"></button>',
+        '          <button type="button" class="ds-dot ds-dot--min" data-terminal-action="minimize" aria-expanded="true" aria-label="Collapse the contact form"></button>',
+        '          <button type="button" class="ds-dot ds-dot--zoom" disabled tabindex="-1" aria-hidden="true"></button>',
+        '        </span>',
+        '        <button type="button" class="ds-window-title" aria-expanded="true">doxxus@contact &mdash; ~/message</button>',
+        '        <span class="ds-window-hint">new message</span>',
         '      </div>',
-        '      <div class="modal-body">',
-        '        <p id="show_message" class="p-form-notice">sent! &#128640; we&rsquo;ll contact you in the next 24 hours!</p>',
-        '        <p id="error" class="p-form-notice">error! &#128027; please try again or email dev@doxxus.us</p>',
-        '        <form id="ajax-form" class="cf" method="post" action="javascript:void(0)">',
-        '          <div class="cf-row">',
-        '            <label class="cf-label" for="type-trigger" data-glitch-modal>TYPE</label>',
-        '            <div class="contact-select" data-contact-select>',
-        '              <input type="hidden" id="type" name="type" value="software">',
-        '              <button class="contact-select-trigger" id="type-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="type-options">',
-        '                <span>Software Development</span><i class="typcn typcn-chevron-down" aria-hidden="true"></i>',
-        '              </button>',
-        '              <div class="contact-select-options" id="type-options" role="listbox" aria-label="Project type" hidden>',
-        '                <button type="button" role="option" aria-selected="false" data-value="website">Website Development</button>',
-        '                <button type="button" role="option" aria-selected="true" data-value="software">Software Development</button>',
-        '                <button type="button" role="option" aria-selected="false" data-value="repair">IT Support / Repair</button>',
-        '                <button type="button" role="option" aria-selected="false" data-value="other">Other (please specify)</button>',
+        '      <div class="ds-window-body ds-window-body--plain">',
+        '        <div class="ds-modal-body">',
+        '          <div class="ds-modal-head">',
+        '            <span class="ds-eyebrow" data-glitch-modal>you found me.</span>',
+        '            <h2 class="ds-modal-title" id="contact-title">Leave a message</h2>',
+        '          </div>',
+        '          <div id="show_message" class="ds-callout ds-callout--success ds-modal-notice" role="status"><i class="typcn typcn-tick" aria-hidden="true"></i><span>Sent! We&rsquo;ll contact you in the next 24 hours.</span></div>',
+        '          <div id="error" class="ds-callout ds-callout--attention ds-modal-notice" role="alert"><i class="typcn typcn-warning-outline" aria-hidden="true"></i><span>Something went wrong. Please try again, or email <a href="mailto:dev@doxxus.us">dev@doxxus.us</a>.</span></div>',
+        '          <form id="ajax-form" class="cf ds-modal-form" method="post" action="javascript:void(0)">',
+        '            <div class="ds-field">',
+        '              <label for="type-trigger" data-glitch-modal>Type</label>',
+        '              <div class="contact-select" data-contact-select>',
+        '                <input type="hidden" id="type" name="type" value="software">',
+        '                <button class="contact-select-trigger ds-input" id="type-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="type-options">',
+        '                  <span>Software Development</span><i class="typcn typcn-chevron-down" aria-hidden="true"></i>',
+        '                </button>',
+        '                <div class="contact-select-options" id="type-options" role="listbox" aria-label="Project type" hidden>',
+        '                  <button type="button" role="option" aria-selected="false" data-value="website">Website Development</button>',
+        '                  <button type="button" role="option" aria-selected="true" data-value="software">Software Development</button>',
+        '                  <button type="button" role="option" aria-selected="false" data-value="repair">IT Support / Repair</button>',
+        '                  <button type="button" role="option" aria-selected="false" data-value="other">Other (please specify)</button>',
+        '                </div>',
         '              </div>',
         '            </div>',
-        '          </div>',
-        '          <div class="cf-row">',
-        '            <label class="cf-label" for="user-1" data-glitch-modal>NAME</label>',
-        '            <input class="form-control" type="text" id="user-1" name="user" required placeholder="john doe" autocomplete="name" maxlength="50">',
-        '          </div>',
-        '          <div class="cf-row">',
-        '            <label class="cf-label" for="email" data-glitch-modal>EMAIL</label>',
-        '            <input class="form-control" type="email" id="email" name="email" required placeholder="email@example.com" inputmode="email" autocomplete="email" maxlength="50">',
-        '          </div>',
-        '          <div class="cf-row">',
-        '            <label class="cf-label" for="phone" data-glitch-modal>PHONE</label>',
-        '            <input class="form-control" type="tel" id="phone" name="phone" required placeholder="1 (123) 567 8910" inputmode="tel" autocomplete="tel" maxlength="20" minlength="10">',
-        '          </div>',
-        '          <div class="cf-row cf-row-full">',
-        '            <label class="cf-label cf-label-top" for="websummary" data-glitch-modal>NOTE</label>',
-        '            <textarea class="form-control" id="websummary" name="websummary" placeholder="Explain your idea here! &#10024;" rows="3" style="overflow-y:hidden;resize:none;" required minlength="10" maxlength="500" spellcheck="true"></textarea>',
-        '          </div>',
-        '          <div class="cf-submit">',
-        '            <button class="neon-btn cf-btn" type="submit" name="submit" value="submit">Send</button>',
-        '          </div>',
-        '        </form>',
+        '            <div class="ds-field">',
+        '              <label for="user-1" data-glitch-modal>Name</label>',
+        '              <input class="ds-input" type="text" id="user-1" name="user" required placeholder="john doe" autocomplete="name" maxlength="50">',
+        '            </div>',
+        '            <div class="ds-field">',
+        '              <label for="email" data-glitch-modal>Email</label>',
+        '              <input class="ds-input" type="email" id="email" name="email" required placeholder="email@example.com" inputmode="email" autocomplete="email" maxlength="50">',
+        '            </div>',
+        '            <div class="ds-field">',
+        '              <label for="phone" data-glitch-modal>Phone</label>',
+        '              <input class="ds-input" type="tel" id="phone" name="phone" required placeholder="1 (123) 567 8910" inputmode="tel" autocomplete="tel" maxlength="20" minlength="10">',
+        '            </div>',
+        '            <div class="ds-field">',
+        '              <label for="websummary" data-glitch-modal>Note</label>',
+        '              <textarea class="ds-input" id="websummary" name="websummary" placeholder="Explain your idea here! &#10024;" rows="3" style="overflow-y:hidden;resize:none;" required minlength="10" maxlength="500" spellcheck="true"></textarea>',
+        '            </div>',
+        '            <div class="ds-modal-actions">',
+        '              <button class="ds-btn ds-btn--primary ds-btn--lg cf-btn" type="submit" name="submit" value="submit">Send</button>',
+        '            </div>',
+        '          </form>',
+        '        </div>',
         '      </div>',
         '    </div>',
         '  </div>',
@@ -149,6 +159,7 @@
 
         if (!document.getElementById('contact')) {
             document.body.insertAdjacentHTML('beforeend', MODAL_HTML);
+            if (window.DoxxusTitles) window.DoxxusTitles.init(document.getElementById('contact'));
         }
 
         setupNavIndicator();
@@ -282,9 +293,61 @@
         var form = document.getElementById('ajax-form');
         if (!modal || !form) return;
 
-        modal.addEventListener('hidden.bs.modal', resetContactForm);
+        var win = modal.querySelector('.ds-window');
+        var glitchTimer = 0;
+        var cancelGlitch = null;
+        var dismissing = false;
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        // Every way of closing (red dot, Esc, backdrop click) takes the window's close
+        // animation first, then lets Bootstrap hide the dialog.
+        function dismiss() {
+            dismissing = true;
+            window.setTimeout(function () {
+                var instance = window.bootstrap && window.bootstrap.Modal.getInstance(modal);
+                if (instance) instance.hide();
+            }, 0);
+        }
+
+        modal.addEventListener('ds-window:dismiss', dismiss);
+        modal.addEventListener('hide.bs.modal', function (event) {
+            if (dismissing || !win || !window.DoxxusWindow) return;
+            event.preventDefault();
+            window.DoxxusWindow.playClose(win, function () {
+                win.classList.add('is-vanished');
+                dismiss();
+            });
+        });
+
+        modal.addEventListener('hidden.bs.modal', function () {
+            dismissing = false;
+            window.clearTimeout(glitchTimer);
+            if (cancelGlitch) cancelGlitch();
+            cancelGlitch = null;
+            if (win) win.dispatchEvent(new CustomEvent('ds-window:reset'));
+            resetContactForm();
+            // Hand focus back to whatever opened the dialog (if it is still on the page).
+            if (opener && opener !== document.body && document.contains(opener) && opener.focus) {
+                opener.focus({ preventScroll: true });
+            }
+            opener = null;
+        });
+
+        var opener = null;
         modal.addEventListener('show.bs.modal', function (event) {
+            opener = event.relatedTarget || document.activeElement;
             applyInterest(event.relatedTarget);
+        });
+
+        // Glitch one random label each time the dialog opens, and retype the title.
+        modal.addEventListener('shown.bs.modal', function () {
+            if (window.DoxxusTitles) window.DoxxusTitles.retype(modal);
+            if (reduceMotion.matches || !window.DoxxusGlitch) return;
+            var targets = Array.prototype.slice.call(modal.querySelectorAll('[data-glitch-modal]'));
+            if (!targets.length) return;
+            glitchTimer = window.setTimeout(function () {
+                cancelGlitch = window.DoxxusGlitch.run(window.DoxxusGlitch.randomItems(targets, 1)[0]);
+            }, 450 + Math.random() * 500);
         });
 
         var note = document.getElementById('websummary');

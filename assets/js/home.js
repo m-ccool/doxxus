@@ -30,6 +30,7 @@
 
     function start() {
         stop();
+        var myGeneration = generation;
         var fill = document.getElementById('splash-bar-fill');
         var overlay = document.getElementById('splash-overlay');
         var startTime = Date.now();
@@ -154,104 +155,18 @@
             return items.sort(function(){ return Math.random() - 0.5; }).slice(0, count);
         }
 
+        // The effect itself lives in glitch.js (shared with the contact dialog).
+        // Cancelling restores the element's text, so stop() never strands scrambled text.
         function runGlitchTyping(el, onDone) {
-            if (el.classList.contains('modal-headline')) {
-                var lines = Array.from(el.querySelectorAll('.glitch-line'));
-                var lineTargets = lines.map(function (line) { return line.textContent; });
-                var lineIndex = 0;
-
-                el.classList.add('is-glitch-typing');
-
-                function typeLine() {
-                    if (lineIndex >= lines.length) {
-                        later(function(){
-                            el.classList.remove('is-glitch-typing');
-                            if (onDone) onDone();
-                        }, 160);
-                        return;
-                    }
-
-                    var line = lines[lineIndex];
-                    var targetLine = lineTargets[lineIndex];
-                    var textLine = document.createElement('span');
-                    var caretLine = document.createElement('span');
-                    var characterIndex = 0;
-
-                    textLine.className = 'glitch-line-text';
-                    caretLine.className = 'glitch-caret';
-                    caretLine.setAttribute('aria-hidden', 'true');
-                    line.replaceChildren(textLine, caretLine);
-
-                    function typeCharacter() {
-                        if (characterIndex >= targetLine.length) {
-                            caretLine.remove();
-                            lineIndex += 1;
-                            typeLine();
-                            return;
-                        }
-                        characterIndex += 1;
-                        textLine.textContent = targetLine.slice(0, characterIndex);
-                        later(typeCharacter, 80 + Math.random() * 140);
-                    }
-
-                    typeCharacter();
-                }
-
-                typeLine();
-                return;
-            }
-
-            var target = el.textContent.trim();
-            var text = document.createElement('span');
-            var caret = document.createElement('span');
-            caret.className = 'glitch-caret';
-            caret.setAttribute('aria-hidden', 'true');
-            el.textContent = '';
-            el.append(text, caret);
-            el.classList.add('is-glitch-typing');
-
-            function finish() {
-                later(function(){
-                    el.classList.remove('is-glitch-typing');
-                    if (onDone) onDone();
-                }, 160);
-            }
-
-            if (target.length === 1) {
-                var frames = 3 + Math.floor(Math.random() * 4);
-                function scrambleLetter(frame) {
-                    if (frame < frames) {
-                        text.textContent = randChar();
-                        later(function(){ scrambleLetter(frame + 1); }, 90 + Math.random() * 100);
-                        return;
-                    }
-                    text.textContent = target;
-                    finish();
-                }
-                scrambleLetter(0);
-                return;
-            }
-
-            function type(index, current) {
-                if (index < target.length) {
-                    var character = target[index];
-                    if (Math.random() < 0.28 && /[A-Za-z0-9]/.test(character)) {
-                        text.textContent = current + randChar();
-                        later(function(){ type(index, current); }, 60 + Math.random() * 100);
-                        return;
-                    }
-                    text.textContent = current + character;
-                    later(function(){ type(index + 1, current + character); }, 80 + Math.random() * 140);
-                    return;
-                }
-                finish();
-            }
-            type(0, '');
+            var cancel = DoxxusGlitch.run(el, function () {
+                if (generation === myGeneration) onDone && onDone();
+            });
+            cleanups.push(cancel);
         }
 
         function startGlitchTargets(reduceMotion) {
             if (reduceMotion) return;
-            var selector = '[data-glitch-word], [data-glitch-letter], [data-glitch-modal], #skill-cards .skill-card span';
+            var selector = '[data-glitch-word], [data-glitch-letter], #skill-cards .skill-card span';
 
             function visibleTargets() {
                 return Array.from(document.querySelectorAll(selector)).filter(function(el){
@@ -274,25 +189,11 @@
             tick(900 + Math.random() * 1300);
         }
 
-        function startContactGlitch(reduceMotion) {
-            if (reduceMotion) return;
-            var contactModal = document.getElementById('contact');
-            if (!contactModal) return;
-            var onShown = function(){
-                var targets = Array.from(contactModal.querySelectorAll('[data-glitch-modal]'));
-                if (!targets.length) return;
-                later(function(){ runGlitchTyping(randomItems(targets, 1)[0]); }, 450 + Math.random() * 500);
-            };
-            contactModal.addEventListener('shown.bs.modal', onShown);
-            cleanups.push(function(){ contactModal.removeEventListener('shown.bs.modal', onShown); });
-        }
-
         function startTyping() {
             if (typingStarted) return;
             typingStarted = true;
             var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             startGlitchTargets(reduceMotion);
-            startContactGlitch(reduceMotion);
             document.querySelectorAll('.typed-out').forEach(function(el) {
                 var textEl = el.querySelector('.brand-type-text');
                 var caretEl = el.querySelector('.brand-caret');
