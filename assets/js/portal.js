@@ -20,7 +20,7 @@
     // Publishable key: safe in the browser by design. Never put a secret key in this file.
     var SUPABASE_KEY = 'sb_publishable_7JyDWMMD_VmAODhFUNOQAw_GITR_Dn5';
     // Stripe customer portal login link (Dashboard > Settings > Billing > Customer portal). Empty = not set up yet.
-    var BILLING_PORTAL_URL = '';
+    var BILLING_PORTAL_URL = 'https://billing.stripe.com/p/login/test_bJe9AV8fwcKS8NBdhoco000';
 
     var SIGNIN_PAGE = 'signin.html';
     var ACCOUNT_PAGE = 'account.html';
