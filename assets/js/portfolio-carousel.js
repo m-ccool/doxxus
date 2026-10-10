@@ -142,6 +142,13 @@
         var last = performance.now();
         var lastHoverCheck = 0;
         var drag = { id: null, startX: 0, startPos: 0, lastX: 0, lastT: 0, v: 0 };
+        var canHover = window.matchMedia('(hover: hover)').matches;
+
+        // iOS keeps :hover stuck after a tap, so only trust it on hover-capable devices;
+        // a tapped card is tracked through .is-selected (see trackCards).
+        function isHot() {
+            return !!mount.querySelector((canHover ? '.content:hover, ' : '') + '.content.is-selected');
+        }
 
         function refresh() {
             track = mount.querySelector('.gallery-track');
@@ -175,7 +182,7 @@
             // Enter/leave events are lost during pointer capture, so re-read :hover a few times a second.
             if (!dragging && now - lastHoverCheck > 120) {
                 lastHoverCheck = now;
-                var nowHovered = !!mount.querySelector('.content:hover');
+                var nowHovered = isHot();
                 if (nowHovered !== hovered) { hovered = nowHovered; retarget(); }
             }
 
@@ -231,12 +238,12 @@
             mount.classList.remove('is-dragging');
             if (moved) velocity = Math.max(-3000, Math.min(3000, drag.v));
             // Pointer capture swallows the "leave" event, so re-read the hover state.
-            hovered = !!mount.querySelector('.content:hover');
+            hovered = isHot();
             retarget();
         }
 
-        function leave() {
-            if (dragging) return;
+        function leave(event) {
+            if (dragging || event.pointerType === 'touch') return;
             hovered = false;
             retarget();
         }
@@ -261,9 +268,11 @@
         }
 
         function over(event) {
+            if (event.pointerType === 'touch') return;
             if (!dragging && event.target.closest && event.target.closest('.content')) { hovered = true; retarget(); }
         }
         function out(event) {
+            if (event.pointerType === 'touch') return;
             var content = event.target.closest && event.target.closest('.content');
             if (content && !content.contains(event.relatedTarget)) { hovered = false; retarget(); }
         }
@@ -358,7 +367,10 @@
             var s = state(content);
             var on = always || s.inView;
             content.classList.toggle('is-on', on);
-            if (!on) stopCycle(content);
+            if (!on) {
+                stopCycle(content);
+                content.classList.remove('is-selected');
+            }
         }
 
         function refreshAll() {
@@ -395,6 +407,7 @@
         }
 
         function onOver(event) {
+            if (event.pointerType === 'touch') return;
             var content = contentOf(event.target);
             if (!content) return;
             state(content).hover = true;
@@ -402,11 +415,46 @@
             if (content.classList.contains('is-on')) startCycle(content);
         }
         function onOut(event) {
+            if (event.pointerType === 'touch') return;
             var content = contentOf(event.target);
             if (!content || content.contains(event.relatedTarget)) return;
             state(content).hover = false;
             stopCycle(content);
             apply(content);
+        }
+
+        // Touch has no hover: a tap selects a card (aura + title card), a drag or a tap
+        // elsewhere releases it. This replaces iOS's sticky :hover, which fired late and unevenly.
+        var touch = { x: 0, y: 0 };
+
+        function clearSelection(except) {
+            mount.querySelectorAll('.content.is-selected').forEach(function (content) {
+                if (content === except) return;
+                content.classList.remove('is-selected');
+                stopCycle(content);
+            });
+        }
+        function onTouchDown(event) {
+            if (event.pointerType !== 'touch') return;
+            touch.x = event.clientX;
+            touch.y = event.clientY;
+        }
+        function onTouchMove(event) {
+            if (event.pointerType !== 'touch') return;
+            if (Math.abs(event.clientX - touch.x) > 8 || Math.abs(event.clientY - touch.y) > 8) clearSelection();
+        }
+        function onTouchUp(event) {
+            if (event.pointerType !== 'touch') return;
+            if (Math.abs(event.clientX - touch.x) > 10 || Math.abs(event.clientY - touch.y) > 10) return;
+            var content = contentOf(event.target);
+            clearSelection(content);
+            if (content && content.classList.contains('is-on')) {
+                content.classList.add('is-selected');
+                startCycle(content);
+            }
+        }
+        function onDocDown(event) {
+            if (!mount.contains(event.target)) clearSelection();
         }
         function onFocusIn(event) {
             var content = contentOf(event.target);
@@ -425,6 +473,10 @@
 
         mount.addEventListener('pointerover', onOver);
         mount.addEventListener('pointerout', onOut);
+        mount.addEventListener('pointerdown', onTouchDown);
+        mount.addEventListener('pointermove', onTouchMove);
+        mount.addEventListener('pointerup', onTouchUp);
+        document.addEventListener('pointerdown', onDocDown);
         mount.addEventListener('focusin', onFocusIn);
         mount.addEventListener('focusout', onFocusOut);
 
@@ -440,6 +492,10 @@
             mutations.disconnect();
             mount.removeEventListener('pointerover', onOver);
             mount.removeEventListener('pointerout', onOut);
+            mount.removeEventListener('pointerdown', onTouchDown);
+            mount.removeEventListener('pointermove', onTouchMove);
+            mount.removeEventListener('pointerup', onTouchUp);
+            document.removeEventListener('pointerdown', onDocDown);
             mount.removeEventListener('focusin', onFocusIn);
             mount.removeEventListener('focusout', onFocusOut);
             mount.querySelectorAll('.content').forEach(function (content) {

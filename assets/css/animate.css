@@ -91,33 +91,6 @@
   }
 }
 
-@keyframes slow-blink {
-  0% {
-    transform: scale(.05);
-    transition: ease;
-    opacity: 0;
-  }
-  50% {
-    transition: ease;
-    opacity: .5;
-  }
-  75% {
-    transform: scale(1);
-    opacity: 1;
-    transition: ease;
-  }
-  100% {
-    transform: scale(1.5);
-    transition: ease;
-    opacity: .5;
-  }
-  to {
-    transform: scale(.5);
-    transition: ease;
-    opacity: .2;
-  }
-}
-
 #web-portfolio-frame {
   box-shadow: 5px 5px 20px 0px rgb(0,0,0);
 }
@@ -2888,10 +2861,6 @@ main {
   font-size: 1.25em;
   color: white;
   text-shadow: 0px 0px 20px rgba(255,255,255,0.25);
-}
-
-.p.p-explore {
-  letter-spacing: .5rem;
 }
 
 #html-5-icon {

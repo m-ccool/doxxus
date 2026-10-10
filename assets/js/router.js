@@ -8,8 +8,8 @@
  *
  * Fail closed: any fetch, parse or asset error falls back to a normal navigation.
  *
- * Page lifecycles: DoxxusPortfolio.destroy/init, DoxxusHome.stop/start,
- * DoxxusPages.init, SiteShell.setPage/observeSections.
+ * Page lifecycles: DoxxusPortfolio.destroy/init, DoxxusHome.stop/start, DoxxusExplore.destroy/init,
+ * DoxxusPortal, DoxxusAccount and DoxxusAdmin.destroy/init, DoxxusPages.init, SiteShell.setPage/observeSections.
  */
 (function () {
     'use strict';
@@ -108,9 +108,12 @@
 
     function leave(main) {
         if (window.DoxxusHome) window.DoxxusHome.stop();
+        if (window.DoxxusExplore) window.DoxxusExplore.destroy(main);
         if (window.DoxxusTitles) window.DoxxusTitles.destroy(main);
         if (window.DoxxusPortfolio) window.DoxxusPortfolio.destroy(main);
         if (window.DoxxusPortal) window.DoxxusPortal.destroy();
+        if (window.DoxxusAdmin) window.DoxxusAdmin.destroy();
+        if (window.DoxxusAccount) window.DoxxusAccount.destroy();
         if (window.bootstrap && window.bootstrap.Tooltip) {
             main.querySelectorAll('[data-bs-toggle="tooltip"], [data-bss-tooltip]').forEach(function (node) {
                 var tip = window.bootstrap.Tooltip.getInstance(node);
@@ -129,7 +132,10 @@
         if (window.DoxxusTitles) window.DoxxusTitles.init(main);
         if (window.DoxxusPages) window.DoxxusPages.init();
         if (window.DoxxusPortal) window.DoxxusPortal.init(main);
+        if (window.DoxxusAdmin) window.DoxxusAdmin.init(main);
+        if (window.DoxxusAccount) window.DoxxusAccount.init(main);
         if (page === 'home' && window.DoxxusHome) window.DoxxusHome.start();
+        if (window.DoxxusExplore) window.DoxxusExplore.init(main);
 
         if (window.bootstrap && window.bootstrap.Tooltip) {
             main.querySelectorAll('[data-bs-toggle="tooltip"], [data-bss-tooltip]').forEach(function (node) {
@@ -275,9 +281,16 @@
         target.focus({ preventScroll: true });
     }
 
+    // A #tab link (account.html#project) has no element with that id: it points at a tab, so aim at its tab set.
+    function tabTarget(id) {
+        var tab = document.querySelector('[data-tabs] [role="tab"][data-tab="' + id.replace(/[^A-Za-z0-9_-]/g, '') + '"]');
+        return tab ? tab.closest('[data-tabs]') : null;
+    }
+
     function scrollToHash(hash, smooth) {
         if (hash.length > 1) {
-            var target = document.getElementById(decodeURIComponent(hash.slice(1)));
+            var id = decodeURIComponent(hash.slice(1));
+            var target = document.getElementById(id) || tabTarget(id);
             if (target) {
                 target.scrollIntoView({ behavior: smooth ? scrollBehavior() : 'auto' });
                 return true;
@@ -347,7 +360,10 @@
         if (normalize(url.pathname) === currentPath) {
             // Same page: just move to the section (or top).
             history.replaceState({ y: window.scrollY }, '');
+            var before = location.href;
             history.pushState({ y: 0 }, '', url.href);
+            // pushState does not fire hashchange; pages with tabs (account, admin) listen for it.
+            if (before !== url.href) window.dispatchEvent(new HashChangeEvent('hashchange', { oldURL: before, newURL: url.href }));
             if (url.hash === '#contact' && window.SiteShell) window.SiteShell.openLinkedContact();
             else if (!scrollToHash(url.hash, true)) window.scrollTo({ top: 0, behavior: scrollBehavior() });
             return;

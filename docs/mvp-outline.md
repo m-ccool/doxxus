@@ -316,8 +316,12 @@ Clients receive an account tied to the contact email used during consultation or
 
 ### Client view
 
-- Contact information
-- Active project cards
+One dashboard with four tabs (Overview, Project, Files & links, Account), deep-linkable by hash:
+
+- Contract summary, read-only (plan, start date, agreed price, billing terms, contract link, status)
+- Project outline: five fixed phases (Discovery, Design, Build, Review, Launch) with optional custom milestones and a progress bar
+- Documents and links the admin shares (private files are served through short-lived signed links; clients cannot upload)
+- Contact details; the client edits only an additional contact, the admin owns the rest
 - Project name and short description
 - Live URL where available
 - Status indicator
@@ -333,7 +337,7 @@ Clients receive an account tied to the contact email used during consultation or
 - Red: Issue or unavailable
 - Gray, internal use: Not started or awaiting client information
 
-The portal should remain a status and billing surface, not a full project-management application.
+The portal should remain a status, documents and billing surface, not a full project-management application.
 
 ### Authentication requirements
 
@@ -350,8 +354,9 @@ The admin panel supports the liaison and manager workflow.
 
 Required capabilities:
 
-- Create and edit clients
-- Create and edit projects
+- Create and edit clients, including contract fields (built)
+- Create and edit projects, with phase states and milestones (built)
+- Share links and upload files to a client, with per-item visibility (built)
 - Assign project status
 - Add project descriptions and live URLs
 - Add invoice and payment references
@@ -372,12 +377,12 @@ Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 ### Stack
 
 - **Static site** on GitHub Pages. **Supabase** project `doxxus_db`: Postgres (`clients`, `projects`, `submissions`), Auth (Google and email code), Edge Function `contact`. Email is sent from the existing `dev@doxxus.us` Namecheap Private Email mailbox over SMTP (no extra vendor). **Stripe** with no code (Payment Links, Invoicing, customer portal).
-- Schema and function source are in `supabase/`. Admin work is done in the Supabase table editor until an admin screen is worth building.
+- Schema and function source are in `supabase/`. The admin hub (`admin.html`) covers day-to-day work: create and edit clients, contracts, projects, phases, milestones, links, files and notes. The IT-support and disabled switches are still set in the Supabase table editor.
 
 ### Task list
 
 **A. Client pages**
-- [x] `signin.html` (Google button, email-code sign-in, honest closed state) and `account.html` (Profile, Projects, Billing link, IT support for flagged clients, Security) **[Built]**
+- [x] `signin.html` (Google button, email-code sign-in, honest closed state) and `account.html` (tabbed dashboard: Overview, Project, Files & links, Account; additional contact is the only client-editable data) **[Built]**
 - [x] Utilities: Schedule a call, Contact panel, Request a change, Report an issue, Request IT support, Sign out; the contact dialog prefills from the profile **[Built]**
 - [x] "Not linked" state for an account with no client row **[Built]**
 
@@ -389,10 +394,21 @@ Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 - [ ] Keep-alive or Pro plan, because free projects pause after a week idle
 
 **C. Payments (no code)**
-- [ ] Stripe account, Payment Links for the $150 consult and $100 IT diagnostic, `thanks.html` with the prep checklist, customer portal link set as `BILLING_PORTAL_URL` in `portal.js`
+- [ ] Stripe account, Payment Links for the $150 consult and $100 IT diagnostic, `thanks.html` with the prep checklist, customer portal link set as `BILLING_PORTAL_URL` in `account.js`
 
-**D. Later**
-- [ ] Admin screen, Stripe webhook sync, activity log
+**D. Admin hub** (`admin.html`, `admin.js`, migration `20261009000000_admin.sql`)
+- [x] Admin sign-in: the same login, with `app_metadata.role = 'admin'` (decision O5). After signing in, admins land on the hub and clients on their account; the navbar account menu shows the right links for each **[Built]**
+- [x] Hub: every client and their projects, search, a status control per project, private notes (per client or project), and the latest contact / package submissions **[Built]**
+- [ ] Apply the migration and set your admin claim (see the comment at the top of the migration), then sign out and back in
+
+**D2. Portal v2** (`account.js`, `admin.js`, `admin-projects.js`, `admin-files.js`, `portal-ui.js`, migration `20261010000000_portal_v2.sql`)
+- [x] Master-detail admin hub: client list with search and filter; per-client tabs for Overview, Contract & contact, Projects, Files & links, Notes; create client from a submission **[Built]**
+- [x] Contract fields on `clients`; a trigger lets signed-in non-admins update only `extra_contact` **[Built]**
+- [x] Fixed phases plus custom milestones per project; links and private file uploads (`client-files` bucket) **[Built]**
+- [ ] Apply the migration, then run the hand-test checklist at its bottom against the real project (live RLS and storage are untested)
+
+**E. Later**
+- [ ] Stripe webhook sync, activity log
 
 ### Decisions
 
@@ -406,13 +422,15 @@ Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 | J6 | Consultation prep checklist | Emailed only, not stored in the portal |
 | O6 | Data Boundary additions | **Approved**: IT-support flag, activity log, notification preference (see "Data Boundary") |
 
-Open: **O1** business phone and hours (the Contact panel shows the email only until supplied), **O2** how calls are scheduled, **O3** email sender and wording, **O4** how payment is taken before Stripe, **O5** admin sign-in (default: same login with an admin role).
+Open: **O1** business phone and hours (the Contact panel shows the email only until supplied), **O2** how calls are scheduled, **O3** email sender and wording, **O4** how payment is taken before Stripe, ~~**O5** admin sign-in~~ resolved: same login, `app_metadata.role = 'admin'`.
 
 ### Acceptance checks
 
 - Adding a `clients` row lets that email sign in and see only its own data.
 - A status change made by the admin is visible to that client on the next load.
 - A client with `disabled = true` sees the "not linked" message and no data.
+- A client can change only their additional contact; any other write is rejected by the database.
+- A file marked hidden, or belonging to another client, is never listed or downloadable.
 - A client never sees "Not started" projects.
 - No screen shows a value outside the Data Boundary.
 - The public site stays usable while Supabase is down.
@@ -496,7 +514,7 @@ Keep the public site and private API deployment separate so the showcase can rem
 
 ### Phase 3: Client portal
 
-Accounts are created by the admin (decision J1): a `clients` row in the Supabase table editor is the whole invite, so the table editor serves as the admin tool until a screen is worth building.
+Accounts are created by the admin (decision J1): a `clients` row in the Supabase table editor is the whole invite. The admin hub now creates and edits clients and projects too.
 
 - [x] Create client account at project start by adding a `clients` row (decisions J1, J2)
 - [x] Google and email-code sign-in through Supabase Auth
@@ -509,14 +527,14 @@ Accounts are created by the admin (decision J1): a `clients` row in the Supabase
 
 ### Phase 4: Admin panel
 
-- [ ] Add client management
-- [ ] Add project management
-- [ ] Add status updates
+- [x] Add client management
+- [x] Add project management
+- [x] Add status updates (admin hub)
 - [ ] Add meeting-link management
 - [ ] Add invoice references
 - [ ] Add consultation tracking
 - [ ] Add payment visibility
-- [ ] Add an admin screen for clients and projects (until then: the Supabase table editor, including the IT-support flag and the disabled switch)
+- [x] Add an admin screen for clients and projects: create, edit, status, phases, milestones, links, files and notes (the IT-support flag and the disabled switch are still in the Supabase table editor)
 - [ ] Add the activity (audit) list
 
 ### Phase 5: Payment expansion
@@ -539,7 +557,7 @@ Accounts are created by the admin (decision J1): a `clients` row in the Supabase
 - **Bitcoin:** Deferred pending operational decision
 - **Authentication:** Google or emailed one-time code through Supabase Auth; no passwords. Built and tested end to end (`signin.html`, `account.html`, `assets/js/portal.js`)
 - **Client portal:** Minimal profile, project, status, invoice, and scheduling scope defined; `account.html` built against the planned API; admin tools outlined in "Client Journey and Portal UX"
-- **Admin panel:** Required for MVP operations; scope intentionally small
+- **Admin panel:** Admin hub built (clients, contracts, projects, phases, milestones, links, files, notes, submissions); needs both migrations applied and the admin claim set
 - **Journey:** The interim manual path (form to email) is built; the automated path is planned. Journey decisions J1-J6 have defaults; open items O1-O5 remain
 - **Data policy:** Contact and project metadata only
 - **Implementation:** Phase 1 public surface complete; Node backend foundation started
@@ -581,6 +599,6 @@ The MVP is ready when:
 
 - **README changes:** This outline is separate so the existing project README remains a technical repository summary. Add a README link only after the outline is approved.
 - **Full hosting platform:** Hosting provisioning is outside the first sale and requires more infrastructure than the current service model needs.
-- **In-portal chat and files:** Email and external meeting tools cover the initial communication workflow with less stored personal data.
+- **In-portal chat and client uploads:** Email and external meeting tools cover the initial communication workflow with less stored personal data. The admin can share files; clients cannot upload.
 - **Bitcoin subscriptions:** Confirmation and recurring-payment operations are not worth the initial complexity.
 - **Password login:** Not built. Google sign-in and emailed codes avoid storing passwords.

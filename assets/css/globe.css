@@ -1,202 +1,212 @@
-:root {
-  --borders: 0.2em solid whitesmoke;
-}
-
-.globediv::before, .globediv::after, .inner::before, .inner::after, .outter::before, .outter::after, .flare::before, .flare::after, .globe::before, .globe::after, .under-glow::before, .under-glow::after {
-  content: "";
-  display: block;
-  position: absolute;
-  border-radius: 50%;
-}
-
-.globediv {
-  /*transform: scale(2.5);*/
-  height: 120px;
-  width: 120px;
+/* ── Hero globe stage: the globe, the stars orbiting it, and the lens flare ─────────
+   The stars and the flare are drawn on canvases by explore-prompt.js; this file only places them.
+   Sizes derive from the globe's own font-size, so everything scales with it. --globe-d is the globe's
+   rendered diameter (the icon is drawn at 1.75x). The stage itself only animates transform and opacity. */
+.globe-stage {
+  --globe-d: calc(1.75 * (10rem + 10vw));
   position: relative;
-  animation: 5s linear infinite bob;
+  isolation: isolate;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: calc(1 - var(--handoff, 0) * .75);
+  transform: perspective(900px) translate3d(0, calc(var(--handoff, 0) * -32px), 0) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 700ms cubic-bezier(.2, .7, .2, 1), opacity 700ms ease;
 }
 
-.globediv * {
-  border-radius: 50%;
-  position: absolute;
-  transform-origin: center center;
-}
-
-.globediv::before {
-  top: 5.95em;
-  height: 0.1em;
-  width: 12em;
-  border-top: var(--borders);
-  z-index: 2;
-}
-
-.globediv::after {
-  left: 5.95em;
-  height: 12em;
-  width: 0.1em;
-  border-right: var(--borders);
-  z-index: 2;
-}
-
-.globe {
-  height: 12em;
-  width: 12em;
-  background-color: transparent;
+.globe-stage #globe-container {
+  position: relative;
   z-index: 1;
 }
 
-.globe::before {
-  height: inherit;
-  width: 8em;
-  border-left: var(--borders);
-  border-right: var(--borders);
-  left: 2em;
-}
-
-.globe::after {
-  height: inherit;
-  width: 4em;
-  border-left: var(--borders);
-  border-right: var(--borders);
-  left: 4em;
-}
-
-.globe > .inner {
-  border-bottom: var(--borders);
-  height: 3em;
-  width: 10em;
-  top: 1.2em;
-  left: 1em;
-}
-
-.globe > .outer {
-  border-bottom: var(--borders);
-  height: 2em;
-  width: 6em;
-  top: -0.2em;
-  left: 3em;
-}
-
-.inner::after {
-  border-bottom: inherit;
-  height: inherit;
-  width: inherit;
-  top: 6.4em;
-  transform: scaleY(-1);
-}
-
-.outer::after {
-  border-bottom: inherit;
-  height: inherit;
-  width: inherit;
-  top: 10.2em;
-  transform: scaleY(-1);
-}
-
-.under-glow {
-  height: 12em;
-  width: 12em;
-  background: linear-gradient( 105deg, var(--bs-secondary) 25%, transparent 80%, rgba(255,255,255,0.03));
-  box-shadow: -0.2em 0 0.5em 0.3em #60ffff;
-  animation: 10s ease infinite hueRotate;
-}
-
-.flare {
-  transform: scale(2);
-  filter: blur(2px);
-  height: 1em;
-  width: 0.25em;
-  background-color: rgba(255,255,255,0.5);
-  box-shadow: 0 0 2em 1em rgba(255,255,255,0.5);
+/* Stars: one per project card, drawn on two canvases by explore-prompt.js. The back canvas sits
+   under the globe icon and the front one over it, so a star passes behind and then in front. */
+.globe-orbit {
   position: absolute;
-  top: 6em;
-  opacity: 0;
-  animation: 20s ease-in-out infinite flare;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.orbit-canvas {
+  position: absolute;
+  pointer-events: none;
+}
+
+.orbit-canvas--back {
+  z-index: 0;
+}
+
+.orbit-canvas--front {
   z-index: 2;
 }
-
-@keyframes flare {
-  from {
-    transform: rotate(0deg) scaleX(1);
-    opacity: 0;
-  }
-  5% {
-    transform: rotate(-720deg) scaleX(20);
-    opacity: 1;
-  }
-  10% {
-    transform: rotate(-1080deg) scaleX(1);
-    opacity: 0;
-  }
+/* Click burst (see explore-prompt.js): a small version of the lens flare plus sparkles */
+.star-pop,
+.spark {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
 }
 
+.star-pop {
+  --pop-d: calc(var(--globe-d) * .42);
+  width: var(--pop-d);
+  height: var(--pop-d);
+  isolation: isolate;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.15);
+  animation: pop-spin .95s cubic-bezier(.3, 0, .2, 1) both;
+}
+
+.star-pop::before,
+.star-pop::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 4px;
+  margin-top: -2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 30%, #fff 47%, #fff 53%, rgba(255, 255, 255, 0) 70%), var(--rainbow-gradient);
+  -webkit-mask-image: radial-gradient(closest-side, #000 20%, rgba(0, 0, 0, .55) 60%, transparent);
+  mask-image: radial-gradient(closest-side, #000 20%, rgba(0, 0, 0, .55) 60%, transparent);
+  transform: scaleX(0);
+  animation: pop-stretch .95s cubic-bezier(.3, 0, .2, 1) both;
+}
+
+.star-pop::after {
+  animation-name: pop-stretch-v;
+}
+
+/* Soft gaussian glow behind the click flare: the rainbow gradient under a white heart, blurred so it melts into the scene */
+.star-pop-glow {
+  position: absolute;
+  inset: -4%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 55%), var(--rainbow-gradient);
+  -webkit-mask-image: radial-gradient(closest-side, #000 15%, rgba(0, 0, 0, .5) 55%, transparent);
+  mask-image: radial-gradient(closest-side, #000 15%, rgba(0, 0, 0, .5) 55%, transparent);
+  filter: blur(14px);
+  opacity: .75;
+  transform: scale(.4);
+  animation: pop-glow .95s cubic-bezier(.3, 0, .2, 1) both;
+}
+
+@keyframes pop-glow {
+  0% { opacity: 0; transform: scale(.4); }
+  22% { opacity: .75; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+
+.star-pop-core {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff 0, #fff 2%, rgba(255, 255, 255, .7) 5%, rgba(255, 255, 255, .15) 9%, rgba(255, 255, 255, 0) 14%);
+}
+
+@keyframes pop-spin {
+  0% { opacity: 0; transform: translate(-50%, -50%) rotate(0deg) scale(.15); }
+  22% { opacity: 1; transform: translate(-50%, -50%) rotate(-140deg) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) rotate(-300deg) scale(.2); }
+}
+
+@keyframes pop-stretch {
+  0%, 100% { transform: scaleX(0); }
+  22% { transform: scaleX(1); }
+}
+
+@keyframes pop-stretch-v {
+  0%, 100% { transform: rotate(90deg) scaleX(0); }
+  22% { transform: rotate(90deg) scaleX(.6); }
+}
+
+/* Sparkle: a soft glint (animated with the Web Animations API). Blurred, with feathered cross rays,
+   so it fades in and out of the scene rather than snapping. */
+.spark {
+  margin: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--c-glow, #fff) 0, var(--c, #bd8aff) 38%, transparent 72%);
+}
+
+.spark::before,
+.spark::after {
+  content: "";
+  position: absolute;
+  left: -90%;
+  top: 50%;
+  width: 280%;
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, var(--c, #bd8aff) 30%, var(--c-glow, #fff) 50%, var(--c, #bd8aff) 70%, transparent);
+  opacity: .7;
+}
+
+.spark::after {
+  transform: rotate(90deg);
+}
+
+/* Lens flare: drawn on a canvas in the same style as the stars (see drawFlare in explore-prompt.js).
+   This is only its host: above the globe, and additive
+   (mix-blend-mode: screen only ever adds light, so the globe keeps its colour).
+   Each flare moves the host to a new spot on the globe (left/top are set from script). */
+.flare {
+  --flare-d: calc(var(--globe-d) * 1.9);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  width: var(--flare-d);
+  height: var(--flare-d);
+  margin: calc(var(--flare-d) / -2) 0 0 calc(var(--flare-d) / -2);
+  pointer-events: none;
+  isolation: isolate;
+  mix-blend-mode: screen;
+}
+
+.flare-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 @keyframes bob {
-  from {
-    transform: translateY(-0.6em);
-  }
-  25% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(0.6em);
-  }
-  75% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-0.6em);
-  }
+  from { transform: translate3d(0, -10px, 0); }
+  to { transform: translate3d(0, 10px, 0); }
 }
 
-@keyframes color-borders {
-  from {
-    border-color: var(--bs-teal);
-  }
-  20% {
-    border-color: var(--bs-green);
-  }
-  40% {
-    border-color: var(--bs-yellow);
-  }
-  60% {
-    border-color: var(--bs-red);
-  }
-  80% {
-    border-color: var(--bs-pink);
-  }
-  100% {
-    border-color: var(--bs-indigo);
-  }
+/* Slow colour drift for the hero gradients: shifts hue inside the palette instead of
+   repainting a background-position sweep through huge clipped text every frame. */
+@keyframes hue-drift {
+  from { filter: hue-rotate(-25deg); }
+  to { filter: hue-rotate(25deg); }
 }
 
-@keyframes color-wheel {
-  from {
-    transform: rotate(0deg);
-    box-shadow: -0.5em 0 1em 0.7em ghostwhite;
-  }
-  20% {
-    transform: rotate(72deg);
-    box-shadow: -0.2em -0.1em 1em 0.3em skyblue;
-  }
-  40% {
-    transform: rotate(144deg);
-    box-shadow: -0.2em -0.2em 1em 0.3em springgreen;
-  }
-  60% {
-    transform: rotate(216deg);
-    box-shadow: -0.2em -0.2em 1em 0.3em yellow;
-  }
-  80% {
-    transform: rotate(288deg);
-    box-shadow: -0.2em -0.1em 1em 0.3em lightpink;
-  }
-  100% {
-    transform: rotate(360deg);
-    box-shadow: -0.5em 0 1em 0.7em ghostwhite;
-  }
+/* Paused while the hero is off-screen (class set by explore-prompt.js) */
+#splash.is-offscreen,
+#splash.is-offscreen *,
+#splash.is-offscreen *::before,
+#splash.is-offscreen *::after {
+  animation-play-state: paused !important;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .flare,
+  .globe-orbit {
+    display: none;
+  }
+
+  .globe-stage {
+    transform: none;
+    transition: none;
+  }
+}
 .globe-icon {
   position: relative;
   font-size: calc(10rem + 10vw);
@@ -232,6 +242,11 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: gradient 5s ease infinite;
+  animation: none;
+  background-position: 15% 50%;
+}
+
+.icon-globe.rainbow-gradient.globe-icon {
+  animation: hue-drift 14s ease-in-out infinite alternate;
 }
 

@@ -25,11 +25,15 @@
         '    <div class="collapse navbar-collapse justify-content-end" id="navcol-2" style="font-family: Dongle, sans-serif;">',
         '      <span class="last-online d-flex d-md-none justify-content-center w-100 py-1" id="last-online-mobile">last online &mdash;</span>',
         '      <ul class="navbar-nav d-flex flex-row justify-content-center align-items-center gap-1">',
-        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#splash" title="Home" data-nav="home"><i class="typcn typcn-home-outline nav-link-icon" style="font-size: 1.2rem;"></i></a></li>',
-        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#projects" title="Projects" data-nav="projects"><i class="typcn typcn-folder-open nav-link-icon"></i></a></li>',
-        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="index.html#about" title="About" data-nav="about"><i class="typcn typcn-business-card nav-link-icon"></i></a></li>',
-        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" href="services.html" title="Build" data-nav="build"><i class="typcn typcn-spanner nav-link-icon"></i></a></li>',
-        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contact" href="#contact" title="Contact" data-nav="contact"><i class="typcn typcn-mail nav-link-icon"></i></a></li>',
+        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" href="index.html#splash" title="Home" data-nav="home"><i class="typcn typcn-home-outline nav-link-icon" style="font-size: 1.2rem;"></i></a></li>',
+        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" href="index.html#projects" title="Projects" data-nav="projects"><i class="typcn typcn-folder-open nav-link-icon"></i></a></li>',
+        '        <li class="nav-item nav-account" data-account>',
+        '          <a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" href="signin.html" title="Sign in" data-nav="account" data-account-link><i class="typcn typcn-user-outline nav-link-icon"></i></a>',
+        '          <button type="button" class="nav-link nav-account-toggle d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" title="Account" data-nav="account" data-account-toggle aria-haspopup="menu" aria-expanded="false" aria-label="Account menu" hidden><i class="typcn typcn-user nav-link-icon"></i><span class="nav-account-dot" aria-hidden="true"></span></button>',
+        '          <div class="nav-menu" role="menu" aria-label="Account" data-account-menu hidden></div>',
+        '        </li>',
+        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" href="services.html" title="Build" data-nav="build"><i class="typcn typcn-spanner nav-link-icon"></i></a></li>',
+        '        <li class="nav-item"><a class="nav-link d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contact" data-bss-tooltip="" data-bs-placement="bottom" href="#contact" title="Contact" data-nav="contact"><i class="typcn typcn-mail nav-link-icon"></i></a></li>',
         '      </ul>',
         '    </div>',
         '  </div>',
@@ -59,7 +63,7 @@
         '      <div class="footer-col-group">',
         '        <span class="footer-label" data-glitch-word>Contact</span>',
         '        <a href="mailto:dev@doxxus.us">dev@doxxus.us</a>',
-        '        <a href="signin.html">Client Sign In</a>',
+        '        <a href="signin.html">Sign in</a>',
         '      </div>',
         '    </div>',
         '    <div class="footer-bottom">',
@@ -165,11 +169,14 @@
         }
 
         setupNavIndicator();
+        setupAccount();
     }
 
     /* Sliding gradient marker under the active nav item. Follows body[data-page] and,
-       on pages that host them, the #splash / #projects / #about sections. */
-    var SECTION_NAV = { splash: 'home', projects: 'projects', about: 'about' };
+       on pages that host them, the #splash / #projects sections. The portal pages (sign in, account,
+       admin) all mark the account item. */
+    var SECTION_NAV = { splash: 'home', projects: 'projects' };
+    var PAGE_NAV = { signin: 'account', account: 'account', admin: 'account' };
 
     var navApi = null;
 
@@ -191,14 +198,16 @@
             list.style.setProperty('--nav-ind-x', (item.offsetLeft + item.offsetWidth / 2) + 'px');
         }
 
-        // A page with no navbar item (sign in, terms) clears the marker instead of keeping the last one.
+        // A page with no navbar item (terms) clears the marker instead of keeping the last one.
+        // The account item has two faces (sign-in link, account button), so every match is marked.
         function setCurrent(navKey) {
-            var next = list.querySelector('[data-nav="' + navKey + '"]');
-            if (next && next.classList.contains('is-current')) return;
+            navKey = PAGE_NAV[navKey] || navKey;
+            var next = list.querySelectorAll('[data-nav="' + navKey + '"]');
+            if (next.length && next[0].classList.contains('is-current')) return;
             Array.prototype.forEach.call(list.querySelectorAll('.nav-link.is-current'), function (el) {
                 el.classList.remove('is-current');
             });
-            if (next) next.classList.add('is-current');
+            Array.prototype.forEach.call(next, function (el) { el.classList.add('is-current'); });
             moveIndicator();
         }
 
@@ -215,7 +224,7 @@
 
         var observer = null;
 
-        // Re-binds to whichever #splash / #projects / #about sections the current page has.
+        // Re-binds to whichever #splash / #projects sections the current page has.
         function observeSections() {
             if (observer) observer.disconnect();
             observer = null;
@@ -416,10 +425,236 @@
         window.bootstrap.Modal.getOrCreateInstance(modal).show();
     }
 
+    /* ── account button ──────────────────────────────────────────────
+       Signed out it is a plain link to the sign-in page. Signed in it opens a small menu: the client portal
+       for clients, the admin hub for admins (role = app_metadata.role in the Supabase session).
+
+       Who is signed in is read from the session Supabase keeps in localStorage, so ordinary pages do not
+       have to load the Supabase library. That is for display only: the portal pages check the session for
+       real, and the database enforces access with row-level security either way. */
+
+    var SUPABASE_REF = new URL(CONTACT_ENDPOINT).hostname.split('.')[0];
+    var AUTH_KEY = 'sb-' + SUPABASE_REF + '-auth-token';
+    var SUPABASE_SRC = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js';
+    var SUPABASE_SRI = 'sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok';
+
+    var MENUS = {
+        client: [
+            { label: 'Overview', href: 'account.html#overview', icon: 'typcn-th-large-outline' },
+            { label: 'Project', href: 'account.html#project', icon: 'typcn-folder-open' },
+            { label: 'Files & links', href: 'account.html#files', icon: 'typcn-attachment-outline' },
+            { label: 'Account', href: 'account.html#account', icon: 'typcn-user-outline' }
+        ],
+        admin: [
+            { label: 'Clients', href: 'admin.html#clients', icon: 'typcn-group-outline' },
+            { label: 'New client', href: 'admin.html#new', icon: 'typcn-user-add-outline' },
+            { label: 'Submissions', href: 'admin.html#submissions', icon: 'typcn-mail' }
+        ]
+    };
+    function decodeJwt(token) {
+        try {
+            var part = String(token).split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(decodeURIComponent(Array.prototype.map.call(atob(part), function (ch) {
+                return '%' + ('00' + ch.charCodeAt(0).toString(16)).slice(-2);
+            }).join('')));
+        } catch (error) {
+            return null;
+        }
+    }
+
+    // { email, role: 'admin' | 'client' } for a stored, still-usable session; otherwise null.
+    function storedSession() {
+        try {
+            var stored = JSON.parse(window.localStorage.getItem(AUTH_KEY) || 'null');
+            if (!stored || typeof stored !== 'object') return null;
+            var live = stored.refresh_token || (stored.access_token && stored.expires_at * 1000 > Date.now());
+            if (!live) return null;
+            var user = stored.user || decodeJwt(stored.access_token) || {};
+            var role = user.app_metadata && user.app_metadata.role;
+            return { email: String(user.email || ''), role: role === 'admin' ? 'admin' : 'client' };
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function loadScript(src, integrity) {
+        return new Promise(function (resolve, reject) {
+            var script = document.createElement('script');
+            script.src = src;
+            if (integrity) {
+                script.integrity = integrity;
+                script.crossOrigin = 'anonymous';
+            }
+            script.onload = resolve;
+            script.onerror = function () { reject(new Error('could not load ' + src)); };
+            document.body.appendChild(script);
+        });
+    }
+
+    // Sign out from any page: the portal script (and Supabase under it) is only fetched when needed.
+    function signOutEverywhere() {
+        var ready = Promise.resolve();
+        if (!window.supabase) ready = ready.then(function () { return loadScript(SUPABASE_SRC, SUPABASE_SRI); });
+        if (!window.DoxxusUI) ready = ready.then(function () { return loadScript('assets/js/portal-ui.js?v=20261010e'); });
+        if (!window.DoxxusPortal) ready = ready.then(function () { return loadScript('assets/js/portal.js?v=20261010e'); });
+        return ready.then(function () { return window.DoxxusPortal.signOut(); });
+    }
+
+    var accountApi = null;
+
+    function setupAccount() {
+        var item = document.querySelector('[data-account]');
+        if (!item) return;
+        var link = item.querySelector('[data-account-link]');
+        var toggle = item.querySelector('[data-account-toggle]');
+        var menu = item.querySelector('[data-account-menu]');
+        var open = false;
+        var shown = null;     // the "role:email" the menu was last built for
+
+        function tip(node) {
+            return window.bootstrap && window.bootstrap.Tooltip ? window.bootstrap.Tooltip.getInstance(node) : null;
+        }
+
+        function setOpen(next) {
+            if (next === open) return;
+            open = next;
+            menu.hidden = !open;
+            toggle.setAttribute('aria-expanded', String(open));
+            item.classList.toggle('is-open', open);
+            var tooltip = tip(toggle);
+            if (open && tooltip) tooltip.hide();
+        }
+
+        function buildMenu(session) {
+            menu.textContent = '';
+
+            var head = document.createElement('div');
+            head.className = 'nav-menu-head';
+            var label = document.createElement('span');
+            label.className = 'nav-menu-label';
+            label.textContent = session.role === 'admin' ? 'Admin' : 'Signed in as';
+            var email = document.createElement('span');
+            email.className = 'nav-menu-email';
+            email.textContent = session.email || 'your account';
+            head.appendChild(label);
+            head.appendChild(email);
+            menu.appendChild(head);
+
+            MENUS[session.role].forEach(function (entry) {
+                var anchor = document.createElement('a');
+                anchor.className = 'nav-menu-item';
+                anchor.setAttribute('role', 'menuitem');
+                anchor.href = entry.href;
+                var icon = document.createElement('i');
+                icon.className = 'typcn ' + entry.icon;
+                icon.setAttribute('aria-hidden', 'true');
+                anchor.appendChild(icon);
+                anchor.appendChild(document.createTextNode(entry.label));
+                menu.appendChild(anchor);
+            });
+
+            var out = document.createElement('button');
+            out.type = 'button';
+            out.className = 'nav-menu-item nav-menu-item--out';
+            out.setAttribute('role', 'menuitem');
+            var outIcon = document.createElement('i');
+            outIcon.className = 'typcn typcn-power-outline';
+            outIcon.setAttribute('aria-hidden', 'true');
+            out.appendChild(outIcon);
+            out.appendChild(document.createTextNode('Sign out'));
+            menu.appendChild(out);
+
+            var note = document.createElement('p');
+            note.className = 'nav-menu-note';
+            note.setAttribute('role', 'status');
+            note.hidden = true;
+            menu.appendChild(note);
+
+            out.addEventListener('click', function () {
+                if (out.disabled) return;
+                out.disabled = true;
+                note.hidden = true;
+                signOutEverywhere().catch(function () {
+                    out.disabled = false;
+                    note.textContent = 'Could not sign out. Try again.';
+                    note.hidden = false;
+                });
+            });
+        }
+
+        function refresh() {
+            var session = storedSession();
+            link.hidden = !!session;
+            toggle.hidden = !session;
+            if (!session) {
+                setOpen(false);
+                shown = null;
+                menu.textContent = '';
+                return;
+            }
+            var key = session.role + ':' + session.email;
+            if (key !== shown) {
+                shown = key;
+                buildMenu(session);
+            }
+        }
+
+        function items() {
+            return Array.prototype.slice.call(menu.querySelectorAll('[role="menuitem"]:not(:disabled)'));
+        }
+
+        toggle.addEventListener('click', function () { setOpen(!open); });
+
+        // Open from the keyboard onto the first item; arrows, Home/End and Escape work inside the menu.
+        toggle.addEventListener('keydown', function (event) {
+            if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+            event.preventDefault();
+            setOpen(true);
+            var all = items();
+            if (all.length) (event.key === 'ArrowUp' ? all[all.length - 1] : all[0]).focus();
+        });
+
+        menu.addEventListener('keydown', function (event) {
+            var all = items();
+            var at = all.indexOf(document.activeElement);
+            if (event.key === 'ArrowDown') all[(at + 1) % all.length].focus();
+            else if (event.key === 'ArrowUp') all[(at - 1 + all.length) % all.length].focus();
+            else if (event.key === 'Home') all[0].focus();
+            else if (event.key === 'End') all[all.length - 1].focus();
+            else if (event.key === 'Escape' || event.key === 'Tab') {
+                setOpen(false);
+                if (event.key === 'Escape') toggle.focus();
+                return;
+            } else return;
+            event.preventDefault();
+        });
+
+        // Picking a link ends the menu (the router swaps the page without reloading the navbar).
+        menu.addEventListener('click', function (event) {
+            if (event.target.closest && event.target.closest('a')) setOpen(false);
+        });
+
+        document.addEventListener('pointerdown', function (event) {
+            if (open && !item.contains(event.target)) setOpen(false);
+        });
+        document.addEventListener('keydown', function (event) {
+            if (open && event.key === 'Escape') setOpen(false);
+        });
+
+        // Another tab signing in or out; the portal calls refreshAccount() for this tab.
+        window.addEventListener('storage', function (event) {
+            if (event.key === AUTH_KEY) refresh();
+        });
+
+        refresh();
+        accountApi = { refresh: refresh, close: function () { setOpen(false); } };
+    }
     // Used by the client-side router: the navbar stays mounted, only the marker moves.
     window.SiteShell = {
-        setPage: function (key) { if (navApi) navApi.setCurrent(key); },
+        setPage: function (key) { if (navApi) navApi.setCurrent(key); if (accountApi) accountApi.close(); },
         observeSections: function () { if (navApi) navApi.observeSections(); },
+        refreshAccount: function () { if (accountApi) accountApi.refresh(); },
+        session: storedSession,
         openLinkedContact: wireDeepLinkedContact
     };
 

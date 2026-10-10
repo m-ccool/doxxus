@@ -950,63 +950,168 @@ h1 {
   }
 }
 
-.icon-scroll-down {
-  animation: slow-blink 3s ease-in-out infinite;
-  margin-top: 2px;
-  font-size: 1.5rem;
-  color: #39d353;
-  display: block;
+/* ── Explore prompt: a y/n command, plain text on the page (see explore-prompt.js) ──
+   The whole line is clickable (it continues, like Y); only the red n is a separate target. n turns the
+   line red and "sad" (is-sad): the text is backspaced and retyped with a longer frown each time. */
+
+.explore-prompt {
+  --ep-green: #39d353;
+  --ep-red: #ff3b3b;
+  --ep-accent: var(--ep-green);
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Retro cascade pulse — overrides animate.css @keyframes slow-blink */
-@keyframes slow-blink {
-  0%   { opacity: 0.08; text-shadow: 0 0 2px rgba(57,211,83,0.1); }
-  50%  { opacity: 1;   text-shadow: 0 0 10px #39d353, 0 0 22px rgba(57,211,83,0.45); }
-  100% { opacity: 0.08; text-shadow: 0 0 2px rgba(57,211,83,0.05); }
+.explore-prompt.is-sad {
+  --ep-accent: var(--ep-red);
 }
 
-@keyframes retro-explore-glow {
-  0%, 100% { opacity: 0.55; text-shadow: 0 0 4px rgba(57,211,83,0.15); }
-  50%       { opacity: 1;   text-shadow: 0 0 12px rgba(57,211,83,0.8), 0 0 26px rgba(57,211,83,0.25); }
+.explore-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .6ch;
+  min-height: 44px;
+  padding: 0 .75rem;
+  white-space: nowrap;
+  color: var(--ds-fg-default);
+  font: 500 clamp(.8rem, .72rem + .3vw, .95rem)/1 var(--ds-font-mono);
+  letter-spacing: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 250ms ease;
 }
 
-@keyframes cursor-blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+.explore-prompt.is-sad .explore-pill {
+  color: var(--ep-red);
 }
 
-@keyframes explore-idle {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.05); }
+.explore-ps1 {
+  color: var(--ep-accent);
+  opacity: .9;
+  user-select: none;
+  transition: color 250ms ease;
 }
 
-.p.p-explore {
-  font-family: 'Lexend Giga', sans-serif;
-  font-size: calc(0.4rem + 0.3vw);
-  color: #39d353;
-  margin-top: 1.4rem;
+.explore-choices {
+  color: var(--ds-fg-subtle);
+}
+
+.explore-prompt.is-sad .explore-choices {
+  color: var(--ep-red);
+}
+
+.explore-key {
+  position: relative;
+  padding: .15em .2em;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 250ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Invisible padding so each key is a 44px touch target without spreading the characters apart */
+.explore-key::after {
+  content: "";
+  position: absolute;
+  inset: -14px -5px;
+}
+
+.explore-key--yes {
+  color: var(--ep-accent);
+  font-weight: 700;
+}
+
+.explore-key--no {
+  color: var(--ep-red);
+  font-weight: 700;
+}
+
+/* Hovering the line (anywhere but the n) lights up Y: that is what a click will do */
+.explore-pill:hover:not(:has(.explore-key--no:hover)) .explore-key--yes,
+.explore-key--yes:hover,
+.explore-prompt.is-confirm .explore-key--yes {
+  background: rgba(57, 211, 83, .16);
+}
+
+.explore-prompt.is-sad .explore-pill:hover:not(:has(.explore-key--no:hover)) .explore-key--yes,
+.explore-prompt.is-sad .explore-key--yes:hover {
+  background: rgba(255, 59, 59, .16);
+}
+
+.explore-key--no:hover {
+  background: rgba(255, 59, 59, .16);
+}
+
+.explore-key:focus-visible {
+  outline: 2px solid var(--ep-accent);
+  outline-offset: 2px;
+}
+
+.explore-tail:empty {
+  display: none;
+}
+
+.explore-echo {
   display: inline-block;
-  animation: retro-explore-glow 3s ease-in-out infinite, explore-idle 4s ease-in-out infinite;
+  color: var(--ep-accent);
 }
 
-.p.p-explore::after {
-  content: '_';
-  animation: cursor-blink 1.2s step-end infinite;
-  font-size: 0.8em;
-  vertical-align: baseline;
+.explore-echo:empty {
+  display: none;
 }
 
-#explore-anim a {
+/* Zero-width caret that sits wherever the next character will go, so it never shifts the text */
+.explore-caret {
+  position: relative;
   display: inline-block;
-  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0;
+  height: 1.15em;
+  vertical-align: -.2em;
+  pointer-events: none;
 }
 
-#explore-anim a:active {
-  opacity: 0.25;
-  transform: scale(0.93) translateY(8px);
-  transition: opacity 0.18s ease, transform 0.18s ease;
+.explore-caret::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1px;
+  width: 2px;
+  height: 100%;
+  background: var(--ep-accent);
+  box-shadow: 0 0 8px var(--ep-accent);
+  animation: caret-soft-blink 1300ms ease-in-out infinite;
+  transition: background-color 250ms ease, box-shadow 250ms ease;
 }
 
+/* Typing in (explore-prompt.js): untyped characters keep their space but stay hidden */
+.explore-rest {
+  visibility: hidden;
+}
+
+/* The caret stays solid while characters are being typed or deleted */
+.explore-prompt.is-writing .explore-caret::after {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explore-caret::after {
+    animation: none;
+  }
+
+  .explore-pill,
+  .explore-ps1,
+  .explore-key,
+  .explore-caret::after {
+    transition: none;
+  }
+}
 .inner-bar {
   /*background-size: 200% 250%;*/
   text-align: right!important;
@@ -1432,7 +1537,7 @@ h1 {
   padding: 0.85rem 1.1rem 1rem;
   border: 1px solid rgba(var(--white-rgb), 0.1);
   border-radius: 18px !important;
-  background: var(--glass-dark) !important;
+  background: var(--glass-solid) !important;
   -webkit-backdrop-filter: var(--glass-dark-filter);
   backdrop-filter: var(--glass-dark-filter);
   box-shadow: var(--glass-dark-edge), 0 12px 32px -12px rgba(var(--black-rgb), 0.7);
@@ -1445,18 +1550,9 @@ h1 {
   transition: opacity 400ms ease, transform 400ms ease, visibility 0s linear 400ms;
 }
 
-.work-carousel .noraidus:hover .cont,
-.work-carousel .noraidus:focus-within .cont {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translate(-50%, 0);
-  transition-delay: 0s;
-}
-
-/* No hover on touch: show the title card on the focused (active) slide */
-@media (hover: none) {
-  .work-carousel .swiper-slide-active .noraidus .cont {
+/* Hover-capable pointers reveal the title card on hover; touch uses .is-selected (set on tap). */
+@media (hover: hover) {
+  .work-carousel .noraidus:hover .cont {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -1465,6 +1561,19 @@ h1 {
   }
 }
 
+.work-carousel .noraidus:focus-within .cont,
+.work-carousel .content.is-selected .cont {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+}
+
+.work-carousel .gallery-viewport {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
 .work-carousel .noraidus .cont .card-title {
   margin: 0;
   font: var(--ds-title-weight) var(--ds-text-md)/1.25 var(--ds-title-font);
@@ -1550,9 +1659,25 @@ h1 {
   pointer-events: none;
 }
 
-.work-carousel .content.is-on:hover .iphone-bezel-aura,
+.work-carousel .content.is-on.is-selected .iphone-bezel-aura,
 .work-carousel .content.is-on:focus-within .iphone-bezel-aura {
   opacity: 0.55;
+}
+
+@media (hover: hover) {
+  .work-carousel .content.is-on:hover .iphone-bezel-aura {
+    opacity: 0.55;
+  }
+}
+
+/* Touch: the blurred, animated aura is repainted every frame while the strip moves, which
+   stutters on iOS. Keep it static and let only its opacity change. */
+@media (hover: none) {
+  .iphone-bezel-aura {
+    animation: none;
+    background-size: 100% 100%;
+    will-change: opacity;
+  }
 }
 
 .iphone-bezel-notch {
@@ -1666,8 +1791,21 @@ section {
   padding-left: 2.5vw!important;
 }
 
+/* Anchor jumps (explore prompt, nav, router hashes) stop just below the sticky navbar instead of under it */
+#projects {
+  --nav-clearance: 3.1rem;
+  scroll-margin-top: calc(var(--nav-clearance) + .75rem);
+}
+
+@media (min-width: 768px) {
+  #projects {
+    --nav-clearance: 3.95rem;
+  }
+}
+
+/* The globe is drawn at 1.75x, so it overflows its layout box by .375em at the bottom; clear that, plus a gap. */
 #explore-anim {
-  margin-top: -5rem;
+  margin-top: calc(.375 * (10rem + 10vw) + 2rem);
   z-index: 1;
 }
 
@@ -1747,15 +1885,6 @@ body {
   backface-visibility: hidden;
 }
 
-.div-comet {
-  z-index: -5;
-  height: 100%;
-  overflow: visible!important;
-  transform: translate(1000px);
-  flex: 1 1 auto!important;
-  display: flex!important;
-}
-
 .bubble-div {
   z-index: 2!important;
   position: relative;
@@ -1811,9 +1940,10 @@ body {
   animation: brand-glow-pulse 3.2s ease-in-out infinite;
 }
 
+/* Same outline glow as a drop-shadow, so it animates on the GPU instead of repainting the text */
 @keyframes brand-glow-pulse {
-  0%, 100% { text-shadow: 0 0 6px rgba(var(--white-rgb),0.25), 0 0 16px rgba(var(--white-rgb),0.1); }
-  50%       { text-shadow: 0 0 14px rgba(var(--white-rgb),0.75), 0 0 34px rgba(var(--white-rgb),0.35); }
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(var(--white-rgb),0.25)) drop-shadow(0 0 16px rgba(var(--white-rgb),0.1)); }
+  50%       { filter: drop-shadow(0 0 14px rgba(var(--white-rgb),0.75)) drop-shadow(0 0 34px rgba(var(--white-rgb),0.35)); }
 }
 
 /* cursor sized relative to the wordmark's own font-size, same soft glow as .p-explore */
@@ -1963,8 +2093,8 @@ body {
 .section-terminal-suffix {
   display: inline-flex;
   align-items: baseline;
-  min-width: 2.1em;
-  margin-left: 0.3em;
+  min-width: 2.3em;
+  margin-left: 0.08em;
   color: var(--ds-accent-fg);
   font-family: var(--ds-font-mono);
   font-weight: 500;
@@ -1973,24 +2103,28 @@ body {
 
 .section-terminal-text {
   display: inline-block;
-  min-width: 1.8em;
   color: inherit;
-  transition: opacity 180ms ease, filter 180ms ease;
-}
-
-.section-terminal-suffix.is-typing .section-terminal-text {
-  opacity: 0.7;
-  filter: brightness(1.35);
 }
 
 .section-terminal-caret {
   width: 0.09em;
   height: 0.9em;
-  margin-left: 0.18em;
+  margin-left: 0.1em;
   vertical-align: -0.08em;
   background: currentColor;
   box-shadow: 0 0 10px currentColor;
-  animation: caret-blink-glow 900ms ease-in-out infinite;
+  animation: caret-soft-blink 1300ms ease-in-out infinite;
+}
+
+/* Solid while typing, like a real terminal; fades softly when idle. Opacity only, so it stays smooth. */
+.section-terminal-suffix.is-typing .section-terminal-caret {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes caret-soft-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.12; }
 }
 
 .h3 {
@@ -2035,6 +2169,8 @@ body {
 
 #splash-p-5 {
   background-size: 150%;
+  background-position: 15% 50%;
+  animation: hue-drift 14s ease-in-out infinite alternate;
   font-family: 'Lexend Giga', sans-serif;
   font-size: 1.2rem;
   font-weight: 900;
@@ -2466,6 +2602,151 @@ dl, ol, ul {
   transform: translateY(0) scale(1);
 }
 
+/* Account item: a sign-in link when signed out, a button that opens a small menu when signed in
+   (see setupAccount in site-shell.js). */
+.nav-account {
+  position: relative;
+}
+
+.nav-account [hidden] {
+  display: none !important;
+}
+
+.nav-account-toggle {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-account-dot {
+  position: absolute;
+  top: .55rem;
+  right: 1rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  pointer-events: none;
+}
+
+.nav-menu {
+  position: absolute;
+  top: calc(100% + .6rem);
+  left: 50%;
+  z-index: 1000;
+  width: 14.5rem;
+  max-width: calc(100vw - 1.5rem);
+  padding: .4rem;
+  transform: translateX(-50%);
+  border: 1px solid rgba(var(--white-rgb), .1);
+  border-radius: 14px;
+  background: var(--glass-solid);
+  -webkit-backdrop-filter: var(--glass-dark-filter);
+  backdrop-filter: var(--glass-dark-filter);
+  box-shadow: var(--glass-dark-edge), 0 14px 36px -12px rgba(var(--black-rgb), .8);
+  font-family: var(--ds-font-ui);
+  text-align: left;
+  white-space: normal;
+  animation: nav-menu-in 160ms var(--ds-ease) both;
+}
+
+@keyframes nav-menu-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+}
+
+.nav-menu-head {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  padding: .5rem .7rem .6rem;
+  margin-bottom: .25rem;
+  border-bottom: 1px solid rgba(var(--white-rgb), .08);
+}
+
+.nav-menu-label {
+  color: var(--ds-fg-subtle);
+  font: 500 .66rem/1 var(--ds-font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.nav-menu-email {
+  overflow: hidden;
+  color: var(--ds-fg-default);
+  font-size: .82rem;
+  text-overflow: ellipsis;
+}
+
+.nav-menu-item {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  width: 100%;
+  padding: .55rem .7rem;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--ds-fg-muted);
+  font: 500 .85rem/1.2 var(--ds-font-ui);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.nav-menu-item i {
+  width: 1.1rem;
+  font-size: 1.05rem;
+  text-align: center;
+  opacity: .85;
+}
+
+.nav-menu-item:hover,
+.nav-menu-item:focus-visible {
+  background: rgba(var(--white-rgb), .08);
+  color: var(--ds-fg-default);
+  text-decoration: none;
+}
+
+.nav-menu-item:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: -2px;
+}
+
+.nav-menu-item--out {
+  margin-top: .25rem;
+  border-top: 1px solid rgba(var(--white-rgb), .08);
+  border-radius: 0 0 9px 9px;
+  color: var(--ds-danger-fg);
+}
+
+.nav-menu-item--out:hover,
+.nav-menu-item--out:focus-visible {
+  background: rgba(255, 59, 59, .12);
+  color: var(--ds-danger-fg);
+}
+
+.nav-menu-item:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.nav-menu-note {
+  margin: .35rem .7rem .25rem;
+  color: var(--ds-danger-fg);
+  font-size: .75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-menu {
+    animation: none;
+  }
+}
 /* Active page/section marker. site-shell.js keeps .is-current in sync and feeds --nav-ind-x. */
 .nav-indicator {
   position: absolute;
@@ -5805,10 +6086,6 @@ textarea.ds-input {
   font-weight: 600;
 }
 
-.portal-mono {
-  font-family: var(--ds-font-mono);
-}
-
 .portal-grow {
   flex: 1 1 auto;
   min-width: 0;
@@ -5826,23 +6103,8 @@ textarea.ds-input {
   font-size: var(--ds-text-sm);
 }
 
-.portal-contact {
-  max-width: 460px;
-  margin-top: var(--ds-space-4);
-}
-
-.portal-contact .ds-box-row {
-  align-items: center;
-  font-family: var(--ds-font-ui);
-  font-size: var(--ds-text-sm);
-}
-
 .portal-sk {
   height: 140px;
-}
-
-.portal-sk-row {
-  height: 3.5rem;
 }
 
 .portal-kv {
@@ -5882,22 +6144,6 @@ textarea.ds-input {
 .portal-kv dd.portal-muted {
   color: var(--ds-fg-subtle);
 }
-
-.portal-legend {
-  margin: 0;
-  color: var(--ds-fg-subtle);
-  font-family: var(--ds-font-mono);
-  font-size: var(--ds-text-xs);
-}
-
-.portal-dot {
-  margin-left: var(--ds-space-3);
-}
-
-.portal-dot--live { color: var(--ds-success-fg); }
-.portal-dot--progress { color: var(--ds-attention-fg); }
-.portal-dot--issue { color: var(--ds-danger-fg); }
-.portal-legend .portal-dot:first-child { margin-left: 0; }
 
 .portal-projects {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -5981,6 +6227,855 @@ textarea.ds-input {
   }
 }
 
+/* ── Portal v2: tabs, summary, progress, outline, forms, admin master-detail ───────────────
+   Shared by the client dashboard (account.js) and the admin hub (admin*.js). */
+
+/* Tabs */
+.portal-tabbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  padding: 0 var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border-default);
+}
+
+.portal-tabs {
+  display: flex;
+  gap: .15rem;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0 var(--ds-space-4);
+  scrollbar-width: none;
+}
+
+.portal-tabbar .portal-tabs {
+  padding: 0;
+  border: 0;
+}
+
+.portal-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.ds-window-body > .portal-tabs {
+  border-bottom: 1px solid var(--ds-border-default);
+}
+
+.portal-tabs--sub {
+  margin: 0 calc(var(--ds-space-4) * -1) var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border-default);
+}
+
+.portal-tabs [role="tab"] {
+  position: relative;
+  flex: none;
+  padding: .75rem .9rem;
+  border: 0;
+  background: none;
+  color: var(--ds-fg-subtle);
+  font: 500 var(--ds-text-sm)/1.2 var(--ds-font-mono);
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 160ms ease;
+}
+
+.portal-tabs [role="tab"]::after {
+  content: "";
+  position: absolute;
+  left: .9rem;
+  right: .9rem;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--rainbow-gradient);
+  opacity: 0;
+  transform: scaleX(.4);
+  transition: opacity 200ms ease, transform 240ms var(--ds-ease);
+}
+
+.portal-tabs [role="tab"]:hover {
+  color: var(--ds-fg-default);
+}
+
+.portal-tabs [role="tab"][aria-selected="true"] {
+  color: var(--ds-fg-default);
+}
+
+.portal-tabs [role="tab"][aria-selected="true"]::after {
+  opacity: 1;
+  transform: none;
+}
+
+.portal-tabs [role="tab"]:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+.portal-tabbar-action {
+  flex: none;
+  padding: .75rem 0;
+  color: var(--ds-danger-fg);
+}
+
+[data-tab-panel][hidden] {
+  display: none;
+}
+
+/* Summary strip in the page hero */
+.portal-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: var(--ds-space-3);
+  width: 100%;
+  max-width: 44rem;
+  margin: var(--ds-space-4) 0;
+}
+
+.portal-summary[hidden] {
+  display: none;
+}
+
+.portal-summary-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .3rem;
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border: 1px solid var(--ds-border-default);
+  border-radius: var(--ds-radius-md);
+  background: var(--glass-bg);
+  min-width: 0;
+}
+
+.portal-summary-label {
+  color: var(--ds-fg-subtle);
+  font: 500 var(--ds-text-xs)/1 var(--ds-font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.portal-summary-value {
+  color: var(--ds-fg-default);
+  font: 600 var(--ds-text-md)/1.25 var(--ds-font-ui);
+  overflow-wrap: anywhere;
+}
+
+.portal-summary-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  width: 100%;
+}
+
+/* Progress bar */
+.portal-progress {
+  flex: 1 1 auto;
+  min-width: 4rem;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(var(--white-rgb), .1);
+}
+
+.portal-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--rainbow-gradient);
+  background-size: 300% 100%;
+  transition: width 500ms var(--ds-ease);
+}
+
+.portal-progress-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  width: 100%;
+}
+
+.portal-progress-num {
+  min-width: 2.6rem;
+  color: var(--ds-fg-muted);
+  font: 500 var(--ds-text-xs)/1 var(--ds-font-mono);
+  text-align: right;
+}
+
+/* Panels */
+.portal-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2) var(--ds-space-4);
+  margin: 0 0 var(--ds-space-4);
+}
+
+.portal-panel-title {
+  margin: 0;
+  color: var(--ds-fg-default);
+  font: 600 var(--ds-text-lg)/1.2 var(--ds-font-mono);
+}
+
+.portal-panel-title--spaced {
+  margin-top: var(--ds-space-6);
+  margin-bottom: var(--ds-space-3);
+}
+
+.portal-gap,
+.admin-gap {
+  margin: var(--ds-space-3) 0 0;
+}
+
+.portal-sub {
+  display: block;
+  margin-top: .15rem;
+  font-size: var(--ds-text-xs);
+}
+
+.portal-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--ds-space-3);
+  margin-top: var(--ds-space-4);
+}
+
+.portal-shortcut {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .25rem;
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border: 1px solid var(--ds-border-default);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-canvas-subtle);
+  font: 500 var(--ds-text-sm)/1.4 var(--ds-font-ui);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.portal-shortcut:hover,
+.portal-shortcut:focus-visible {
+  border-color: var(--ds-border-emphasis);
+  background: var(--ds-canvas-raised);
+}
+
+.portal-shortcut:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: 2px;
+}
+
+.portal-callout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  margin-top: var(--ds-space-4);
+  padding: var(--ds-space-4);
+  border: 1px solid var(--ds-border-default);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-canvas-subtle);
+}
+
+.portal-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2) var(--ds-space-3);
+  width: 100%;
+}
+
+.portal-card-top .portal-card-title {
+  margin: 0;
+}
+
+.portal-project {
+  width: 100%;
+  margin-bottom: var(--ds-space-4);
+}
+
+.portal-project:hover {
+  background: var(--ds-canvas-subtle);
+  border-color: var(--ds-border-default);
+}
+
+/* Phase outline and milestones */
+.portal-phases {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: var(--ds-space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal-phase {
+  position: relative;
+  padding: var(--ds-space-2) 0 var(--ds-space-2) 1.75rem;
+  border-left: 2px solid var(--ds-border-default);
+  margin-left: .6rem;
+}
+
+.portal-phase::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 1rem;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ds-border-emphasis);
+  border-radius: 50%;
+  background: var(--ds-canvas-default, #0f0f0f);
+}
+
+.portal-phase--in_progress::before {
+  border-color: var(--ds-attention-fg);
+  background: var(--ds-attention-fg);
+  box-shadow: 0 0 8px var(--ds-attention-fg);
+}
+
+.portal-phase--done::before {
+  border-color: var(--ds-success-fg);
+  background: var(--ds-success-fg);
+}
+
+.portal-phase--done {
+  border-left-color: var(--ds-success-fg);
+}
+
+.portal-phase-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2) var(--ds-space-3);
+}
+
+.portal-phase-mark {
+  display: none;
+}
+
+.portal-phase-name {
+  color: var(--ds-fg-default);
+  font: 600 var(--ds-text-sm)/1.3 var(--ds-font-mono);
+}
+
+.portal-phase-state {
+  margin-left: auto;
+  color: var(--ds-fg-subtle);
+  font: 500 var(--ds-text-xs)/1 var(--ds-font-mono);
+}
+
+.portal-phase--done .portal-phase-state {
+  color: var(--ds-success-fg);
+}
+
+.portal-phase--in_progress .portal-phase-state {
+  color: var(--ds-attention-fg);
+}
+
+.portal-milestones {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  margin: var(--ds-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.portal-milestone {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .1rem var(--ds-space-3);
+  color: var(--ds-fg-muted);
+  font: 400 var(--ds-text-sm)/1.4 var(--ds-font-ui);
+}
+
+.portal-milestone .portal-phase-mark {
+  display: inline;
+  width: 1rem;
+  color: var(--ds-fg-subtle);
+}
+
+.portal-milestone--done .portal-phase-mark { color: var(--ds-success-fg); }
+.portal-milestone--in_progress .portal-phase-mark { color: var(--ds-attention-fg); }
+
+.portal-milestone--done .portal-milestone-title {
+  color: var(--ds-fg-subtle);
+  text-decoration: line-through;
+}
+
+.portal-milestone-meta {
+  margin-left: auto;
+  font-size: var(--ds-text-xs);
+}
+
+/* Forms */
+.portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.portal-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--ds-space-3);
+}
+
+.portal-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3) var(--ds-space-5);
+}
+
+.portal-check-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .55rem;
+}
+
+.portal-check-field label {
+  margin: 0;
+  color: var(--ds-fg-muted);
+  font-size: var(--ds-text-sm);
+}
+
+.portal-check {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  accent-color: var(--ds-accent-fg);
+  cursor: pointer;
+}
+
+.portal-form textarea,
+.admin-note-form textarea {
+  resize: vertical;
+}
+
+.ds-field input[type="file"] {
+  padding: .5rem;
+}
+
+.portal-result {
+  min-width: 4.5rem;
+  color: var(--ds-fg-subtle);
+  font: 500 var(--ds-text-xs)/1.2 var(--ds-font-mono);
+}
+
+.portal-result:empty {
+  min-width: 0;
+}
+
+.portal-result--ok { color: var(--ds-success-fg); }
+.portal-result--bad { color: var(--ds-danger-fg); }
+
+.ds-btn--danger {
+  color: var(--ds-danger-fg);
+  border-color: rgba(255, 59, 59, .35);
+}
+
+.ds-btn--danger:hover,
+.ds-btn--danger:focus-visible,
+.ds-btn--danger.is-confirming {
+  border-color: var(--ds-danger-fg);
+  background: rgba(255, 59, 59, .12);
+  color: var(--ds-danger-fg);
+}
+
+.portal-icon-button {
+  flex: none;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 .4rem;
+  border: 1px solid var(--ds-border-default);
+  border-radius: 8px;
+  background: none;
+  color: var(--ds-fg-muted);
+  font-size: .7rem;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.portal-icon-button:hover:not(:disabled),
+.portal-icon-button:focus-visible {
+  border-color: var(--ds-border-emphasis);
+  color: var(--ds-fg-default);
+}
+
+.portal-icon-button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+.portal-icon-button--danger.is-confirming {
+  width: auto;
+  border-color: var(--ds-danger-fg);
+  background: rgba(255, 59, 59, .12);
+  color: var(--ds-danger-fg);
+  font-size: var(--ds-text-xs);
+}
+
+.portal-icon-button:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: 2px;
+}
+
+/* Admin: master-detail */
+.admin-split {
+  display: grid;
+  grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr);
+  gap: var(--ds-space-5);
+  align-items: start;
+}
+
+.admin-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+  min-width: 0;
+}
+
+.admin-side-tools {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+}
+
+.admin-side-row {
+  display: flex;
+  gap: var(--ds-space-2);
+}
+
+.admin-side-row select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.admin-main {
+  min-width: 0;
+  padding: var(--ds-space-4);
+  border: 1px solid var(--ds-border-default);
+  border-radius: var(--ds-radius-md);
+  scroll-margin-top: 4.5rem;
+}
+
+.admin-empty {
+  padding: var(--ds-space-5) 0;
+  color: var(--ds-fg-subtle);
+}
+
+.admin-back {
+  display: none;
+  margin-bottom: var(--ds-space-3);
+}
+
+.admin-client {
+  width: 100%;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  align-items: center;
+  flex-wrap: wrap;
+  transition: background-color 160ms ease;
+}
+
+.admin-client:hover,
+.admin-client:focus-visible,
+.admin-client.is-selected {
+  background: rgba(var(--white-rgb), .05);
+}
+
+.admin-client.is-selected {
+  box-shadow: inset 2px 0 0 var(--ds-accent-fg);
+}
+
+.admin-client:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: -2px;
+}
+
+.admin-count {
+  margin: 0;
+}
+
+.admin-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem;
+}
+
+.portal-kv + .admin-h,
+.admin-panel > .admin-h:not(:first-child) {
+  margin-top: var(--ds-space-5);
+}
+
+.admin-h {
+  margin: 0 0 var(--ds-space-3);
+  color: var(--ds-fg-default);
+  font: 600 var(--ds-text-md)/1.2 var(--ds-font-mono);
+}
+
+.admin-h--spaced {
+  margin-top: var(--ds-space-6);
+}
+
+.admin-h--sub {
+  margin-top: var(--ds-space-4);
+  font-size: var(--ds-text-sm);
+}
+
+.admin-spaced {
+  margin-top: var(--ds-space-6);
+}
+
+.admin-panel[hidden] {
+  display: none;
+}
+
+.admin-overview-project {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2) var(--ds-space-4);
+  padding: .6rem 0;
+  border-bottom: 1px solid rgba(var(--white-rgb), .06);
+}
+
+.admin-overview-bar {
+  flex: 0 1 12rem;
+  width: auto;
+}
+
+.admin-projects {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.admin-create {
+  margin-bottom: var(--ds-space-4);
+  padding: var(--ds-space-4);
+  border: 1px dashed var(--ds-border-emphasis);
+  border-radius: var(--ds-radius-md);
+}
+
+.admin-create[hidden] {
+  display: none;
+}
+
+.admin-project-card {
+  border: 1px solid var(--ds-border-default);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-canvas-subtle);
+}
+
+.admin-project-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2) var(--ds-space-4);
+  padding: var(--ds-space-3) var(--ds-space-4);
+  cursor: pointer;
+  list-style: none;
+}
+
+.admin-project-summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-project-summary::before {
+  content: "\25B8";
+  color: var(--ds-fg-subtle);
+  transition: transform 160ms ease;
+}
+
+.admin-project-card[open] > .admin-project-summary::before {
+  transform: rotate(90deg);
+}
+
+.admin-project-summary:focus-visible {
+  outline: 2px solid var(--ds-accent-fg);
+  outline-offset: -2px;
+  border-radius: var(--ds-radius-md);
+}
+
+.admin-summary-bar {
+  flex: 1 1 8rem;
+  min-width: 6rem;
+  max-width: 14rem;
+}
+
+.admin-project-body {
+  padding: 0 var(--ds-space-4) var(--ds-space-4);
+  border-top: 1px solid var(--ds-border-default);
+  padding-top: var(--ds-space-4);
+}
+
+.admin-phases .portal-phase-line {
+  justify-content: space-between;
+}
+
+.admin-inline-field {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  margin: 0;
+}
+
+.admin-inline-field label {
+  font-size: var(--ds-text-xs);
+  color: var(--ds-fg-subtle);
+}
+
+.admin-inline-field.portal-check-field {
+  flex-direction: row;
+}
+
+.admin-inline-field select,
+.admin-inline-field input {
+  min-width: 0;
+}
+
+.admin-grow {
+  flex: 1 1 14rem;
+}
+
+.admin-milestones {
+  margin-top: var(--ds-space-2);
+}
+
+.admin-milestone {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) 9rem 9rem auto auto;
+  align-items: end;
+  gap: var(--ds-space-2);
+  padding: .4rem 0;
+}
+
+.admin-milestone-controls {
+  display: inline-flex;
+  gap: .25rem;
+}
+
+.admin-milestone-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ds-space-2);
+  margin-top: var(--ds-space-2);
+}
+
+.admin-file-list {
+  margin-top: var(--ds-space-3);
+}
+
+.admin-file-row {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-visibility {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}
+
+.admin-add-form {
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border: 1px dashed var(--ds-border-default);
+  border-radius: var(--ds-radius-md);
+}
+
+.admin-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  margin-bottom: var(--ds-space-4);
+}
+
+.admin-scope {
+  width: auto;
+  min-width: 9rem;
+}
+
+.admin-note-list,
+.admin-subs {
+  display: grid;
+  gap: var(--ds-space-3);
+}
+
+.admin-subs {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+}
+
+.admin-note-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.admin-sub-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .5rem;
+}
+
+.admin-when {
+  margin-left: auto;
+  font-size: var(--ds-text-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal-tabs [role="tab"]::after,
+  .portal-progress-fill,
+  .admin-project-summary::before {
+    transition: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .admin-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* One column on phones: the list, or the selected client with a way back */
+  .admin-split.is-detail .admin-side {
+    display: none;
+  }
+
+  .admin-split:not(.is-detail) .admin-main {
+    display: none;
+  }
+
+  .admin-split.is-detail .admin-back {
+    display: inline-flex;
+  }
+
+  .admin-milestone {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .admin-milestone > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-tabs [role="tab"] {
+    padding: .7rem .7rem;
+  }
+}
 /* ── Responsive ── */
 
 @media (max-width: 1080px) {
@@ -6181,7 +7276,12 @@ main:focus {
   height: 100%;
   background: var(--ds-accent-fg);
   box-shadow: 0 0 10px var(--ds-accent-fg);
-  animation: caret-blink-glow 900ms ease-in-out infinite;
+  animation: caret-soft-blink 1300ms ease-in-out infinite;
+}
+
+.ct-cursor.is-typing::after {
+  animation: none;
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

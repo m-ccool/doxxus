@@ -29,9 +29,10 @@
     ].join(',');
 
     var SKIP = '.ct-prompt, .section-terminal-suffix, .visually-hidden';
-    var DOT_MS = 220;
+    var DOT_MS = 380;
+    var DOT_ERASE_MS = 140;
     var FIRST_DELAY_MS = 300;
-    var TEXT_TOTAL_MS = 1500;
+    var TEXT_TOTAL_MS = 2800;
     var REPLAY_MIN_MS = 7000;
     var REPLAY_SPREAD_MS = 7000;
     var RETYPE_MIN_MS = 40000;
@@ -161,13 +162,15 @@
 
         function typeText(done, withTypos) {
             var length = total();
-            var base = Math.max(16, Math.min(60, TEXT_TOTAL_MS / Math.max(length, 1)));
+            var base = Math.max(45, Math.min(95, TEXT_TOTAL_MS / Math.max(length, 1)));
             var count = 0;
+            cursor.classList.add('is-typing');
             (function step() {
                 render(count);
                 if (count >= length) {
                     finishText();
-                    if (done) done();
+                    // Hand the caret over to the suffix after a short beat.
+                    if (done) later(done, 320);
                     return;
                 }
                 var next = fullText().charAt(count);
@@ -177,11 +180,11 @@
                     later(function () {
                         render(count);
                         later(step, base * 2);
-                    }, 240);
+                    }, 340);
                     return;
                 }
                 count += 1;
-                later(step, base * (0.7 + Math.random() * 0.6));
+                later(step, base * (0.8 + Math.random() * 0.4));
             }());
         }
 
@@ -191,7 +194,8 @@
 
         function deleteText(done) {
             var count = total();
-            var base = Math.max(10, Math.min(30, 700 / Math.max(count, 1)));
+            var base = Math.max(18, Math.min(40, 1100 / Math.max(count, 1)));
+            cursor.classList.add('is-typing');
             (function step() {
                 render(count);
                 if (count <= 0) { if (done) done(); return; }
@@ -203,25 +207,40 @@
         // Delete the whole title, pause, then type it again (with the odd typo).
         function retypeText(done) {
             splitForTyping(entry);
+            entry.dots.textContent = '';
             deleteText(function () {
-                later(function () { typeText(done, true); }, 280);
+                later(function () { typeText(done, true); }, 450);
             });
         }
 
+        // Backspaces any existing dots, pauses, then types three again at an even pace.
+        // The caret stays solid while keys are "pressed" and fades softly when idle.
         function typeDots(done) {
             entry.suffix.classList.add('is-typing');
-            entry.dots.textContent = '';
             var count = 0;
-            (function step() {
+            function type() {
                 if (count < 3) {
-                    entry.dots.textContent += '.';
                     count += 1;
-                    later(step, DOT_MS);
+                    entry.dots.textContent = '...'.slice(0, count);
+                    later(type, DOT_MS);
                     return;
                 }
                 entry.suffix.classList.remove('is-typing');
                 if (done) done();
-            }());
+            }
+            var erased = false;
+            function erase() {
+                var length = entry.dots.textContent.length;
+                if (length > 0) {
+                    erased = true;
+                    entry.dots.textContent = entry.dots.textContent.slice(0, -1);
+                    later(erase, DOT_ERASE_MS);
+                    return;
+                }
+                if (erased) later(type, 350);
+                else type();
+            }
+            erase();
         }
 
         function replay() {
