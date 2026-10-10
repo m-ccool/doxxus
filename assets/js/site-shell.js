@@ -495,8 +495,8 @@
     function signOutEverywhere() {
         var ready = Promise.resolve();
         if (!window.supabase) ready = ready.then(function () { return loadScript(SUPABASE_SRC, SUPABASE_SRI); });
-        if (!window.DoxxusUI) ready = ready.then(function () { return loadScript('assets/js/portal-ui.js?v=20261010e'); });
-        if (!window.DoxxusPortal) ready = ready.then(function () { return loadScript('assets/js/portal.js?v=20261010e'); });
+        if (!window.DoxxusUI) ready = ready.then(function () { return loadScript('assets/js/portal-ui.js?v=20261010f'); });
+        if (!window.DoxxusPortal) ready = ready.then(function () { return loadScript('assets/js/portal.js?v=20261010f'); });
         return ready.then(function () { return window.DoxxusPortal.signOut(); });
     }
 

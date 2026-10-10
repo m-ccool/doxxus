@@ -69,9 +69,12 @@
         var filter = root.querySelector('[data-admin-filter]');
         var detailBox = root.querySelector('[data-admin-detail]');
         var submissionsBox = root.querySelector('[data-admin-submissions]');
+        var accountBox = root.querySelector('[data-admin-account]');
         var gone = false;
         var topTabs = null;
         var detailTabs = null;
+        var accountRendered = false;
+        var signedInEmail = '';
         var state = { clients: [], selectedId: null, creating: false, prefill: null, tab: 'overview', noteToken: 0 };
 
         cleanups.push(function () {
@@ -696,6 +699,90 @@
             submissionsBox.appendChild(grid);
         }
 
+        /* ── account ──────────────────────────────────────────────── */
+
+        // Renders once per load: a "set/change password" form so the admin can sign in with a password next
+        // time, alongside the emailed code (which keeps working either way).
+        function renderAccountPanel(email) {
+            if (accountRendered) return;
+            accountRendered = true;
+            clear(accountBox);
+
+            var who = el('p', 'portal-note');
+            who.appendChild(el('strong', 'portal-strong', 'Signed in as '));
+            who.appendChild(el('span', 'portal-muted', email || ''));
+            accountBox.appendChild(who);
+
+            var form = el('form', 'portal-form');
+            form.noValidate = true;
+
+            var grid = el('div', 'portal-form-grid');
+            var newWrap = el('div', 'ds-field');
+            var newLabel = el('label', null, 'New password');
+            var newInput = el('input', 'ds-input');
+            newInput.type = 'password';
+            newInput.id = 'admin-password-new';
+            newInput.autocomplete = 'new-password';
+            newInput.maxLength = 72;
+            newLabel.setAttribute('for', newInput.id);
+            newWrap.appendChild(newLabel);
+            newWrap.appendChild(newInput);
+
+            var confirmWrap = el('div', 'ds-field');
+            var confirmLabel = el('label', null, 'Confirm password');
+            var confirmInput = el('input', 'ds-input');
+            confirmInput.type = 'password';
+            confirmInput.id = 'admin-password-confirm';
+            confirmInput.autocomplete = 'new-password';
+            confirmInput.maxLength = 72;
+            confirmLabel.setAttribute('for', confirmInput.id);
+            confirmWrap.appendChild(confirmLabel);
+            confirmWrap.appendChild(confirmInput);
+
+            grid.appendChild(newWrap);
+            grid.appendChild(confirmWrap);
+            form.appendChild(grid);
+            form.appendChild(el('p', 'portal-note', 'Optional: set a password to sign in faster next time. The emailed code still works either way.'));
+
+            var row = el('div', 'portal-row portal-row--end');
+            var state2 = el('span', 'portal-result');
+            var result = UI.status(state2);
+            var save = el('button', 'ds-btn ds-btn--sm ds-btn--primary', 'Set password');
+            save.type = 'submit';
+            row.appendChild(state2);
+            row.appendChild(save);
+            form.appendChild(row);
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+                var value = newInput.value;
+                var confirm = confirmInput.value;
+                if (value.length < 8) {
+                    result.failed('Use at least 8 characters.');
+                    newInput.focus();
+                    return;
+                }
+                if (value !== confirm) {
+                    result.failed('Passwords do not match.');
+                    confirmInput.focus();
+                    return;
+                }
+                save.disabled = true;
+                result.saving();
+                db().auth.updateUser({ password: value }).then(function (response) {
+                    if (gone) return;
+                    if (response.error) return result.failed('Not saved. Try again.');
+                    newInput.value = '';
+                    confirmInput.value = '';
+                    result.saved('Password set');
+                }).catch(function () {
+                    if (!gone) result.failed(FAILED);
+                }).then(function () { save.disabled = false; });
+            });
+
+            accountBox.appendChild(form);
+        }
+
         /* ── loading ─────────────────────────────────────────────── */
 
         function load() {
@@ -712,6 +799,7 @@
                     show('denied');
                     return null;
                 }
+                signedInEmail = (session.user && session.user.email) || '';
                 return Promise.all([
                     db().from('clients').select(CLIENT_SELECT).order('name', { ascending: true }),
                     db().from('submissions')
@@ -738,6 +826,7 @@
                 renderDetail();
                 if (submissionsResult.error) empty(submissionsBox, 'Could not load submissions. Has the admin migration been applied?');
                 else renderSubmissions(submissionsResult.data || []);
+                renderAccountPanel(signedInEmail);
                 show('content');
                 if (!topTabs) {
                     topTabs = UI.tabs(topRoot, {

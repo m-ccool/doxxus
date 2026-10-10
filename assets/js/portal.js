@@ -145,15 +145,33 @@
             var sendForm = root.querySelector('[data-portal-email-form]');
             var codeForm = root.querySelector('[data-portal-code-form]');
             var emailInput = sendForm.elements.email;
+            var passwordField = sendForm.querySelector('[data-portal-password-field]');
+            var passwordInput = sendForm.elements.password;
+            var passwordToggle = sendForm.querySelector('[data-portal-password-toggle]');
             var codeInput = codeForm.elements.code;
             var sendButton = sendForm.querySelector('[data-portal-email-send]');
             var verifyButton = codeForm.querySelector('[data-portal-code-verify]');
             var sentTo = '';
+            var usePassword = false;
 
             function failure(error, fallback) {
                 var limited = error && (error.status === 429 || /rate|seconds|too many/i.test(error.message || ''));
                 setNotice('attention', limited ? 'Please wait a minute before asking for another code.' : fallback);
             }
+
+            // Toggles between "email me a code" (default) and "sign in with a password", which only works once a
+            // password has been set from the Account page. The form and its validation stay the same either way.
+            function setMode(next) {
+                usePassword = next;
+                passwordField.hidden = !usePassword;
+                passwordInput.required = usePassword;
+                if (!usePassword) passwordInput.value = '';
+                sendButton.textContent = usePassword ? 'Sign in' : 'Email me a sign-in code';
+                passwordToggle.textContent = usePassword ? 'Use an emailed code instead' : 'Sign in with a password instead';
+                notice.hidden = true;
+            }
+
+            on(passwordToggle, 'click', function () { setMode(!usePassword); });
 
             on(sendForm, 'submit', function (event) {
                 event.preventDefault();
@@ -164,6 +182,31 @@
                     emailInput.focus();
                     return;
                 }
+
+                if (usePassword) {
+                    var password = passwordInput.value;
+                    if (!password) {
+                        setNotice('attention', 'Enter your password.');
+                        passwordInput.focus();
+                        return;
+                    }
+                    sendButton.disabled = true;
+                    notice.hidden = true;
+                    getClient().auth.signInWithPassword({ email: address, password: password }).then(function (result) {
+                        if (gone) return;
+                        if (result.error || !result.data || !result.data.session) {
+                            setNotice('attention', 'Wrong email or password. Use a code instead, or set a password from your account once signed in.');
+                            passwordInput.focus();
+                            return;
+                        }
+                        if (window.SiteShell) window.SiteShell.refreshAccount();
+                        goTo(homeFor(result.data.session));
+                    }).catch(function () {
+                        if (!gone) setNotice('attention', FAILED_NOTICE);
+                    }).then(function () { sendButton.disabled = false; });
+                    return;
+                }
+
                 sendButton.disabled = true;
                 notice.hidden = true;
                 getClient().auth.signInWithOtp({ email: address, options: { shouldCreateUser: true } }).then(function (result) {

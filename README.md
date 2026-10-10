@@ -21,7 +21,7 @@ Personal portfolio & service site for **B McCool** — freelance web developer.
 index.html          — landing page (splash, software tier, IT tier, portfolio, about)
 services.html       — software spec sheet, package tiers, add-ons, consultation, IT tier
 build.html          — package builder (assemble a package and send the request)
-signin.html         — sign-in for clients and the admin (Google or an emailed one-time code, through Supabase Auth)
+signin.html         — sign-in for clients and the admin (Google, an emailed one-time code, or a password, through Supabase Auth)
 account.html        — client dashboard with tabs: Overview, Project, Files & links, Account (signed-in only)
 admin.html          — admin hub: clients, contracts, projects, files & links, private notes, submissions (admin role only)
 terms.html          — terms of service
@@ -78,8 +78,11 @@ assets/
   message in `submissions`, then emails you and the sender from `dev@doxxus.us` over SMTP
 - Edge Function secrets (set in the Supabase dashboard, never committed): `SMTP_USER`,
   `SMTP_PASS`, `IP_SALT`. Without them messages are still stored but no email is sent
-- Sign-in is Google or an emailed one-time code; a client sees data only when their email matches a row
+- Sign-in is Google, an emailed one-time code, or a password; a client sees data only when their email matches a row
   in `clients`. The admin hub creates clients and projects; no table editing needed
+- A password is optional and off by default (new accounts have none). Set one from the Account tab
+  (account.html for clients, admin.html for the admin) once signed in any other way; the emailed code keeps
+  working either way
 - Clients can change only their additional contact. Everything else (contract, projects, phases, files) is
   admin-only, enforced by a trigger and row-level security, not by the pages
 - Apply `supabase/migrations/20261010000000_portal_v2.sql` after the admin migration. It adds the contract columns,
@@ -101,7 +104,7 @@ assets/
 - The publishable Supabase key in `portal.js` is public by design; secret keys never go in the repo
 - Billing is Stripe's hosted customer portal; set `BILLING_PORTAL_URL` in `account.js` once it exists
 - Stylesheets and scripts are linked with a `?v=` query (GitHub Pages and browsers cache them hard). After changing a
-  file under `assets/`, bump the value in every page, e.g. `(Get-ChildItem *.html) | % { (gc $_ -Raw) -replace '\?v=20261010e','?v=NEW' | sc $_ }`;
+  file under `assets/`, bump the value in every page, e.g. `(Get-ChildItem *.html) | % { (gc $_ -Raw) -replace '\?v=20261010f','?v=NEW' | sc $_ }`;
   `site-shell.js` has one copy too
 - Serve locally with `python -m http.server 8777`
 
