@@ -6308,13 +6308,18 @@ textarea.ds-input {
   display: flex;
   gap: .15rem;
   min-width: 0;
+  /* overflow-x alone makes overflow-y scroll too; the 2px selected underline hangs 1px below the tabs, which is
+     what made the strip wiggle on both axes. Clip y, give the underline its own 1px, and stop horizontal chaining. */
   overflow-x: auto;
-  padding: 0 var(--ds-space-4);
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  padding: 0 var(--ds-space-4) 1px;
+  margin-bottom: -1px;
   scrollbar-width: none;
 }
 
 .portal-tabbar .portal-tabs {
-  padding: 0;
+  padding: 0 0 1px;
   border: 0;
 }
 
@@ -7139,7 +7144,12 @@ textarea.ds-input {
 
 @media (max-width: 480px) {
   .portal-tabs [role="tab"] {
-    padding: .7rem .7rem;
+    padding: .7rem .4rem;
+  }
+
+  .portal-tabs [role="tab"]::after {
+    left: .4rem;
+    right: .4rem;
   }
 }
 /* ── Responsive ── */
