@@ -79,7 +79,14 @@
             if (toggle) toggle.setAttribute('aria-expanded', String(!minimized));
             var titleToggle = win.querySelector('.ds-window-title');
             if (titleToggle) titleToggle.setAttribute('aria-expanded', String(!minimized));
+            win.dispatchEvent(new CustomEvent('ds-window:state', { detail: { minimized: minimized } }));
         }
+
+        // Lets a page script minimize or expand this window (the admin hub does when a client is opened).
+        win.addEventListener('ds-window:set', function (event) {
+            win.classList.remove('is-zoomed');
+            setMinimized(!!(event.detail && event.detail.minimized));
+        });
 
         // Only windows that hold a command list get the accordion behaviour.
         commands.forEach(function (command) {

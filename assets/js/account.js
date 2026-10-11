@@ -33,12 +33,12 @@
 
     var SELECT = [
         'id, name, email, phone, business, it_support, meeting_url,',
-        'plan, start_date, agreed_price, billing_terms, contract_url, contract_status, extra_contact,',
+        'start_date, billing_terms, contract_url, contract_status, extra_contact,',
         'projects(id, name, description, status, live_url, updated_at,',
         ' project_phases(phase, state),',
         ' project_milestones(id, phase, title, state, due_date, position, created_at)),',
-        'client_links(id, project_id, title, url, note, created_at),',
-        'client_files(id, project_id, name, size_bytes, content_type, storage_path, created_at)'
+        'client_links(id, project_id, title, url, note, visible_to_client, created_at),',
+        'client_files(id, project_id, name, size_bytes, content_type, storage_path, visible_to_client, created_at)'
     ].join(' ');
 
     var cleanups = [];
@@ -62,6 +62,8 @@
         var tabsApi = null;
         var me = null;
         var signedInEmail = '';
+        // Client view: an admin opening account.html?as=<client id> sees this page exactly as that client does, read-only.
+        var viewing = false;
 
         cleanups.push(function () {
             gone = true;
@@ -147,8 +149,7 @@
                 return box;
             }
 
-            var plan = cell('Plan');
-            plan.appendChild(el('span', 'portal-summary-value', client.plan || 'Not set'));
+            var plan = cell('Status');
             var contract = UI.pick(UI.CONTRACT_STATUS, client.contract_status);
             plan.appendChild(UI.chip(contract.tone, contract.label));
 
@@ -215,7 +216,7 @@
             var shortcuts = el('div', 'portal-shortcuts');
             var fileCount = (client.client_files || []).length + (client.client_links || []).length;
             shortcuts.appendChild(shortcut('Files & links', fileCount ? fileCount + (fileCount === 1 ? ' item shared' : ' items shared') : 'Nothing shared yet', 'files'));
-            shortcuts.appendChild(shortcut('Contract & billing', client.plan || 'Plan, price and billing', 'account'));
+            shortcuts.appendChild(shortcut('Contract & billing', 'Contract, contact details and billing', 'account'));
             container.appendChild(shortcuts);
 
             if (client.it_support) container.appendChild(itSupportCard());
@@ -457,10 +458,8 @@
             container.appendChild(el('h2', 'portal-panel-title', 'Contract'));
             var contract = el('dl', 'portal-kv');
             var cs = UI.pick(UI.CONTRACT_STATUS, client.contract_status);
-            contract.appendChild(field('Plan', client.plan));
             contract.appendChild(field('Status', UI.chip(cs.tone, cs.label)));
             contract.appendChild(field('Start date', UI.formatDate(client.start_date)));
-            contract.appendChild(field('Agreed price', UI.money(client.agreed_price)));
             contract.appendChild(field('Billing terms', client.billing_terms));
             var doc = UI.safeUrl(client.contract_url);
             contract.appendChild(field('Contract document', doc ? 'Open contract \u2197' : '', doc));
@@ -486,7 +485,7 @@
             container.appendChild(change);
 
             container.appendChild(el('h2', 'portal-panel-title portal-panel-title--spaced', 'Additional contact'));
-            container.appendChild(extraContactForm(client));
+            container.appendChild(viewing ? extraContactReadOnly(client) : extraContactForm(client));
 
             container.appendChild(el('h2', 'portal-panel-title portal-panel-title--spaced', 'Billing'));
             container.appendChild(el('p', 'portal-note', "Invoices, receipts and payment methods are on Stripe's secure billing portal. No card details are stored here."));
@@ -505,6 +504,8 @@
             billingRow.appendChild(billing);
             container.appendChild(billingRow);
             if (!portalUrl) container.appendChild(el('p', 'portal-hint', 'The billing portal is not set up yet. Contact the dev for an invoice.'));
+
+            if (viewing) return;
 
             container.appendChild(el('h2', 'portal-panel-title portal-panel-title--spaced', 'Security'));
             var security = el('div', 'portal-row');
@@ -606,6 +607,17 @@
             return form;
         }
 
+        // Client view: what the client entered, as plain text. Nothing here can write.
+        function extraContactReadOnly(client) {
+            var saved = client.extra_contact || {};
+            var labels = [['Name', 'name'], ['Email', 'email'], ['Phone', 'phone'], ['Role or note', 'note']];
+            var shown = labels.filter(function (pair) { return saved[pair[1]]; });
+            if (!shown.length) return el('p', 'portal-muted', 'None entered.');
+            var dl = el('dl', 'portal-kv');
+            shown.forEach(function (pair) { dl.appendChild(field(pair[0], saved[pair[1]])); });
+            return dl;
+        }
+
         // The one thing a client edits. Mirrors valid_extra_contact() in the database, which is what really enforces it.
         function extraContactForm(client) {
             var saved = client.extra_contact || {};
@@ -693,21 +705,53 @@
 
         /* ── loading ─────────────────────────────────────────────── */
 
+        // The admin's database policies return everything; keep only what the client's own policies would show.
+        function asTheClientSees(client) {
+            var visible = {};
+            (client.projects || []).forEach(function (p) { if (p.status !== 'not_started') visible[p.id] = true; });
+            function keep(item) { return item.visible_to_client && (!item.project_id || visible[item.project_id]); }
+            client.client_links = (client.client_links || []).filter(keep);
+            client.client_files = (client.client_files || []).filter(keep);
+            return client;
+        }
+
+        function viewingBanner(client) {
+            var bar = el('div', 'portal-viewing');
+            bar.setAttribute('role', 'status');
+            var text = el('span', null);
+            text.appendChild(el('strong', 'portal-strong', 'Client view'));
+            text.appendChild(document.createTextNode(' \u2014 this is what ' + (client.name || client.email || 'the client') + ' sees. Read-only.'));
+            var back = el('a', 'ds-btn ds-btn--sm', '\u2190 Back to admin');
+            back.href = ADMIN_PAGE + '?client=' + encodeURIComponent(client.id);
+            bar.appendChild(text);
+            bar.appendChild(back);
+            root.insertBefore(bar, root.firstChild);
+        }
+
         function render(client) {
+            if (viewing) client = asTheClientSees(client);
             me = client;
-            portal.setProfile(client);
-            root.querySelector('[data-account-lede]').textContent = (client.name ? 'Signed in as ' + client.name + '. ' : '') + 'Status, files and billing for your projects.';
-            windowHint.textContent = client.plan || '';
+            if (!viewing) portal.setProfile(client);
+            var lede = root.querySelector('[data-account-lede]');
+            if (viewing) lede.textContent = 'Status, files and billing for ' + (client.name || 'this client') + '.';
+            else lede.textContent = (client.name ? 'Signed in as ' + client.name + '. ' : '') + 'Status, files and billing for your projects.';
+            windowHint.textContent = '';
             renderSummary(client);
             renderActions(client);
             renderOverview(client);
             renderProjects(client);
             renderFiles(client);
             renderAccount(client);
+            if (viewing) {
+                // Nothing in the client view may open the contact dialog or write anything.
+                root.querySelectorAll('[data-bs-toggle="modal"]').forEach(function (node) { node.remove(); });
+                if (!root.querySelector('.portal-viewing')) viewingBanner(client);
+            }
         }
 
         function load() {
             show('loading');
+            var asId = new URLSearchParams(window.location.search).get('as');
             db().auth.getSession().then(function (result) {
                 if (gone) return null;
                 var session = result.data && result.data.session;
@@ -717,14 +761,19 @@
                     window.location.replace(SIGNIN_PAGE);
                     return null;
                 }
+                viewing = false;
                 if (portal.roleOf(session) === 'admin') {
-                    if (window.DoxxusRouter) window.DoxxusRouter.navigate(ADMIN_PAGE);
-                    else window.location.replace(ADMIN_PAGE);
-                    return null;
+                    if (!asId) {
+                        if (window.DoxxusRouter) window.DoxxusRouter.navigate(ADMIN_PAGE);
+                        else window.location.replace(ADMIN_PAGE);
+                        return null;
+                    }
+                    viewing = true;
                 }
                 signedInEmail = (session.user && session.user.email) || '';
                 if (window.SiteShell) window.SiteShell.refreshAccount();
-                return db().from('clients').select(SELECT).maybeSingle();
+                var query = db().from('clients').select(SELECT);
+                return viewing ? query.eq('id', asId).maybeSingle() : query.maybeSingle();
             }).then(function (result) {
                 if (gone || !result) return;
                 if (result.error) {
@@ -732,6 +781,11 @@
                     return show('error');
                 }
                 if (!result.data) {
+                    if (viewing) {
+                        if (window.DoxxusRouter) window.DoxxusRouter.navigate(ADMIN_PAGE);
+                        else window.location.replace(ADMIN_PAGE);
+                        return;
+                    }
                     root.querySelector('[data-account-unlinked-email]').textContent = signedInEmail;
                     return show('unlinked');
                 }

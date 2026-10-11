@@ -29,7 +29,7 @@
 
     var CLIENT_COLUMNS = [
         'id, email, name, phone, business, it_support, meeting_url, disabled, created_at,',
-        'plan, start_date, agreed_price, billing_terms, contract_url, contract_status, extra_contact'
+        'plan, start_date, billing_terms, contract_url, contract_status, extra_contact'
     ].join(' ');
 
     var CLIENT_SELECT = CLIENT_COLUMNS + ', ' + [
@@ -41,10 +41,9 @@
     ].join(' ');
 
     var DETAIL_TABS = [
-        { key: 'overview', label: 'Overview' },
-        { key: 'contract', label: 'Contract & contact' },
         { key: 'projects', label: 'Projects' },
         { key: 'files', label: 'Files & links' },
+        { key: 'details', label: 'Details' },
         { key: 'notes', label: 'Notes' }
     ];
 
@@ -63,24 +62,30 @@
         var content = root.querySelector('[data-admin-content]');
         var topRoot = root.querySelector('[data-admin-tabs]');
         var windowTitle = root.querySelector('[data-admin-title]');
-        var split = root.querySelector('[data-admin-split]');
+        var listWin = topRoot;
+        var clientWin = root.querySelector('[data-admin-client-window]');
+        var clientTitle = clientWin.querySelector('[data-admin-client-title]');
+        var clientChips = clientWin.querySelector('[data-admin-client-chips]');
+        var clientTabList = clientWin.querySelector('[data-admin-client-tablist]');
+        var clientViewLink = clientWin.querySelector('[data-admin-client-view]');
+        var clientPanels = {};
+        DETAIL_TABS.forEach(function (def) { clientPanels[def.key] = clientWin.querySelector('[data-tab-panel="' + def.key + '"]'); });
         var listBox = root.querySelector('[data-admin-clients]');
         var search = root.querySelector('[data-admin-search]');
         var filter = root.querySelector('[data-admin-filter]');
-        var detailBox = root.querySelector('[data-admin-detail]');
         var submissionsBox = root.querySelector('[data-admin-submissions]');
         var accountBox = root.querySelector('[data-admin-account]');
         var gone = false;
         var topTabs = null;
-        var detailTabs = null;
+        var clientTabs = null;
         var accountRendered = false;
         var signedInEmail = '';
-        var state = { clients: [], selectedId: null, creating: false, prefill: null, tab: 'overview', noteToken: 0 };
+        var state = { clients: [], selectedId: null, creating: false, prefill: null, tab: 'projects', noteToken: 0 };
 
         cleanups.push(function () {
             gone = true;
             if (topTabs) topTabs.destroy();
-            if (detailTabs) detailTabs.destroy();
+            if (clientTabs) clientTabs.destroy();
         });
 
         function listen(target, type, handler) {
@@ -164,7 +169,25 @@
             listBox.appendChild(box);
         }
 
-        /* ── client detail ───────────────────────────────────────── */
+        /* ── client window ───────────────────────────────────────── */
+
+        // The clients window minimizes to its title bar while a client is open, and expands again when it closes.
+        function setListMinimized(minimized) {
+            listWin.dispatchEvent(new CustomEvent('ds-window:set', { detail: { minimized: minimized } }));
+        }
+
+        function slug(text) {
+            return String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'client';
+        }
+
+        function showClientWindow() {
+            clientWin.hidden = false;
+            clientWin.classList.remove('is-vanished', 'is-rebooting');
+            clientWin.dispatchEvent(new CustomEvent('ds-window:set', { detail: { minimized: false } }));
+            setListMinimized(true);
+            // Keep the minimized clients bar in view just above the client window once the list has collapsed.
+            window.setTimeout(function () { if (!gone && !clientWin.hidden) listWin.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 180);
+        }
 
         function openClient(id) {
             state.selectedId = id;
@@ -172,8 +195,7 @@
             state.prefill = null;
             renderList();
             renderDetail();
-            split.classList.add('is-detail');
-            detailBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            showClientWindow();
         }
 
         function openNew(prefill) {
@@ -182,96 +204,75 @@
             state.prefill = prefill || null;
             renderList();
             renderDetail();
-            split.classList.add('is-detail');
-            detailBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            showClientWindow();
         }
 
         function closeDetail() {
             state.selectedId = null;
             state.creating = false;
-            split.classList.remove('is-detail');
+            if (clientTabs) { clientTabs.destroy(); clientTabs = null; }
+            clientWin.hidden = true;
+            clientWin.dispatchEvent(new CustomEvent('ds-window:reset'));
             renderList();
-            renderDetail();
+            setListMinimized(false);
+            listWin.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        function backButton() {
-            var back = el('button', 'portal-link admin-back', '\u2190 All clients');
-            back.type = 'button';
-            back.addEventListener('click', closeDetail);
-            return back;
-        }
-
+        // The client window has its own tab bar (Projects, Files & links, Details, Notes); this only fills the panels.
         function renderDetail() {
-            if (detailTabs) { detailTabs.destroy(); detailTabs = null; }
-            clear(detailBox);
+            if (clientTabs) { clientTabs.destroy(); clientTabs = null; }
+            DETAIL_TABS.forEach(function (def) { clear(clientPanels[def.key]); });
 
             if (state.creating) {
-                detailBox.appendChild(backButton());
-                var head = el('div', 'portal-panel-head');
-                head.appendChild(el('h2', 'portal-panel-title', 'New client'));
-                detailBox.appendChild(head);
-                detailBox.appendChild(el('p', 'portal-note', 'The client signs in with this email address (Google or an emailed code) and then sees only their own account.'));
-                contractForm(detailBox, null, state.prefill);
+                clientTitle.textContent = 'doxxus@admin \u2014 ~/clients/new';
+                clear(clientChips);
+                clientViewLink.hidden = true;
+                clientTabList.hidden = true;
+                DETAIL_TABS.forEach(function (def) { clientPanels[def.key].hidden = def.key !== 'details'; });
+                var details = clientPanels.details;
+                details.appendChild(el('p', 'portal-note', 'The client signs in with this email address (Google or an emailed code) and then sees only their own account.'));
+                contractForm(details, null, state.prefill);
                 return;
             }
 
             var client = selected();
-            if (!client) {
-                var hint = el('div', 'portal-empty admin-empty');
-                hint.appendChild(el('p', null, 'Select a client to see their projects, files and contract, or create a new client.'));
-                detailBox.appendChild(hint);
-                return;
-            }
+            if (!client) return;
 
-            detailBox.appendChild(backButton());
-            var top = el('div', 'portal-panel-head');
-            var title = el('h2', 'portal-panel-title', client.name || client.email);
-            title.setAttribute('data-admin-client-title', '');
-            top.appendChild(title);
-            var chips = el('span', 'admin-chips');
-            chips.setAttribute('data-admin-client-chips', '');
-            top.appendChild(chips);
-            detailBox.appendChild(top);
-            renderChips(client, chips);
-
-            var wrap = el('div', 'admin-client-tabs');
-            wrap.setAttribute('data-tabs', '');
-            var list = el('div', 'portal-tabs portal-tabs--sub');
-            list.setAttribute('role', 'tablist');
-            list.setAttribute('aria-label', 'Client sections');
-            DETAIL_TABS.forEach(function (def) {
-                var tab = el('button', null, def.label);
-                tab.type = 'button';
-                tab.setAttribute('role', 'tab');
-                tab.setAttribute('data-tab', def.key);
-                list.appendChild(tab);
-            });
-            wrap.appendChild(list);
-
-            var holders = {};
-            DETAIL_TABS.forEach(function (def) {
-                var holder = el('section', 'admin-panel');
-                holder.setAttribute('data-tab-panel', def.key);
-                holder.hidden = true;
-                wrap.appendChild(holder);
-                holders[def.key] = holder;
-            });
-            detailBox.appendChild(wrap);
+            clientTabList.hidden = false;
+            clientViewLink.hidden = false;
+            clientViewLink.href = 'account.html?as=' + encodeURIComponent(client.id);
+            refreshTitle(client);
 
             var ctx = {
                 db: db,
                 alive: function () { return !gone; },
                 changed: function () { refreshChrome(); },
-                openTab: function (name) { if (detailTabs) detailTabs.select(name); }
+                openTab: function (name) { if (clientTabs) clientTabs.select(name); }
             };
 
-            renderOverview(holders.overview, client);
-            contractForm(holders.contract, client, null);
-            renderPanel('projects', holders.projects, client, ctx);
-            renderPanel('files', holders.files, client, ctx);
-            renderNotes(holders.notes, client);
+            renderPanel('projects', clientPanels.projects, client, ctx);
+            renderPanel('files', clientPanels.files, client, ctx);
+            contractForm(clientPanels.details, client, null);
+            renderNotes(clientPanels.notes, client);
 
-            detailTabs = UI.tabs(wrap, { initial: state.tab, onSelect: function (name) { state.tab = name; } });
+            var filesRenderedFor = (client.projects || []).length;
+            clientTabs = UI.tabs(clientWin, {
+                initial: state.tab,
+                onSelect: function (name) {
+                    state.tab = name;
+                    // The file and link forms offer the client's projects; refresh them if projects were added or removed.
+                    var count = (client.projects || []).length;
+                    if (name === 'files' && count !== filesRenderedFor) {
+                        filesRenderedFor = count;
+                        renderPanel('files', clear(clientPanels.files), client, ctx);
+                    }
+                }
+            });
+        }
+
+        function refreshTitle(client) {
+            clientTitle.textContent = 'doxxus@admin \u2014 ~/clients/' + slug(client.name || client.email);
+            renderChips(client, clientChips);
         }
 
         function renderPanel(name, holder, client, ctx) {
@@ -291,68 +292,15 @@
             if (client.it_support) chips.appendChild(UI.chip('accent', 'IT support'));
         }
 
-        // After any change: refresh the list row, the header, and the overview. Other tabs keep their own state.
+        // After any change: refresh the list row and the client window's title bar. Other tabs keep their own state.
         function refreshChrome() {
             if (gone) return;
             var client = selected();
             renderList();
-            if (!client) return;
-            var title = detailBox.querySelector('[data-admin-client-title]');
-            var chips = detailBox.querySelector('[data-admin-client-chips]');
-            if (title) title.textContent = client.name || client.email;
-            if (chips) renderChips(client, chips);
-            var overview = detailBox.querySelector('[data-tab-panel="overview"]');
-            if (overview) renderOverview(clear(overview), client);
+            if (client) refreshTitle(client);
         }
 
-        /* ── overview ────────────────────────────────────────────── */
-
-        function renderOverview(container, client) {
-            var facts = el('dl', 'portal-kv');
-            function row(label, value) {
-                var line = el('div');
-                line.appendChild(el('dt', null, label));
-                var dd = el('dd');
-                dd.textContent = value || 'Not set';
-                dd.classList.toggle('portal-muted', !value);
-                line.appendChild(dd);
-                facts.appendChild(line);
-            }
-            row('Email', client.email);
-            row('Plan', client.plan);
-            row('Agreed price', UI.money(client.agreed_price));
-            row('Start date', UI.formatDate(client.start_date));
-            row('Meeting link', client.meeting_url);
-            container.appendChild(facts);
-
-            container.appendChild(el('h3', 'admin-h', 'Projects'));
-            var projects = client.projects || [];
-            if (!projects.length) {
-                container.appendChild(el('p', 'portal-muted', 'No projects yet.'));
-            } else {
-                projects.forEach(function (project) {
-                    var status = UI.pick(UI.PROJECT_STATUS, project.status);
-                    var line = el('div', 'admin-overview-project');
-                    var name = el('span', 'portal-grow');
-                    name.appendChild(el('strong', 'portal-strong', project.name || 'Untitled project'));
-                    var phase = UI.currentPhase(project);
-                    name.appendChild(el('span', 'portal-muted portal-sub', phase ? 'Now: ' + phase.label : 'All phases complete'));
-                    line.appendChild(name);
-                    var percent = UI.projectProgress(project);
-                    var bar = el('div', 'portal-progress-row admin-overview-bar');
-                    bar.appendChild(UI.progressBar(percent, 'Progress for ' + (project.name || 'project')));
-                    bar.appendChild(el('span', 'portal-progress-num', percent + '%'));
-                    line.appendChild(bar);
-                    line.appendChild(UI.chip(status.tone, status.label));
-                    container.appendChild(line);
-                });
-            }
-
-            var shared = (client.client_links || []).length + (client.client_files || []).length;
-            container.appendChild(el('p', 'portal-muted admin-gap', shared + (shared === 1 ? ' link or file shared' : ' links and files shared') + ' with this client.'));
-        }
-
-        /* ── contract and contact ────────────────────────────────── */
+        /* ── details (contract and contact) ──────────────────────── */
 
         function contractForm(container, client, prefill) {
             var creating = !client;
@@ -371,7 +319,6 @@
                     options: UI.CONTRACT_STATUS.map(function (s) { return { value: s.value, label: s.label }; })
                 }),
                 start_date: UI.field({ label: 'Start date', type: 'date', value: source.start_date }),
-                agreed_price: UI.field({ label: 'Agreed price (USD)', type: 'number', min: 0, step: '0.01', value: source.agreed_price }),
                 billing_terms: UI.field({ label: 'Billing terms', type: 'textarea', rows: 3, max: 1000, value: source.billing_terms }),
                 contract_url: UI.field({ label: 'Contract document link', type: 'url', max: 2000, placeholder: 'https://', value: source.contract_url }),
                 meeting_url: UI.field({ label: 'Meeting link', type: 'url', max: 2000, placeholder: 'https://', value: source.meeting_url }),
@@ -380,7 +327,7 @@
             };
 
             var grid = el('div', 'portal-form-grid');
-            ['name', 'email', 'phone', 'business', 'plan', 'contract_status', 'start_date', 'agreed_price'].forEach(function (key) { grid.appendChild(f[key].wrap); });
+            ['name', 'email', 'phone', 'business', 'plan', 'contract_status', 'start_date'].forEach(function (key) { grid.appendChild(f[key].wrap); });
             form.appendChild(grid);
             form.appendChild(f.billing_terms.wrap);
             var links = el('div', 'portal-form-grid');
@@ -406,8 +353,6 @@
                 if (!f.name.get().trim()) { f.name.input.focus(); return 'Enter a name.'; }
                 var email = f.email.get().trim().toLowerCase();
                 if (!UI.isEmail(email)) { f.email.input.focus(); return 'Enter a valid email address.'; }
-                var price = f.agreed_price.get();
-                if (price !== '' && !(Number(price) >= 0)) { f.agreed_price.input.focus(); return 'The price must be zero or more.'; }
                 var bad = ['contract_url', 'meeting_url'].filter(function (key) {
                     var value = f[key].get().trim();
                     return value && !UI.safeUrl(value);
@@ -429,7 +374,6 @@
                     plan: toNull(f.plan.get()),
                     contract_status: f.contract_status.get(),
                     start_date: toNull(f.start_date.get()),
-                    agreed_price: f.agreed_price.get() === '' ? null : Number(f.agreed_price.get()),
                     billing_terms: toNull(f.billing_terms.get()),
                     contract_url: toNull(f.contract_url.get()),
                     meeting_url: toNull(f.meeting_url.get()),
@@ -823,7 +767,6 @@
                 });
                 sortClients();
                 renderList();
-                renderDetail();
                 if (submissionsResult.error) empty(submissionsBox, 'Could not load submissions. Has the admin migration been applied?');
                 else renderSubmissions(submissionsResult.data || []);
                 renderAccountPanel(signedInEmail);
@@ -835,7 +778,19 @@
                     });
                 }
                 handleNewHash();
+                openFromQuery();
             }).catch(function () { if (!gone) show('error'); });
+        }
+
+        // "Back to admin" from the client view lands on admin.html?client=<id>: reopen that client, then tidy the URL.
+        function openFromQuery() {
+            var id = new URLSearchParams(window.location.search).get('client');
+            if (!id) return;
+            window.history.replaceState(window.history.state, '', window.location.pathname + window.location.hash);
+            if (state.clients.some(function (c) { return c.id === id; })) {
+                if (topTabs) topTabs.select('clients');
+                openClient(id);
+            }
         }
 
         // #new (from the navbar menu) opens the new-client form.
@@ -850,6 +805,13 @@
         listen(filter, 'change', renderList);
         listen(root.querySelector('[data-admin-new]'), 'click', function () { openNew(null); });
         listen(root.querySelector('[data-admin-retry]'), 'click', load);
+        listen(root.querySelector('[data-admin-client-close]'), 'click', closeDetail);
+        // The red dot on the client window ends as a dismiss; expanding the clients window again closes the client.
+        listen(clientWin, 'ds-window:dismiss', closeDetail);
+        listen(listWin, 'ds-window:state', function (event) {
+            if (event.target !== listWin || event.detail.minimized || clientWin.hidden) return;
+            if (state.selectedId || state.creating) closeDetail();
+        });
 
         root.querySelectorAll('[data-admin-signout]').forEach(function (button) {
             listen(button, 'click', function () {

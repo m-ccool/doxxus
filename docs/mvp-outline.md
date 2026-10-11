@@ -318,7 +318,7 @@ Clients receive an account tied to the contact email used during consultation or
 
 One dashboard with four tabs (Overview, Project, Files & links, Account), deep-linkable by hash:
 
-- Contract summary, read-only (plan, start date, agreed price, billing terms, contract link, status)
+- Contract summary, read-only (start date, billing terms, contract link, status). There is no plan or price shown to the client
 - Project outline: five fixed phases (Discovery, Design, Build, Review, Launch) with optional custom milestones and a progress bar
 - Documents and links the admin shares (private files are served through short-lived signed links; clients cannot upload)
 - Contact details; the client edits only an additional contact, the admin owns the rest
@@ -402,7 +402,7 @@ Tags: **[Built]** live in the repo and tested, **[Planned]** not done yet.
 - [ ] Apply the migration and set your admin claim (see the comment at the top of the migration), then sign out and back in
 
 **D2. Portal v2** (`account.js`, `admin.js`, `admin-projects.js`, `admin-files.js`, `portal-ui.js`, migration `20261010000000_portal_v2.sql`)
-- [x] Master-detail admin hub: client list with search and filter; per-client tabs for Overview, Contract & contact, Projects, Files & links, Notes; create client from a submission **[Built]**
+- [x] Admin hub: a full-width client list (search, filter, New client); selecting a client minimizes the list and opens a client window with Projects, Files & links, Details and Notes tabs, plus a read-only "Client view" of the real client dashboard; create client from a submission **[Built]**
 - [x] Contract fields on `clients`; a trigger lets signed-in non-admins update only `extra_contact` **[Built]**
 - [x] Fixed phases plus custom milestones per project; links and private file uploads (`client-files` bucket) **[Built]**
 - [ ] Apply the migration, then run the hand-test checklist at its bottom against the real project (live RLS and storage are untested)

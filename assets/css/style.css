@@ -6326,11 +6326,6 @@ textarea.ds-input {
   border-bottom: 1px solid var(--ds-border-default);
 }
 
-.portal-tabs--sub {
-  margin: 0 calc(var(--ds-space-4) * -1) var(--ds-space-4);
-  border-bottom: 1px solid var(--ds-border-default);
-}
-
 .portal-tabs [role="tab"] {
   position: relative;
   flex: none;
@@ -6790,15 +6785,8 @@ textarea.ds-input {
   outline-offset: 2px;
 }
 
-/* Admin: master-detail */
-.admin-split {
-  display: grid;
-  grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr);
-  gap: var(--ds-space-5);
-  align-items: start;
-}
-
-.admin-side {
+/* Admin: the clients list, and the client window that opens beside it */
+.admin-list {
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-3);
@@ -6821,22 +6809,48 @@ textarea.ds-input {
   min-width: 0;
 }
 
-.admin-main {
-  min-width: 0;
-  padding: var(--ds-space-4);
-  border: 1px solid var(--ds-border-default);
-  border-radius: var(--ds-radius-md);
+/* The client window sits under the (minimized) clients window, with the same gap the page uses between sections */
+[data-admin-tabs] {
   scroll-margin-top: 4.5rem;
 }
 
-.admin-empty {
-  padding: var(--ds-space-5) 0;
-  color: var(--ds-fg-subtle);
+.admin-client-window {
+  margin-top: var(--ds-space-4);
+  scroll-margin-top: 4.5rem;
 }
 
-.admin-back {
+.admin-client-window[hidden] {
   display: none;
-  margin-bottom: var(--ds-space-3);
+}
+
+.portal-tabbar-actions {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--ds-space-4);
+  padding: .75rem 0;
+}
+
+.portal-tabbar-actions .portal-link[hidden] {
+  display: none;
+}
+
+/* Phones: the section tabs get the full width and the two actions drop to their own line */
+@media (max-width: 640px) {
+  .admin-client-window .portal-tabbar {
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+
+  .admin-client-window .portal-tabbar .portal-tabs {
+    width: 100%;
+  }
+
+  .admin-client-window .portal-tabbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+    padding: .35rem 0 .6rem;
+  }
 }
 
 .admin-client {
@@ -6906,18 +6920,23 @@ textarea.ds-input {
   display: none;
 }
 
-.admin-overview-project {
+/* Client view: a bar above the page while an admin looks at the dashboard as the client does */
+.portal-viewing {
+  position: sticky;
+  top: var(--nav-h, 3.5rem);
+  z-index: 50;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: var(--ds-space-2) var(--ds-space-4);
-  padding: .6rem 0;
-  border-bottom: 1px solid rgba(var(--white-rgb), .06);
-}
-
-.admin-overview-bar {
-  flex: 0 1 12rem;
-  width: auto;
+  padding: .6rem var(--ds-space-4);
+  background: rgba(var(--shade-1-rgb), .92);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--ds-border-default);
+  color: var(--ds-fg-default);
+  font-size: var(--ds-text-sm);
 }
 
 .admin-projects {
@@ -7109,23 +7128,6 @@ textarea.ds-input {
 }
 
 @media (max-width: 860px) {
-  .admin-split {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  /* One column on phones: the list, or the selected client with a way back */
-  .admin-split.is-detail .admin-side {
-    display: none;
-  }
-
-  .admin-split:not(.is-detail) .admin-main {
-    display: none;
-  }
-
-  .admin-split.is-detail .admin-back {
-    display: inline-flex;
-  }
-
   .admin-milestone {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }

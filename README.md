@@ -23,7 +23,7 @@ services.html       — software spec sheet, package tiers, add-ons, consultatio
 build.html          — package builder (assemble a package and send the request)
 signin.html         — sign-in for clients and the admin (Google, an emailed one-time code, or a password, through Supabase Auth)
 account.html        — client dashboard with tabs: Overview, Project, Files & links, Account (signed-in only)
-admin.html          — admin hub: clients, contracts, projects, files & links, private notes, submissions (admin role only)
+admin.html          — admin hub: client list, then a client window (projects, files & links, details, notes, client view), submissions (admin role only)
 terms.html          — terms of service
 privacy.html        — privacy policy
 sitemap.xml         — public URL list
@@ -88,6 +88,10 @@ assets/
 - Apply `supabase/migrations/20261010000000_portal_v2.sql` after the admin migration. It adds the contract columns,
   phases and milestones, links and files tables, and a private `client-files` storage bucket (files reach clients
   through short-lived signed links). The hand-test checklist is at the bottom of that file
+- Then apply `supabase/migrations/20261011000000_drop_agreed_price.sql` (agreed price is no longer tracked). Apply it
+  only after the site release that stops reading that column is live
+- The admin hub's **Client view** opens `account.html?as=<client id>`: the real client dashboard for that client,
+  read-only (admin only; for anyone else the parameter is ignored), with a "Back to admin" bar
 - **Admin account:** Create a Supabase Auth user (email: `dev@doxxus.us`, or your own), then run this SQL in the Supabase SQL Editor:
   ```sql
   update auth.users
@@ -104,7 +108,7 @@ assets/
 - The publishable Supabase key in `portal.js` is public by design; secret keys never go in the repo
 - Billing is Stripe's hosted customer portal; set `BILLING_PORTAL_URL` in `account.js` once it exists
 - Stylesheets and scripts are linked with a `?v=` query (GitHub Pages and browsers cache them hard). After changing a
-  file under `assets/`, bump the value in every page, e.g. `(Get-ChildItem *.html) | % { (gc $_ -Raw) -replace '\?v=20261010h','?v=NEW' | sc $_ }`;
+  file under `assets/`, bump the value in every page, e.g. `(Get-ChildItem *.html) | % { (gc $_ -Raw) -replace '\?v=20261010i','?v=NEW' | sc $_ }`;
   `site-shell.js` has one copy too
 - Serve locally with `python -m http.server 8777`
 
