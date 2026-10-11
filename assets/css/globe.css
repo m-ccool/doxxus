@@ -1,9 +1,40 @@
+/* ── Hero sizing ─────────────────────────────────────────────────────────────────
+   --nav-h is the sticky navbar's height; the hero is exactly one screen below it. --globe-fs is the globe
+   icon's font-size: wide-screen size, but never more than ~36% of the hero height (the icon is drawn at
+   1.75x, so that keeps the globe about 63% of the hero) so it still fits short windows. */
+:root {
+  --nav-h: 49px;
+  --globe-fs: min(calc(10rem + 10vw), calc((100vh - var(--nav-h)) * .36));
+}
+
+@supports (height: 100svh) {
+  :root {
+    --globe-fs: min(calc(10rem + 10vw), calc((100svh - var(--nav-h)) * .36));
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-h: 63px;
+    /* two columns: the 1.75x globe must also fit in half the width */
+    --globe-fs: min(calc(10rem + 10vw), calc((100vh - var(--nav-h)) * .36), 26vw);
+  }
+}
+
+@supports (height: 100svh) {
+  @media (min-width: 768px) {
+    :root {
+      --globe-fs: min(calc(10rem + 10vw), calc((100svh - var(--nav-h)) * .36), 26vw);
+    }
+  }
+}
+
 /* ── Hero globe stage: the globe, the stars orbiting it, and the lens flare ─────────
    The stars and the flare are drawn on canvases by explore-prompt.js; this file only places them.
    Sizes derive from the globe's own font-size, so everything scales with it. --globe-d is the globe's
    rendered diameter (the icon is drawn at 1.75x). The stage itself only animates transform and opacity. */
 .globe-stage {
-  --globe-d: calc(1.75 * (10rem + 10vw));
+  --globe-d: calc(1.75 * var(--globe-fs));
   position: relative;
   isolation: isolate;
   display: flex;
@@ -209,7 +240,7 @@
 }
 .globe-icon {
   position: relative;
-  font-size: calc(10rem + 10vw);
+  font-size: var(--globe-fs);
   overflow: visible;
   /*padding: 10px;*/
   /*text-shadow: 0 5px 25px;*/

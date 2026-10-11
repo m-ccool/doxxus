@@ -1803,10 +1803,66 @@ section {
   }
 }
 
-/* The globe is drawn at 1.75x, so it overflows its layout box by .375em at the bottom; clear that, plus a gap. */
+/* ── Hero: exactly one screen (below the sticky navbar), content centred inside it ──
+   min-height rather than height so a very short window can grow instead of clipping. The globe is drawn at
+   1.75x, so it overflows its layout box by .375em on the top and the bottom; its column reserves that so the
+   visible edge clears the navbar and the prompt. Nothing of #begin renders until the visitor scrolls. */
+:root {
+  --hero-gutter: clamp(1rem, 4vw, 3rem);
+}
+
+#splash {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--nav-h));
+  padding-block: clamp(.5rem, 2vh, 1.5rem);
+}
+
+@supports (height: 100svh) {
+  #splash {
+    min-height: calc(100svh - var(--nav-h));
+  }
+}
+
+#splash > .row:first-child {
+  flex: 1 1 auto;
+  align-items: center;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#splash .splash-copy-col {
+  padding-inline: var(--hero-gutter);
+}
+
+#splash .splash-globe-col {
+  margin-block: calc(.375 * var(--globe-fs) + .5rem);
+}
+
 #explore-anim {
-  margin-top: calc(.375 * (10rem + 10vw) + 2rem);
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding-bottom: clamp(.5rem, 2vh, 1.5rem);
   z-index: 1;
+}
+
+#splash .p-center-flex {
+  font-size: clamp(1.125rem, 1rem + .35vw, 1.375rem);
+  line-height: 1.3;
+}
+
+/* Gentle snap between the hero and the next section, home page only. Proximity (not mandatory) so the
+   rest of the page scrolls freely. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(body[data-page="home"]) {
+    scroll-snap-type: y proximity;
+  }
+
+  html:has(body[data-page="home"]) #splash,
+  html:has(body[data-page="home"]) #begin {
+    scroll-snap-align: start;
+    scroll-margin-top: var(--nav-h);
+  }
 }
 
 .p {
@@ -1926,6 +1982,14 @@ body {
   font-size: clamp(1.8rem, 1rem + 5vw, 4rem);
 }
 
+/* Two columns from 768px: size the wordmark from its column (half the viewport minus the gutters), not the
+   viewport. The wordmark is ~7.35em wide including its tracking. */
+@media (min-width: 768px) {
+  .typed-out {
+    font-size: min(4rem, calc((50vw - 2 * var(--hero-gutter, 2rem)) / 7.6));
+  }
+}
+
 /* text-based brand wordmark, JS scrambles/settles the characters in on reveal */
 .brand-type-text {
   display: inline-block;
@@ -1935,7 +1999,7 @@ body {
   font-size: 1em;
   letter-spacing: 0.28em;
   line-height: 1.1;
-  padding: 0 0.05em 0.1em 0;
+  padding: 0 .05em .1em .28em;
   color: #fff;
   animation: brand-glow-pulse 3.2s ease-in-out infinite;
 }

@@ -2820,6 +2820,14 @@ main {
   overflow: hidden!important;
 }
 
+/* clip clips exactly like hidden but does not make <main> a scroll container, so #splash and #begin
+   stay scroll-snap points of the page itself (see the hero snap rules in style.css). */
+@supports (overflow: clip) {
+  main {
+    overflow: clip!important;
+  }
+}
+
 .create-website-btn {
   margin: 2.5rem 0;
   align-items: center!important;
@@ -2971,9 +2979,7 @@ main {
 }
 
 #splash {
-  margin-top: calc(.5em + 5vw);
   overflow: visible;
-  padding-bottom: 2vw;
 }
 
 footer .footer-col {

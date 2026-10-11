@@ -104,7 +104,7 @@ assets/
 - The publishable Supabase key in `portal.js` is public by design; secret keys never go in the repo
 - Billing is Stripe's hosted customer portal; set `BILLING_PORTAL_URL` in `account.js` once it exists
 - Stylesheets and scripts are linked with a `?v=` query (GitHub Pages and browsers cache them hard). After changing a
-  file under `assets/`, bump the value in every page, e.g. `(Get-ChildItem *.html) | % { (gc $_ -Raw) -replace '\?v=20261010f','?v=NEW' | sc $_ }`;
+  file under `assets/`, bump the value in every page, e.g. `(Get-ChildItem *.html) | % { (gc $_ -Raw) -replace '\?v=20261010h','?v=NEW' | sc $_ }`;
   `site-shell.js` has one copy too
 - Serve locally with `python -m http.server 8777`
 
