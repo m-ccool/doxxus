@@ -80,7 +80,7 @@ The public site is five pages:
 | `index.html` | Splash, positioning, software tier teaser, condensed IT tier, portfolio, about |
 | `services.html` | Full software spec sheet, package tier comparison, add-ons, consultation, IT tier |
 | `build.html` | Package builder — assemble a package and send the request |
-| `signin.html` | Client portal placeholder (no authentication yet) |
+| `signin.html` | Client portal placeholder (no authentication yet). Shareable login entry: `https://doxxus.us/login/` (redirects to `signin.html`, preserving query parameters and fragments; the existing URL remains supported). |
 | `terms.html` | Terms and conditions |
 
 Homepage order:

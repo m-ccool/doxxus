@@ -45,6 +45,7 @@
         if (!anchor || !anchor.getAttribute('href')) return null;
         if (anchor.target && anchor.target !== '_self') return null;
         if (anchor.hasAttribute('download')) return null;
+        if (anchor.hasAttribute('data-router-reload')) return null;
         var toggle = anchor.getAttribute('data-bs-toggle');
         if (toggle && toggle !== 'tooltip') return null;
         var url;
